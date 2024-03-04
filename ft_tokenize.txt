@@ -1,0 +1,85 @@
+# Pseudo Code for tokenization :
+
+function lexer(input: string) -> array of tokens
+    tokens = empty array of tokens
+    current_token = empty string
+    inside_quotes = false
+    escaped = false
+
+    for each character in input
+        if character is escape character '\' and not escaped
+            escaped = true
+            append character to current_token
+        else if character is double quote '"' and not escaped
+            inside_quotes = not inside_quotes
+            append character to current_token
+        else if character is space and not inside_quotes and not escaped
+            if current_token is not empty
+                add current_token to tokens
+                current_token = empty string
+        else if character is special character and not inside_quotes and not escaped
+            if current_token is not empty
+                add current_token to tokens
+                current_token = empty string
+            add character as token to tokens
+        else
+            append character to current_token
+            escaped = false
+
+    if current_token is not empty
+        add current_token to tokens
+
+    return tokens
+
+
+
+# Usefult code generated using chatgpt : 
+
+
+/*
+#include <stdio.h>
+#include <regex.h>
+
+// Define token types
+#define PROMPT 1
+#define COMMAND 2
+#define ARGUMENT 3
+
+int main() {
+    // Define regular expressions for token types
+    char *prompt_regex = "^[$#]";
+    char *command_regex = "^[^\\s|&;]+";
+    char *argument_regex = "[^\\s|&;]+";
+
+    // Input string
+    char *input_string = "$ ls -l /usr/bin\n# echo \"Hello, World!\"\n";
+
+    // Compile regular expressions
+    regex_t prompt_regex_compiled, command_regex_compiled, argument_regex_compiled;
+    regcomp(&prompt_regex_compiled, prompt_regex, REG_EXTENDED);
+    regcomp(&command_regex_compiled, command_regex, REG_EXTENDED);
+    regcomp(&argument_regex_compiled, argument_regex, REG_EXTENDED);
+
+    // Tokenize input string
+    char *line = strtok(input_string, "\n");
+    while (line != NULL) {
+        if (regexec(&prompt_regex_compiled, line, 0, NULL, 0) == 0) {
+            printf("Token: PROMPT, Value: %s\n", line);
+        } else {
+            regmatch_t match;
+            while (regexec(&argument_regex_compiled, line, 1, &match, 0) == 0) {
+                printf("Token: ARGUMENT, Value: %.*s\n", match.rm_eo - match.rm_so, &line[match.rm_so]);
+                line += match.rm_eo;
+            }
+        }
+        line = strtok(NULL, "\n");
+    }
+
+    // Free resources
+    regfree(&prompt_regex_compiled);
+    regfree(&command_regex_compiled);
+    regfree(&argument_regex_compiled);
+
+    return 0;
+}
+*/
