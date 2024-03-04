@@ -1,6 +1,6 @@
 # Pseudo Code for tokenization :
 
-function lexer(input: string) -> array of tokens
+function ft_strtok(input: string) -> array of tokens
     tokens = empty array of tokens
     current_token = empty string
     inside_quotes = false
