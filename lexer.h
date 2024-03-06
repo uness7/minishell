@@ -1,8 +1,8 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include <glob.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 enum TokenType
@@ -43,7 +43,7 @@ typedef struct s_lexer
 	int ntoks;
 }	t_lexer;
 
-int		lexer_build(char *input, size_t size, t_lexer *lexerbuf);
+void	lexer_build(char *input, size_t size, t_lexer *lexerbuf);
 void	lexer_destroy(t_lexer *lexerbuf);
 
 #endif

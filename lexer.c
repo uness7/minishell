@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/04 10:31:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/04 12:20:16 by yzioual          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "lexer.h"
 
 int	getchartype(char c)
 {
@@ -83,60 +73,143 @@ void tok_destroy(t_tok *tok)
 	}
 }
 
-int	lexer_build(char *input, size_t size, t_lexer *lexerbuf)
+/*
+void    ft_tokenize(size_t size, char *input, int i, int j, int char_type, t_tok *token, int *state)
 {
+        if (char_type == CHAR_DQUOTE)
+        {
+                *state = STATE_IN_DQUOTE;
+                token->data[j++] = CHAR_DQUOTE;
+                token->type = TOKEN;
+        }
+        else if (char_type == CHAR_QOUTE)
+        {
+                *state = STATE_IN_QUOTE;
+                token->data[j++] = CHAR_QOUTE;
+                token->type = TOKEN;
+        }
+        else if (char_type == CHAR_ESCAPESEQUENCE)
+        {
+                token->data[j++] = input[++i];
+                token->type = TOKEN;
+        }
+        else if (char_type == CHAR_GENERAL)
+        {
+                token->data[j++] = input[i];
+                token->type = TOKEN;
+        }
+        else if (char_type == CHAR_WHITESPACE)
+        {
+                if (j > 0)
+                {
+                        token->data[j] = 0;
+                        token->next = malloc(sizeof(t_tok));
+                        token = token->next;
+                        tok_init(token, size - i);
+                        j = 0;
+                }
+        }
+        else if (char_type == CHAR_SEMICOLON || char_type == CHAR_GREATER || \
+                        char_type == CHAR_LESSER || char_type == CHAR_AMPERSAND || char_type == CHAR_PIPE)
+        {
+                if (j > 0)
+                {
+                        token->data[j] = 0;
+                        token->next = malloc(sizeof(t_tok));
+                        token = token->next;
+                        tok_init(token, size - i);
+                        j = 0;
+                }
+                token->data[0] = char_type;
+                token->data[1] = 0;
+                token->type = char_type;
+                token->next = malloc(sizeof(t_tok));
+                tok_init(token, size - i);
+        }
+}
+*/
+
+void	lexer_build(char *input, size_t size, t_lexer *lexerbuf)
+{
+	int	i = 0;
+	int	j = 0;
+	int	ntemptok = 0;
+	int	char_type;
+	t_tok	*token;
+	int	state;
+	
+	
+	state = STATE_GENERAL;
 	if (lexerbuf == NULL)
-		return -1;
-	
-	if (size == 0) {
-		lexerbuf->ntoks = 0;
-		return 0;
-	}
-	
-	lexerbuf->llisttok = malloc(sizeof(t_tok));
-	
-	t_tok *token = lexerbuf->llisttok;
-	tok_init(token, size);
-	
-	int i = 0;
-	int j = 0, ntemptok = 0;
-	
-	char c;
-	int state = STATE_GENERAL;
-	
-	do
+		return ;
+	if (size == 0)
 	{
-		c = input[i];		
-		int chtype = getchartype(c);
-		
+		lexerbuf->ntoks = 0;
+		return ;
+	}
+	lexerbuf->llisttok = malloc(sizeof(t_tok));
+	token = lexerbuf->llisttok;
+	tok_init(token, size);
+	/*
+	while (input[i])
+	{
+		char_type = getchartype(input[i]);
 		if (state == STATE_GENERAL)
 		{
-			switch (chtype) 
+			ft_tokenize(size, input, i, j, char_type, token, &state);
+		}
+		else if (state == STATE_IN_DQUOTE)
+		{
+			token->data[j++] = input[i];
+                        if (char_type == CHAR_DQUOTE)
+                                state = STATE_GENERAL;
+		}
+		else if (state == STATE_IN_QUOTE)
+		{
+			token->data[j++] = input[i];
+                        if (char_type == CHAR_QOUTE)
+                                state = STATE_GENERAL;
+		}
+		if (char_type == CHAR_NULL)
+                {
+                        if (j > 0)
+                        {
+                                token->data[j] = 0;
+                                ntemptok++;
+                                j = 0;
+                        }
+                }
+		i++;
+	}
+	*/
+	while (input[i] != '\0')
+	{
+		char_type = getchartype(input[i]);
+		if (state == STATE_GENERAL)
+		{
+			switch (char_type) 
 			{
 				case CHAR_QOUTE:
 					state = STATE_IN_QUOTE;
 					token->data[j++] = CHAR_QOUTE;
 					token->type = TOKEN;
 					break;
-					
 				case CHAR_DQUOTE:
 					state = STATE_IN_DQUOTE;
 					token->data[j++] = CHAR_DQUOTE;
 					token->type = TOKEN;
 					break;
-					
 				case CHAR_ESCAPESEQUENCE:
 					token->data[j++] = input[++i];
 					token->type = TOKEN;
 					break;
-					
 				case CHAR_GENERAL:
-					token->data[j++] = c;
+					token->data[j++] = input[i];
 					token->type = TOKEN;
 					break;
-					
 				case CHAR_WHITESPACE:
-					if (j > 0) {
+					if (j > 0)
+					{
 						token->data[j] = 0;
 						token->next = malloc(sizeof(t_tok));
 						token = token->next;
@@ -144,13 +217,11 @@ int	lexer_build(char *input, size_t size, t_lexer *lexerbuf)
 						j = 0;
 					}
 					break;
-					
 				case CHAR_SEMICOLON:
 				case CHAR_GREATER:
 				case CHAR_LESSER:
 				case CHAR_AMPERSAND:
 				case CHAR_PIPE:
-					
 					// end the token that was being read before
 					if (j > 0) {
 						token->data[j] = 0;
@@ -159,12 +230,10 @@ int	lexer_build(char *input, size_t size, t_lexer *lexerbuf)
 						tok_init(token, size - i);
 						j = 0;
 					}
-					
 					// next token
-					token->data[0] = chtype;
+					token->data[0] = char_type;
 					token->data[1] = 0;
-					token->type = chtype;
-					
+					token->type = char_type;
 					token->next = malloc(sizeof(t_tok));
 					token = token->next;
 					tok_init(token, size - i);
@@ -172,79 +241,32 @@ int	lexer_build(char *input, size_t size, t_lexer *lexerbuf)
 			}
 		}
 		else if (state == STATE_IN_DQUOTE) {
-			token->data[j++] = c;
-			if (chtype == CHAR_DQUOTE)
+			token->data[j++] = input[i];
+			if (char_type == CHAR_DQUOTE)
 				state = STATE_GENERAL;
-			
 		}
 		else if (state == STATE_IN_QUOTE) {
-			token->data[j++] = c;
-			if (chtype == CHAR_QOUTE)
+			token->data[j++] = input[i];
+			if (char_type == CHAR_QOUTE)
 				state = STATE_GENERAL;
 		}
-		
-		if (chtype == CHAR_NULL) {
-			if (j > 0) {
+		if (char_type == CHAR_NULL)
+		{
+			if (j > 0)
+			{
 				token->data[j] = 0;
 				ntemptok++;
 				j = 0;
 			}
 		}
-		
 		i++;
-	} while (c != '\0');
-	
-	token = lexerbuf->llisttok;
-	int k = 0;
-	while (token != NULL) 
-	{
-		if (token->type == TOKEN)
-		{
-			glob_t globbuf;
-			glob(token->data, GLOB_TILDE, NULL, &globbuf);
-			
-			if (globbuf.gl_pathc > 0)
-			{
-				k += globbuf.gl_pathc;
-				// save the next token so we can attach it later
-				t_tok *saved = token->next;
-				
-				// replace the current token with the first one
-				free(token->data);
-				token->data = malloc(strlen(globbuf.gl_pathv[0]) + 1);
-				strcpy(token->data, globbuf.gl_pathv[0]);
-								
-				int i;
-				for (i = 1; i < globbuf.gl_pathc; i++)
-				{
-					token->next = malloc(sizeof(t_tok));
-					tok_init(token->next, strlen(globbuf.gl_pathv[i]));
-					token = token->next;
-					token->type = TOKEN;
-					strcpy(token->data, globbuf.gl_pathv[i]);
-				}
-				token->next = saved;
-			}
-			else {
-				// token from the user might be inside quotation to escape special characters
-				// hence strip the quotation symbol
-				char* stripped = malloc(strlen(token->data) + 1);
-				strip_quotes(token->data, stripped);
-				free(token->data);
-				token->data = stripped;
-				k++;
-			}
-		}
-		token = token->next;
 	}
-	lexerbuf->ntoks = k;
-	return k;
+	token = lexerbuf->llisttok;
 }
 
 void lexer_destroy(t_lexer *lexerbuf)
 {
 	if (lexerbuf == NULL)
 		return;
-	
 	tok_destroy(lexerbuf->llisttok);
 }
