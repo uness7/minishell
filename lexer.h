@@ -5,14 +5,20 @@
 #include <stdio.h>
 #include <string.h>
 
-enum TokenType
+typedef struct s_obj
+{
+	int	state;
+	int	ntemptok;
+	int	chtype;
+}		t_obj;
+
+typedef enum
 {
 	CHAR_GENERAL = -1,
 	CHAR_PIPE = '|',
 	CHAR_AMPERSAND = '&',
 	CHAR_QOUTE = '\'',
 	CHAR_DQUOTE = '\"',
-	CHAR_SEMICOLON = ';',
 	CHAR_WHITESPACE = ' ',
 	CHAR_ESCAPESEQUENCE = '\\',
 	CHAR_TAB = '\t',
@@ -20,8 +26,8 @@ enum TokenType
 	CHAR_GREATER = '>',
 	CHAR_LESSER = '<',
 	CHAR_NULL = 0,	
-	TOKEN = -1,
-};
+	TOKEN = 100,
+}	e_token_type;
 
 enum {
 	STATE_IN_DQUOTE,
@@ -40,7 +46,6 @@ typedef struct s_tok
 typedef struct s_lexer
 {
 	t_tok *llisttok;
-	int ntoks;
 }	t_lexer;
 
 void	lexer_build(char *input, size_t size, t_lexer *lexerbuf);
