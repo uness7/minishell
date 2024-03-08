@@ -71,7 +71,6 @@ void tok_destroy(t_tok *tok)
 	}
 }
 
-/*
 void	tokenize(char *input, size_t size, t_tok *token)
 {
 	int		i;
@@ -160,69 +159,6 @@ void	tokenize(char *input, size_t size, t_tok *token)
 		}
 		i++;
 	}
-}
-*/
-
-
-void handle_general_state(int *state, char *input, int *i, int *j, int chtype, t_tok *token, size_t size) {
-    if (chtype == CHAR_QOUTE || chtype == CHAR_DQUOTE) {
-        token->data[(*j)++] = chtype;
-        token->type = TOKEN;
-        state = (chtype == CHAR_QOUTE) ? STATE_IN_QUOTE : STATE_IN_DQUOTE;
-    } else if (chtype == CHAR_ESCAPESEQUENCE || chtype == CHAR_GENERAL) {
-        token->data[(*j)++] = (chtype == CHAR_ESCAPESEQUENCE) ? input[++(*i)] : input[*i];
-        token->type = TOKEN;
-    } else if (chtype == CHAR_WHITESPACE) {
-        if (*j > 0) {
-            token->data[*j] = 0;
-            token->next = malloc(sizeof(t_tok));
-            token = token->next;
-            tok_init(token, size - *i);
-            *j = 0;
-        }
-    } else if (chtype == CHAR_GREATER || chtype == CHAR_LESSER ||
-               chtype == CHAR_AMPERSAND || chtype == CHAR_PIPE) {
-        if (*j > 0) {
-            token->data[*j] = 0;
-            token->next = malloc(sizeof(t_tok));
-            token = token->next;
-            tok_init(token, size - *i);
-            *j = 0;
-        }
-        token->data[0] = chtype;
-        token->data[1] = 0;
-        token->type = TOKEN;
-        token->next = malloc(sizeof(t_tok));
-        token = token->next;
-        tok_init(token, size - *i);
-    }
-}
-
-void handle_quote_state(int *state, char *input, int *i, int *j, int chtype, int *state, t_tok *token) {
-    token->data[(*j)++] = input[*i];
-    if (chtype == CHAR_DQUOTE || chtype == CHAR_QOUTE)
-        *state = STATE_GENERAL;
-}
-
-void tokenize(char *input, size_t size, t_tok *token)
-{
-    int i = 0, j = 0, state = STATE_GENERAL, ntemptok = 0;
-    while (input[i] != '\0')
-    {
-        int chtype = getchartype(input[i]);
-        if (state == STATE_GENERAL)
-            handle_general_state(&state, input, &i, &j, chtype, token, size);
-
-	else if (state == STATE_IN_DQUOTE || state == STATE_IN_QUOTE)
-            handle_quote_state(&state, input, &i, &j, chtype, &state, token);
-
-        if (chtype == CHAR_NULL && j > 0) {
-            token->data[j] = 0;
-            ntemptok++;
-            j = 0;
-        }
-        i++;
-    }
 }
 
 
