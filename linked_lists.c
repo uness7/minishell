@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   linked_lists.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/14 14:14:05 by yzioual           #+#    #+#             */
+/*   Updated: 2024/03/14 16:50:19 by yzioual          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_node	*create_node(char *data, t_token_type type)
@@ -10,6 +22,7 @@ t_node	*create_node(char *data, t_token_type type)
 	new->type = type;
 	new->data = data;
 	new->next = NULL;
+	return (new);
 }
 
 void	init_list(t_list *list)
@@ -41,7 +54,7 @@ void	print_list(t_list *list)
 	current_node = list->head;
 	while (current_node !=  NULL)
 	{
-		printf("%s\n", current_node->data);
+		printf("token : %s\ttype : %d\n", current_node->data, current_node->type);
 		current_node = current_node->next;
 	}
 }
