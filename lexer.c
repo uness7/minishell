@@ -110,18 +110,21 @@ t_list	*tokenize(const char *s)
 		}
 		else
 			printf("oooops\n");
+		s++;
 	}
-	return (list);
+	return (1);
 }
 
-int	main(void)
+
+int	main()
 {
 	const char	*str1 = "ls -al /";
 	const char	*str2 = "awl '{print $2}'";
 	const char	*str3 = "ps | wc -l > test.txt";
 
-//	print_list(tokenize(str1));
-//	print_list(tokenize(str2));
-	//print_list(tokenize(str3));
-	print_list(tokenize("echo; '{hello wolrd $3}' >> tset "));
+	print_list(tokenize(str1));
+	print_list(tokenize(str2));
+	print_list(tokenize(str3));
+	print_list(tokenize("echo; '{hello wolrd >> $3}'"));
+	
 }
