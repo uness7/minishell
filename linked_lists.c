@@ -52,10 +52,9 @@ void	print_list(t_list *list)
 	t_node	*current_node;
 
 	current_node = list->head;
-	while (current_node != NULL)
+	while (current_node !=  NULL)
 	{
-		printf("token: %s\t\ttype: %d\n", current_node->data,
-			current_node->type);
+		printf("token : %s\ttype : %d\n", current_node->data, current_node->type);
 		current_node = current_node->next;
 	}
 }
