@@ -56,11 +56,6 @@ t_list	*tokenize(const char *s)
 	if (list == NULL)
 		return (NULL);
 	init_list(list);
-	if (s == "" || is_empty(s))
-	{
-		printf("String is empty or has only whitespaces\n");
-		exit(1);
-	}
 	while (*s != '\0')
 	{
 		while (*s == ' ')
@@ -68,11 +63,10 @@ t_list	*tokenize(const char *s)
 		token = malloc(sizeof(char) * 1024);
 		if (token == NULL)
 			return (NULL);
-//		printf("Processing input string: \"%s\"\n", s);
 		i = 0;
 		if ((*s >= 'a' && *s <= 'z') || (*s >= 'A' && *s <= 'Z') || (*s >= '0'
 				&& *s <= '9') || *s == '_' || *s == '-' || *s == '/'
-			|| *s == '$' || *s == '(' || *s == ')')
+			|| *s == '$' || *s == '(' || *s == ')' || *s == '.')
 		{
 			while (*s && *s != ' ')
 				token[i++] = *s++;
@@ -101,16 +95,18 @@ t_list	*tokenize(const char *s)
 		{
 			quote = *s++;
 			token[i++] = quote;
-			while (*s && *s != quote)
+			while (*s != '\0' && *s != quote) 
+			{
 				token[i++] = *s++;
+			}
 			if (*s == quote)
 				token[i++] = *s++;
 			token[i] = '\0';
-			append(list, token,
-				(quote == '\'') ? TOKEN_SINGLE_QUOTES : TOKEN_DOUBLE_QUOTES);
+			if (quote == '\'')
+				append(list, token, TOKEN_SINGLE_QUOTES);
+			else
+				append(list, token, TOKEN_DOUBLE_QUOTES);
 		}
-		else
-			printf("Something is weird her :0 \n");
 	}
 	return (list);
 }
@@ -121,6 +117,11 @@ int	main(void)
 	const char	*str2 = "awl '{print $2}'";
 	const char	*str3 = "ps | wc -l > test.txt";
 
+	print_list(tokenize("echo Hello World | >>"));
+	printf("\n");
+
+	print_list(tokenize("ls | grep .txt"));
+	printf("\n");
 	print_list(tokenize(str1));
 	printf("\n");
 	print_list(tokenize(str2));
@@ -128,7 +129,21 @@ int	main(void)
 	print_list(tokenize(str3));
 	printf("\n");
 	print_list(tokenize("echo; '{hello wolrd $3}' >> ji "));
+	printf("\n");
 	print_list(tokenize("    "));
 	printf("\n");
 	print_list(tokenize(""));
+	printf("\n");
+	print_list(tokenize("ls -@ /"));
+	printf("\n");
+	print_list(tokenize("echo Hello\\ World"));
+	printf("\n");
+	print_list(tokenize("echo $PATH"));
+	printf("\n");
+	print_list(tokenize("echo hello*world"));
+	printf("\n");
+	print_list(tokenize("echo $HOME"));
+	printf("\n");
+	print_list(tokenize("echo hello\" world"));
+	printf("\n");
 }
