@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:02 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/15 15:59:41 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/18 16:45:32 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,13 @@ t_list	*tokenize(const char *s)
 
 int	main(void)
 {
-	const char	*str1 = "ls";
+	const char	*str1 = "ls -l -al -d";
 	const char	*str2 = "awl '{print $2}'";
 	const char	*str3 = "ps | wc -l > test.txt";
 
 
-	print_tree(parse(tokenize(str1)));
+	printf("Absract Syntax Tree\n");
+	print_tree(parse(tokenize(str1)), 0);
 
 	/*
 	print_list(tokenize("echo Hello World | >>"));

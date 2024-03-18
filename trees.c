@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   trees.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/18 13:56:47 by yzioual           #+#    #+#             */
+/*   Updated: 2024/03/18 16:41:36 by yzioual          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* This file contains the functions of tree data structure like print_tree and such */
 
-t_ast_node	*create_node_tree(const char *data)
+t_ast_node	*create_node_tree(bool arg_flag, t_token_type type, const char *data)
 {
 	t_ast_node	*new_node;
 
@@ -12,56 +24,56 @@ t_ast_node	*create_node_tree(const char *data)
 		printf("Error allocating memory :0.\n");
 		return (NULL);
 	}
-	new_node->type = NODE_COMMAND;
-	new_node->data.command = strdup(data);
-	if (new_node->data.command == NULL)
+	if (type == TOKEN)
 	{
-		printf("Error allocating memory :0.\n");
-		return (NULL);
+		if (arg_flag == true)
+		{
+			new_node->type = NODE_ARGUMENT;
+			new_node->data.argument = strdup(data);
+			if (new_node->data.argument == NULL)
+			{
+				printf("Error allocating memroy:0 weird.\n");
+				free(new_node);
+				return (NULL);
+			}
+			new_node->left = NULL;
+			new_node->right = NULL;
+		}
+		else
+		{
+			new_node->type = NODE_COMMAND;
+			new_node->data.command = strdup(data);
+			if (new_node->data.command == NULL)
+			{
+				printf("Error allocating memory :0.\n");
+				free(new_node);
+				return (NULL);
+			}
+			new_node->left = NULL;
+			new_node->right = NULL;
+		}
+		return (new_node);
 	}
-	return (new_node);
+	printf("Token is not known\n");
+	free(new_node);
+	return (NULL);
 }
 
-void	print_tree_helper(t_ast_node *node, int depth)
+void	print_tree(t_ast_node* root, int depth)
 {
-	if (node == NULL)
-	{
-		return ;
-	}
-	// Print current node
-	for (int i = 0; i < depth; i++)
-	{
-		printf("  "); // Indentation for better visualization
-	}
-	switch (node->type)
-	{
-	case NODE_COMMAND:
-		printf("Command: %s\n", node->data.command);
-		break ;
-	case NODE_ARGUMENT:
-		printf("Argument: %s\n", node->data.argument);
-		break ;
-	case NODE_PIPELINE:
-		printf("Pipeline\n");
-		break ;
-	case NODE_REDIRECTION:
-		printf("Redirection: %s %s\n", node->data.redirection.operator,
-			node->data.redirection.filename);
-		break ;
-		// Add cases for other node types as needed
-	}
-	// Recursively print children
-	/*
-	if (node->type == NODE_PIPELINE)
-	{
-		print_tree_helper(node->pipeline.left, depth + 1);
-		print_tree_helper(node->pipeline.right, depth + 1);
-	}
-	*/
-}
+	int	i = 0;
 
-void	print_tree(t_ast_node *root)
-{
-	printf("Abstract Syntax Tree:\n");
-	print_tree_helper(root, 0);
+	if (root == NULL)
+		return;
+	while (i < depth) {
+		printf("  ");
+		i++;
+	}
+	if (root->type == NODE_COMMAND) {
+		printf("COMMAND: %s\n", root->data.command);
+	} else if (root->type == NODE_ARGUMENT) {
+		printf("ARGUMENT: %s\n", root->data.argument);
+	}
+	print_tree(root->left, depth + 1);
+	print_tree(root->right, depth + 1);
 }
