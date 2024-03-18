@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_node	*create_node(char *data, t_token_type type)
+t_node	*create_node_list(char *data, t_token_type type)
 {
 	t_node	*new;
 
@@ -35,7 +35,7 @@ void	append(t_list *list, char *data, t_token_type type)
 	t_node	*temp_node;
 	t_node	*new_node;
 
-	new_node = create_node(data, type);
+	new_node = create_node_list(data, type);
 	if (list->head == NULL)
 		list->head = new_node;
 	else

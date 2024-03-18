@@ -113,10 +113,14 @@ t_list	*tokenize(const char *s)
 
 int	main(void)
 {
-	const char	*str1 = "ls -al /";
+	const char	*str1 = "ls";
 	const char	*str2 = "awl '{print $2}'";
 	const char	*str3 = "ps | wc -l > test.txt";
 
+
+	print_tree(parse(tokenize(str1)));
+
+	/*
 	print_list(tokenize("echo Hello World | >>"));
 	printf("\n");
 
@@ -146,4 +150,5 @@ int	main(void)
 	printf("\n");
 	print_list(tokenize("echo hello\" world"));
 	printf("\n");
+	*/
 }
