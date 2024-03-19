@@ -8,11 +8,15 @@ CFILES = lexer.c \
 	 parser.c \
 	 linked_lists.c \
 	 trees.c \
+	 minishell.c \
 
 OBJECTS = $(CFILES:.c=.o)
 
+all: $(NAME)
+
 $(NAME): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS)
+
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

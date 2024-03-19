@@ -54,8 +54,18 @@ t_ast_node	*create_node_tree(bool arg_flag, t_token_type type, const char *data)
 		}
 		return (new_node);
 	}
-	printf("Token is not known\n");
-	free(new_node);
+	else if (type == TOKEN_PIPE)
+	{
+		new_node->type = NODE_PIPELINE;	
+		new_node->left = NULL;
+		new_node->right = NULL;
+		return (new_node);
+	}
+	else
+	{
+		printf("Token is not known\n");
+		free(new_node);
+	}
 	return (NULL);
 }
 
@@ -69,11 +79,13 @@ void	print_tree(t_ast_node* root, int depth)
 		printf("  ");
 		i++;
 	}
-	if (root->type == NODE_COMMAND) {
+
+	if (root->type == NODE_PIPELINE)
+		printf("PIPELINE\n");
+	if (root->type == NODE_COMMAND)
 		printf("COMMAND: %s\n", root->data.command);
-	} else if (root->type == NODE_ARGUMENT) {
+	else if (root->type == NODE_ARGUMENT)
 		printf("ARGUMENT: %s\n", root->data.argument);
-	}
 	print_tree(root->left, depth + 1);
 	print_tree(root->right, depth + 1);
 }
