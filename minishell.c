@@ -12,11 +12,8 @@
 
 #include "minishell.h"
 
-int     main(int ac, char **av)
+int     main(void)
 {
-	if (ac < 2)
-		return 0;
-        print_tree(parse(tokenize(av[1])));
-	return 2;
-
+        print_tree(parse(tokenize("echo \"hello world\" -l")));
+	return 0;
 }

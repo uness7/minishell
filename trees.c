@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-/* This file contains the functions of tree data structure like print_tree and such */
-
 t_ast_node	*create_node_tree(t_node_type type, const char *data)
 {
 	t_ast_node	*new_node;
@@ -25,7 +23,7 @@ t_ast_node	*create_node_tree(t_node_type type, const char *data)
 		return (NULL);
 	}
 	new_node->type = type;
-	if (type == NODE_COMMAND)
+	if (type == NODE_COMMAND || type == NODE_ARGUMENT)
 	{
 		new_node->data = strdup(data);
 		if (new_node->data == NULL)
@@ -40,26 +38,23 @@ t_ast_node	*create_node_tree(t_node_type type, const char *data)
 	return (new_node);
 }
 
-void print_tree_utils(t_ast_node* root, int space) {
-    if (root == NULL)
-        return;
-
-    space += 10;
-    print_tree_utils(root->right, space);
-
-    printf("\n");
-    for (int i = 10; i < space; i++)
-        printf(" ");
-
-    if (root->data != NULL)
-        printf("%s\n", root->data);
-    else
-        printf("(null)\n");
-
-    print_tree_utils(root->left, space);
+void	print_tree_utils(t_ast_node *root, int space)
+{
+	if (root == NULL)
+		return ;
+	space += 10;
+	print_tree_utils(root->right, space);
+	printf("\n");
+	for (int i = 10; i < space; i++)
+		printf(" ");
+	if (root->data != NULL)
+		printf("%s\n", root->data);
+	else
+		printf("(null)\n");
+	print_tree_utils(root->left, space);
 }
 
-void print_tree(t_ast_node *root) {
-    print_tree_utils(root, 0);
+void	print_tree(t_ast_node *root)
+{
+	print_tree_utils(root, 0);
 }
-

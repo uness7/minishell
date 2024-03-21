@@ -12,27 +12,25 @@
 
 #include "minishell.h"
 
-
-/*
- * - When root is null, it indicates that the token is a command and an argument otherwise
- */ 
-
 t_ast_node	*parse_command(t_ast_node **root, const char *data)
 {
-	t_ast_node	*node;
+	t_ast_node	*current;
 
+	current = *root;
 	if (*root == NULL)
-	{
-		node = create_node_tree(NODE_COMMAND, data);
-		*root = node;
-	}
+		*root = create_node_tree(NODE_COMMAND, data);
 	else
 	{
-		node = create_node_tree(NODE_ARGUMENT, data);
-		if ((*root)->right == NULL)
-			(*root)->right = node;
-		else if ((*root)->left == NULL)
-			(*root)->left = node;
+		if (current->right == NULL)
+			(*root)->right = create_node_tree(NODE_ARGUMENT, data);
+		else if (current->left == NULL)
+			(*root)->left = create_node_tree(NODE_ARGUMENT, data);
+		else
+		{
+			while (current->right != NULL)
+				current = current->right;
+			current->right = create_node_tree(NODE_ARGUMENT, data);	
+		}
 	}
 	return (*root);
 }
@@ -40,7 +38,6 @@ t_ast_node	*parse_command(t_ast_node **root, const char *data)
 t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
 {
 	t_ast_node	*node;
-	t_ast_node	*temp_node;
 	t_ast_node	*new_root;
 
 	node = create_node_tree(NODE_PIPELINE, data);
@@ -50,7 +47,6 @@ t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
 		free(node);
 		return (NULL);
 	}
-	temp_node = *root;	
 	if ((*root)->type == NODE_PIPELINE)
 		(*root)->right = node;
 	else
@@ -64,7 +60,7 @@ t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
 }
 
 /*
-t_ast_node	*parse_redirction()
+t_ast_node	*parse_redirction(void)
 {
 }
 */
@@ -79,15 +75,7 @@ t_ast_node	*parse(t_list *stream)
 	while (temp_node != NULL)
 	{
 		if (temp_node->type == TOKEN_WORD)
-		{
 			tree = parse_command(&tree, temp_node->data);
-		}
-		else if (temp_node->type == TOKEN_PIPE)
-		{
-			tree = parse_pipeline(&tree, temp_node->data);
-		}
-		else
-			printf("token not known");
 		temp_node = temp_node->next;
 	}
 	return (tree);

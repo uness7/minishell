@@ -87,7 +87,6 @@ void	handle_words(const char **input, t_list **tokens)
 	add_word_token_if_valid(&start, input, tokens);
 }
 
-
 t_list	*tokenize(const char *s)
 {
 	t_list	*list;

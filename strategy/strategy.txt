@@ -1,7 +1,7 @@
 
 
 First Phase : 
-	- Lexical Analysis or Also known As Tokenization.
+	- Lexical Analysis Also known As Tokenization.
 	- Taking the string input and converting it into a stream of tokens aka lexemes.
 
 NOTE : split the command using spaces, but give good care to special characters and quotes
