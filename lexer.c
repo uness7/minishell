@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:02 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/18 17:38:58 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/21 10:39:46 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,11 +111,3 @@ t_list	*tokenize(const char *s)
 	}
 	return (list);
 }
-
-/*
-int	main()
-{
-	print_list(tokenize("ls -a -l | wc -l >> test.txt"));
-	return 0;
-}
-*/

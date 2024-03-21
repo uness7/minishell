@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/18 16:06:17 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/21 11:24:36 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,17 @@
 # include <stdlib.h>
 # include <string.h>
 # include <stdbool.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+
 
 typedef enum e_token_type
 {
-	TOKEN_WORD, // commands and arguments
-	TOKEN_PIPE, // pipeline 
-	TOKEN_REDIR_IN, //'<'
-	TOKEN_REDIR_OUT, // '>'
-	TOKEN_REDIR_APPEND, // '>>'
-	TOKEN_REDIR_HEREDOC, // '<<'
-	TOKEN_ENV_VAR // environement variables
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_APPEND,
+	TOKEN_REDIR_HEREDOC,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_ENV_VAR
 }		t_token_type;
 
 typedef struct s_node
@@ -41,12 +40,9 @@ typedef struct s_node
 typedef struct s_list
 {
 	t_node	*head;
-}		t_list;
-
-
+}	t_list;
 
 /* Abstract Syntac Tree */
-
 typedef enum e_node_type
 {
 	NODE_COMMAND,
@@ -57,22 +53,8 @@ typedef enum e_node_type
 
 typedef struct s_ast_node
 {
-	t_node_type	type;
-	union
-	{
-		char	*command;
-		char	*argument;
-		struct
-		{
-			struct s_ast_node	*left;
-			struct s_ast_node	*right;
-		}	pipeline;
-		struct
-		{
-			char	*operator;
-			char	*filename;
-		}	redirection;
-	}	data;
+	t_node_type		type;
+	char			*data;
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;
 }	t_ast_node;
@@ -90,10 +72,11 @@ t_list *tokenize(const char *s);
 
 // parser.c file
 t_ast_node	*parse(t_list *stream);
-t_ast_node	*parse_command(t_token_type type, t_ast_node *root, const char *data);
+t_ast_node	*parse_command(t_ast_node **root, const char *data);
+t_ast_node	*parse_pipeline(t_ast_node **root, char *data);
 
 // trees.c file
-t_ast_node      *create_node_tree(bool arg, t_token_type type, const char *data);
-void	print_tree(t_ast_node *root, int depth);
+t_ast_node      *create_node_tree(t_node_type type, const char *data);
+void	print_tree(t_ast_node *root);
 
 #endif
