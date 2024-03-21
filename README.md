@@ -8,7 +8,7 @@
 - For a simple command like `echo "hello world"`, the syntax tree would look something like this : 
 	
 			"hello world" // right side child node
-	echo 
+		echo 
 			(null) // left side child node
 
 - In case we have more than one argument, we proceed the following way : 
