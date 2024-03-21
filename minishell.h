@@ -17,28 +17,33 @@
 # include <stdlib.h>
 # include <string.h>
 # include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef enum e_token_type
 {
-	TOKEN = 100,
-	TOKEN_PIPE = 101,
-	TOKEN_DOUBLE_QUOTES = 102,
-	TOKEN_SINGLE_QUOTES = 103,
-	TOKEN_SINGLE_REDIR = 104,
-	TOKEN_DOUBLE_REDIR = 105
+	TOKEN_WORD, // commands and arguments
+	TOKEN_PIPE, // pipeline 
+	TOKEN_REDIR_IN, //'<'
+	TOKEN_REDIR_OUT, // '>'
+	TOKEN_REDIR_APPEND, // '>>'
+	TOKEN_REDIR_HEREDOC, // '<<'
+	TOKEN_ENV_VAR // environement variables
 }		t_token_type;
 
 typedef struct s_node
 {
-	char						*data;
-	t_token_type				type;
-	struct s_node				*next;
+	char		*data;
+	t_token_type	type;
+	struct s_node	*next;
 }		t_node;
 
 typedef struct s_list
 {
-	t_node						*head;
+	t_node	*head;
 }		t_list;
+
+
 
 /* Abstract Syntac Tree */
 
@@ -53,16 +58,16 @@ typedef enum e_node_type
 typedef struct s_ast_node
 {
 	t_node_type	type;
-	union 
+	union
 	{
 		char	*command;
 		char	*argument;
-		struct 
+		struct
 		{
 			struct s_ast_node	*left;
 			struct s_ast_node	*right;
 		}	pipeline;
-		struct 
+		struct
 		{
 			char	*operator;
 			char	*filename;

@@ -12,101 +12,110 @@
 
 #include "minishell.h"
 
-t_token_type	get_char_type(char c)
+void	handle_special_chars(const char **s, t_list **list)
 {
-	if (c == '|')
-		return (TOKEN_PIPE);
-	else if (c == '\'')
-		return (TOKEN_SINGLE_QUOTES);
-	else if (c == '\"')
-		return (TOKEN_DOUBLE_QUOTES);
-	else if (c == '>')
-		return (TOKEN_SINGLE_REDIR);
-	else if (c == '<')
-		return (TOKEN_SINGLE_REDIR);
-	return (TOKEN);
-}
-
-int	ft_isspace(char c)
-{
-	if (c == ' ')
-		return (1);
-	return (0);
-}
-
-int	is_empty(const char *s)
-{
-	while (*s != '\0')
+	if (**s == '>')
 	{
-		if (!ft_isspace((unsigned char)*s))
-			return (0);
-		s++;
+		if (*(*s + 1) == '>')
+		{
+			append(*list, strdup(">>"), TOKEN_REDIR_APPEND);
+			(*s)++;
+		}
+		else
+			append(*list, strdup(">"), TOKEN_REDIR_OUT);
 	}
-	return (1);
+	else if (**s == '<')
+	{
+		if (*(*s + 1) == '<')
+		{
+			append(*list, strdup("<<"), TOKEN_REDIR_HEREDOC);
+			(*s)++;
+		}
+		else
+			append(*list, strdup("<"), TOKEN_REDIR_IN);
+	}
+	else if (**s == '|')
+		append(*list, strdup("|"), TOKEN_PIPE);
+	(*s)++;
 }
+
+
+void	update_quote_status(char c, int *in_quote, char *quote_char)
+{
+	if (!*in_quote && (c == '\'' || c == '\"'))
+	{
+		*in_quote = 1;
+		*quote_char = c;
+	}
+	else if (*in_quote && c == *quote_char)
+		*in_quote = 0;
+}
+
+void	add_word_token_if_valid(const char **start, const char **input, t_list **tokens)
+{
+	char	*word;
+
+	if (*input > *start)
+	{
+		word = strndup(*start, *input - *start);
+		if (word)
+			append(*tokens, word, TOKEN_WORD);
+		else
+		{
+			printf("Error: Malloc failed in handle_word.\n");
+			exit(0);
+		}
+	}
+}
+
+void	handle_words(const char **input, t_list **tokens)
+{
+	const char	*start;
+	int	in_quote;
+	char	quote_char;
+
+	start = *input;
+	in_quote = 0;
+	quote_char = '\0';
+	while (**input)
+	{
+		update_quote_status(**input, &in_quote, &quote_char);
+		if (!in_quote && strchr(" \t\n><|", **input))
+			break ;
+		(*input)++;
+	}
+	add_word_token_if_valid(&start, input, tokens);
+}
+
 
 t_list	*tokenize(const char *s)
 {
 	t_list	*list;
-	int		i;
-	char	*token;
-	char	quote;
 
 	list = malloc(sizeof(t_list));
 	if (list == NULL)
-		return (NULL);
-	init_list(list);
-	while (*s != '\0')
 	{
-		while (*s == ' ')
+		printf("Error allocating memory\n");
+		return (0);
+	}
+	init_list(list);
+	while (*s)
+	{
+		while (*s && strchr(" \t\n", *s))
 			s++;
-		token = malloc(sizeof(char) * 1024);
-		if (token == NULL)
-			return (NULL);
-		i = 0;
-		if ((*s >= 'a' && *s <= 'z') || (*s >= 'A' && *s <= 'Z') || (*s >= '0'
-				&& *s <= '9') || *s == '_' || *s == '-' || *s == '/'
-			|| *s == '$' || *s == '(' || *s == ')' || *s == '.')
-		{
-			while (*s && *s != ' ')
-				token[i++] = *s++;
-			token[i] = '\0';
-			append(list, token, TOKEN);
-		}
-		else if (*s == '|')
-		{
-			token[i++] = *s++;
-			token[i] = '\0';
-			append(list, token, TOKEN_PIPE);
-		}
-		else if (*s == '>' || *s == '<')
-		{
-			token[i++] = *s;
-			if (*s && *(s + 1) == *s)
-			{
-				token[i++] = *s++;
-			}
-			token[i] = '\0';
-			append(list, token,
-				(*s == '>') ? TOKEN_SINGLE_REDIR : TOKEN_DOUBLE_REDIR);
-			s++;
-		}
-		else if (*s == '\'' || *s == '\"')
-		{
-			quote = *s++;
-			token[i++] = quote;
-			while (*s != '\0' && *s != quote) 
-			{
-				token[i++] = *s++;
-			}
-			if (*s == quote)
-				token[i++] = *s++;
-			token[i] = '\0';
-			if (quote == '\'')
-				append(list, token, TOKEN_SINGLE_QUOTES);
-			else
-				append(list, token, TOKEN_DOUBLE_QUOTES);
-		}
+		if (strchr("><|", *s))
+			handle_special_chars(&s, &list);
+		else
+			handle_words(&s, &list);
+		s++;
 	}
 	return (list);
 }
+
+/*
+int	main()
+{
+	print_list(tokenize("ls -a -l | wc -l >> test.txt"));
+	return 0;
+}
+*/

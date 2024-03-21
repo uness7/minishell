@@ -24,7 +24,7 @@ t_ast_node	*create_node_tree(bool arg_flag, t_token_type type, const char *data)
 		printf("Error allocating memory :0.\n");
 		return (NULL);
 	}
-	if (type == TOKEN)
+	if (type == TOKEN_WORD)
 	{
 		if (arg_flag == true)
 		{

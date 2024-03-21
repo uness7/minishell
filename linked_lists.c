@@ -18,7 +18,10 @@ t_node	*create_node_list(char *data, t_token_type type)
 
 	new = malloc(sizeof(t_node));
 	if (new == NULL)
+	{
+		printf("Error allocating memory \n");
 		exit(EXIT_FAILURE);
+	}
 	new->type = type;
 	new->data = data;
 	new->next = NULL;
@@ -54,7 +57,7 @@ void	print_list(t_list *list)
 	current_node = list->head;
 	while (current_node !=  NULL)
 	{
-		printf("token : %s\ttype : %d\n", current_node->data, current_node->type);
+		printf("token : %s\n", current_node->data); 
 		current_node = current_node->next;
 	}
 }

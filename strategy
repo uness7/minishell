@@ -1,0 +1,16 @@
+
+
+First Phase : 
+	- Lexical Analysis or Also known As Tokenization.
+	- Taking the string input and converting it into a stream of tokens aka lexemes.
+
+NOTE : split the command using spaces, but give good care to special characters and quotes
+
+Token Types :
+	- TOKEN_WORD -- what's in between spaces, this encompasses commands and arguments
+	- TOKEN_PIPE -- '|'
+	- TOKEN_REDIR_IN -- '<'
+	- TOKEN_REDIR_OUT -- '>' 
+	- TOKEN_REDIR_APPEND -- '>>'
+	- TOKEN_REDIR_HEREDOC -- '<<'
+	- TOKEN_ENV_VAR -- env and such

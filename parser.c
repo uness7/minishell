@@ -87,7 +87,7 @@ t_ast_node	*parse(t_list *stream)
 	temp_node = stream->head;
 	while (temp_node != NULL)
 	{
-		if (temp_node->type == TOKEN)
+		if (temp_node->type == TOKEN_WORD)
 		{
 			tree = parse_command(temp_node->type, tree, temp_node->data);
 		}
