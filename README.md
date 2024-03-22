@@ -45,3 +45,8 @@
 			NODE_REDIRECTION,
 		};
 	`
+
+### Parsing Redirection Characters :
+
+1. '>' : output redirection
+2. '>>' : appending commands output
