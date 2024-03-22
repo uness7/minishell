@@ -5,12 +5,14 @@
 - The process of splitting the input string into a stream of tokens. This is also called the lexer. The lexer needs to recognize each token and associate its correct type.
 
 - Let's take some examples to understand this point :
+`
 	--> Input : "echo 'hello world'"
 	--> Output :
 			{ 
 			 { Token : echo, Type : command  },
 			 { Token : 'hello world', Type : argument}
 			}
+`
 - In this case, we used an array, but in our implementation, we used a data strucutre known by simply linked lists. 
 
 ## Parsing Process :
