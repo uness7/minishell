@@ -55,7 +55,6 @@
 					-l
 				ls
 		NODE_REDIR_OUT		-a
-		
 				file.txt
 
 2. '>>' : appending commands output
