@@ -2,6 +2,8 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror
 
+RDLINE = -lreadline
+
 NAME = minishell
 
 CFILES = lexer.c \
@@ -15,7 +17,7 @@ OBJECTS = $(CFILES:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS) $(RDLINE)
 
 
 %.o: %.c

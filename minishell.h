@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/22 16:07:49 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/22 16:54:38 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 
 typedef enum e_token_type
@@ -68,7 +70,7 @@ void print_list(t_list *list);
 	
 // lexer.c file
 t_token_type get_char_type(char c);
-t_list *tokenize(char *s);
+t_list *tokenize(const char *s);
 
 // parser.c file
 t_ast_node	*parse(t_list *stream);
