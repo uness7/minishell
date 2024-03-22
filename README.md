@@ -5,8 +5,8 @@
 - The process of splitting the input string into a stream of tokens. This is also called the lexer. The lexer needs to recognize each token and associate its correct type.
 
 - Let's take some examples to understand this point :
-	1. Input : "echo 'hello world'"
-	  	Output :
+	--> Input : "echo 'hello world'"
+	--> Output :
 			{ 
 			 { Token : echo, Type : command  },
 			 { Token : 'hello world', Type : argument}
