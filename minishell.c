@@ -14,6 +14,6 @@
 
 int     main(void)
 {
-        print_tree(parse(tokenize("echo \"hello world\" -l")));
+        print_tree(parse(tokenize("ls -a -l | wc -d -l")));
 	return 0;
 }

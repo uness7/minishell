@@ -25,7 +25,8 @@ t_ast_node	*create_node_tree(t_node_type type, const char *data)
 	new_node->type = type;
 	if (type == NODE_COMMAND || type == NODE_ARGUMENT)
 	{
-		new_node->data = strdup(data);
+		if (data != NULL)
+			new_node->data = strdup(data);
 		if (new_node->data == NULL)
 		{
 			printf("Error allocating memroy:0 weird.\n");
@@ -47,7 +48,9 @@ void	print_tree_utils(t_ast_node *root, int space)
 	printf("\n");
 	for (int i = 10; i < space; i++)
 		printf(" ");
-	if (root->data != NULL)
+	if (root->type == NODE_PIPELINE)
+		printf("PIPELINE\n");
+	else if (root->data != NULL)
 		printf("%s\n", root->data);
 	else
 		printf("(null)\n");

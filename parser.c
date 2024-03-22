@@ -21,15 +21,25 @@ t_ast_node	*parse_command(t_ast_node **root, const char *data)
 		*root = create_node_tree(NODE_COMMAND, data);
 	else
 	{
-		if (current->right == NULL)
-			(*root)->right = create_node_tree(NODE_ARGUMENT, data);
-		else if (current->left == NULL)
-			(*root)->left = create_node_tree(NODE_ARGUMENT, data);
+		if (current->type == NODE_PIPELINE)
+		{
+			while (current->left != NULL)
+				current = current->left;
+			current->left = create_node_tree(NODE_COMMAND, data);
+			return (*root);
+		}
 		else
 		{
-			while (current->right != NULL)
-				current = current->right;
-			current->right = create_node_tree(NODE_ARGUMENT, data);	
+			if (current->right == NULL)
+				(*root)->right = create_node_tree(NODE_ARGUMENT, data);
+			else if (current->left == NULL)
+				(*root)->left = create_node_tree(NODE_ARGUMENT, data);
+			else
+			{
+				while (current->right != NULL)
+					current = current->right;
+				current->right = create_node_tree(NODE_ARGUMENT, data);	
+			}
 		}
 	}
 	return (*root);
@@ -37,33 +47,18 @@ t_ast_node	*parse_command(t_ast_node **root, const char *data)
 
 t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
 {
-	t_ast_node	*node;
-	t_ast_node	*new_root;
+	t_ast_node	*current;
+	t_ast_node	*new_node;
 
-	node = create_node_tree(NODE_PIPELINE, data);
-	if (*root == NULL)
+	current = *root;
+	new_node = create_node_tree(NODE_PIPELINE, data);
+	if (current != NULL)
 	{
-		printf("Error tree is empty or pipe was used incorrectly\n");
-		free(node);
-		return (NULL);
-	}
-	if ((*root)->type == NODE_PIPELINE)
-		(*root)->right = node;
-	else
-	{
-		new_root = create_node_tree(NODE_COMMAND, data);
-		new_root->left = *root;
-		new_root->right = node;
-		*root = new_root;
+		*root = new_node;
+		new_node->right = current;
 	}
 	return (*root);
 }
-
-/*
-t_ast_node	*parse_redirction(void)
-{
-}
-*/
 
 t_ast_node	*parse(t_list *stream)
 {
@@ -76,6 +71,8 @@ t_ast_node	*parse(t_list *stream)
 	{
 		if (temp_node->type == TOKEN_WORD)
 			tree = parse_command(&tree, temp_node->data);
+		else if (temp_node->type == TOKEN_PIPE)
+			tree = parse_pipeline(&tree, NULL);
 		temp_node = temp_node->next;
 	}
 	return (tree);
