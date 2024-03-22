@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 t_ast_node	*parse_command(t_ast_node **root, const char *data)
 {
 	t_ast_node	*current;
@@ -26,7 +27,6 @@ t_ast_node	*parse_command(t_ast_node **root, const char *data)
 			while (current->left != NULL)
 				current = current->left;
 			current->left = create_node_tree(NODE_COMMAND, data);
-			return (*root);
 		}
 		else
 		{
@@ -38,7 +38,7 @@ t_ast_node	*parse_command(t_ast_node **root, const char *data)
 			{
 				while (current->right != NULL)
 					current = current->right;
-				current->right = create_node_tree(NODE_ARGUMENT, data);	
+				current->right = create_node_tree(NODE_ARGUMENT, data);
 			}
 		}
 	}

@@ -14,6 +14,6 @@
 
 int     main(void)
 {
-        print_tree(parse(tokenize("ls -a -l | wc -d -l")));
+        print_tree(parse(tokenize("ls -a -l | wc -d -l | pss -k")));
 	return 0;
 }
