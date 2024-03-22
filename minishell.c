@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/21 10:53:01 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/22 14:03:15 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,6 @@
 
 int     main(void)
 {
-        print_tree(parse(tokenize("ls -a -l | wc -d -l | pss -k")));
+        print_tree(parse(tokenize("ls -a -l | wc -l | ps | test.tt")));
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/21 11:50:51 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/22 14:03:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
 	}
 	return (*root);
 }
+
+//t_ast_node	*parse_redire
 
 t_ast_node	*parse(t_list *stream)
 {
