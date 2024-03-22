@@ -1,5 +1,8 @@
 # Problem : Create a tool to communicate with computers In the context of a 42-school project, we are asked to build our minishell. 
 
+## Lexical Analysis :
+
+- The process of splitting the input string into a stream of tokens. This is also called the lexer. The lexer needs to recognize each token and associate its correct type.
 
 ## Parsing Process :
 
