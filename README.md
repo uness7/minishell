@@ -34,3 +34,14 @@
 			"hi"
 
 - So, the order of which the AST was constructed using is we fill in the right child node, and then the left child node and then keep filling the mostright child nodes of the first right child node. I hope you understand!
+
+- During the lexical analysis part, we defined a set of TOKEN TYPES that we used to recognize each token. Similarly, when parsing, we have to consider the NODES TYPES.
+
+	`
+		enum {
+			NODE_COMMAND, 
+			NODE_ARGUMENT,
+			NODE_PIPELINE,
+			NODE_REDIRECTION,
+		};
+	`
