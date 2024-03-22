@@ -50,3 +50,5 @@
 
 1. '>' : output redirection
 2. '>>' : appending commands output
+3. '<' : Input redirection
+4. '<<' : Here Document
