@@ -13,7 +13,7 @@
 			 { Token : 'hello world', Type : argument}
 			}
 `
-- In this case, we used an array, but in our implementation, we used a data strucutre known by simply linked lists. 
+- In this case, we used an array, but in our implementation, we used a data structure known by simply linked lists. 
 
 ## Parsing Process :
 
