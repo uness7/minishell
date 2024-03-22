@@ -56,6 +56,7 @@
 		NODE_REDIR_OUT		-a
 		
 				file.txt
+
 2. '>>' : appending commands output
 3. '<' : Input redirection
 4. '<<' : Here Document
