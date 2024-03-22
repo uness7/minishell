@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 09:37:59 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/22 14:40:40 by hbenaddi         ###   ########.fr       */
+/*   Updated: 2024/03/22 16:36:39 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,10 @@
 void check_is_print(char *s, char *token, t_list *list)
 {
     int i = 0;
-
     while (*s != '\0' && *s != ' ')
-    {
-        token[i++] = *s;
-        s++;
-    }
+        token[i++] = *s++;
     token[i] = '\0';
-    append(list, token, TOKEN);
+    append(list, token, TOKEN_WORD);
 }
 
 
@@ -35,78 +31,93 @@ void check_pipe(const char *s, char *token, t_list *list)
     append(list, token, TOKEN_PIPE);
 }
 
-void check_dir(const char *s, char *token, t_list *list)
+void check_dir(char *s, char *token, t_list *list)
 {
-	int i = 0;
-	int type_token;
+    int i = 0;
+    char type;
+    char type2;
 
-	token[i++] = *s;
-	if (*s && *(s + 1) == *s)
-	{
-		token[i++] = *s++;
-		type_token = TOKEN_DOUBLE_REDIR;
-	}
-	else
-	{
-		type_token = TOKEN_SINGLE_REDIR;
-		if (*s && *(s + 1) != *s)
-			s++;
-	}
-	token[i] = '\0';
-	append(list, token, type_token);
+    token[i++] = *s;
+    type = *s;
+    if (*s && *(s + 1) == *s)
+    {
+        type2 = *s;
+        token[i++] = *s++;  
+        token[i] = '\0';
+        if (type2 == '<')
+            append(list, token, TOKEN_REDIR_HEREDOC);
+        else
+            append(list, token, TOKEN_REDIR_APPEND);
+    }
+    else
+    {
+        token[i] = '\0';
+        if (type == '>')
+            append(list, token, TOKEN_REDIR_OUT);
+        else
+            append(list, token, TOKEN_REDIR_IN);
+    }
 }
 
 void check_quote(char *s, char *token, t_list *list)
 {
-	int i = 0;
-	char quote;
+    int i = 0;
+    char quote;
 
-	quote = *s++;
-	token[i++] = quote;
-	while (*s != '\0' && *s != quote) 
-	{
-		token[i++] = *s++;
-	}
-	if (*s == quote)
-		token[i++] = *s++;
-	token[i] = '\0';
-	if (quote == '\'')
-		append(list, token, TOKEN_SINGLE_QUOTES);
-	else
-		append(list, token, TOKEN_DOUBLE_QUOTES);
+    quote = *s++;
+    token[i++] = quote;
+    while (*s != '\0' && *s != quote)
+        token[i++] = *s++;
+    if (*s == quote)
+        token[i++] = *s++;
+    token[i] = '\0';
+    append(list, token, TOKEN_WORD);
 }
 
-t_list	*tokenize(char *s)
+t_list *tokenize(char *s)
 {
-	t_list	*list;
-	char	*token;
+    t_list *list;
+    char *token;
+    int i;
 
-	list = malloc(sizeof(t_list));
-	if (list == NULL || s == NULL)
-		return (NULL);
-	init_list(list);
-	while (*s != '\0')
+    list = malloc(sizeof(t_list));
+    if (list == NULL || s == NULL)
+        return (NULL);
+    init_list(list);
+    while (*s != '\0')
+    {
+        while (*s == ' ')
+            s++;
+        token = malloc(sizeof(char) * 1024);
+        if (token == NULL)
+            return (NULL);
+	i = 0;
+        if ((*s >= 'a' && *s <= 'z') || (*s >= 'A' && *s <= 'Z') || (*s >= '0'
+            && *s <= '9') || *s == '_' || *s == '-' || *s == '/'
+            || *s == '$' || *s == '(' || *s == ')' || *s == '.')
 	{
-		while (*s == ' ')
-			s++;
-		token = malloc(sizeof(char) * 1024);
-		if (token == NULL)
-			return (NULL);
-		if ((*s >= 'a' && *s <= 'z') || (*s >= 'A' && *s <= 'Z') || (*s >= '0'
-				&& *s <= '9') || *s == '_' || *s == '-' || *s == '/'
-			|| *s == '$' || *s == '(' || *s == ')' || *s == '.')
-			check_is_print(s, token, list);
-		else if (*s == '|')
-			check_pipe(s, token, list);
-		else if (*s == '>' || *s == '<')
-			check_dir(s, token, list);
-		else if (*s == '\'' || *s == '\"')
-			check_quote(s, token, list);
+		while (*s && *s != ' ')
+			token[i++] = *s++;
+		token[i] = '\0';
+		append(list, token, TOKEN_WORD);
+	}
+        else if (*s == '|')
+	{
+		check_pipe(s, token, list);
 		s++;
 	}
-	return (list);
+        else if (*s == '>' || *s == '<')
+	{
+            check_dir(s, token, list);
+	    s++;
+	}
+        else if (*s == '\'' || *s == '\"')
+            check_quote(s, token, list);
+    }
+    return (list);
 }
-int main ()
+
+int main()
 {
-	print_list(tokenize("test | test"));
+	print_list(tokenize("ls -al | wc -l >> test.txt"));
 }
