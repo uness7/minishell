@@ -105,7 +105,7 @@ void	parse_redir_out(t_ast_node **root, char *data)
 	t_ast_node	*new_node;
 
 
-	new_node = create_node_tree(NODE_REDIRECTION, data);
+	new_node = create_node_tree(NODE_REDIRECTION_OUT, data);
 	if ((*root)->type == NODE_COMMAND)
 	{
 		temp = *root;
