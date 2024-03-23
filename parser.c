@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/22 14:03:51 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/23 15:03:43 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,47 @@ t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
 	return (*root);
 }
 
-//t_ast_node	*parse_redire
+t_ast_node	*find_mostleft_cmd(t_ast_node **root)
+{
+	t_ast_node	*current;
+	t_ast_node	*last_node;
+
+	last_node = NULL;
+	current = *root;
+	while (current->left != NULL) 
+	{
+		if (current->left->type == NODE_COMMAND) 
+			last_node = current->left;
+		current = current->left;
+	}
+	return (last_node);
+}
+
+/* A function that returns the last node added that is of type NODE_COMMAND */
+t_ast_node	*find_mostright_cmd(t_ast_node **root)
+{
+	t_ast_node      *current;
+	t_ast_node      *last_node;
+
+	last_node = NULL;
+        current = *root;
+        while (current->right != NULL)
+	{
+		if (current->type == NODE_COMMAND)
+			last_node = current;
+                current = current->right;
+	}
+        return (current);
+}
+
+void	parse_redir_out(t_ast_node **root)
+{
+	t_ast_node	*last_node;
+
+	last_node = find_mostleft_cmd(root);
+	printf("last node's data : %s\n", last_node->data);
+	exit(0);
+}
 
 t_ast_node	*parse(t_list *stream)
 {
@@ -75,6 +115,8 @@ t_ast_node	*parse(t_list *stream)
 			tree = parse_command(&tree, temp_node->data);
 		else if (temp_node->type == TOKEN_PIPE)
 			tree = parse_pipeline(&tree, NULL);
+		else if (temp_node->type == TOKEN_REDIR_OUT)
+			parse_redir_out(&tree);
 		temp_node = temp_node->next;
 	}
 	return (tree);
