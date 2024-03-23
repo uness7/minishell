@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/23 15:03:43 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/23 18:16:13 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,18 @@ t_ast_node	*parse_command(t_ast_node **root, const char *data)
 	{
 		if (current->type == NODE_PIPELINE)
 		{
-			while (current->left != NULL)
-				current = current->left;
-			current->left = create_node_tree(NODE_COMMAND, data);
+			if (current->left && current->left->type == NODE_COMMAND)
+			{
+				while (current->left != NULL)
+					current = current->left;
+				current->left = create_node_tree(NODE_ARGUMENT, data);
+			}
+			else
+			{
+				while (current->left != NULL)
+					current = current->left;
+				current->left = create_node_tree(NODE_COMMAND, data);
+			}
 		}
 		else
 		{
@@ -93,13 +102,25 @@ t_ast_node	*find_mostright_cmd(t_ast_node **root)
         return (current);
 }
 
-void	parse_redir_out(t_ast_node **root)
+t_ast_node	*parse_redir_out(t_ast_node **root)
 {
 	t_ast_node	*last_node;
+	t_ast_node	*current;
+	t_ast_node	*new_node;
 
+	current = *root;
 	last_node = find_mostleft_cmd(root);
-	printf("last node's data : %s\n", last_node->data);
-	exit(0);
+	if (current->type == NODE_PIPELINE)
+	{
+		while (current != last_node)
+			current = current->left;
+
+		new_node = create_node_tree(NODE_REDIRECTION, ">");
+		if (a
+		last_node->right = current;
+		current->right = new_node;
+	}
+	return (*root);
 }
 
 t_ast_node	*parse(t_list *stream)

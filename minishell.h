@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/22 16:54:38 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/23 15:51:52 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ typedef struct s_list
 /* Abstract Syntac Tree */
 typedef enum e_node_type
 {
-	NODE_COMMAND,
-	NODE_ARGUMENT,
+	NODE_COMMAND=1,
+	NODE_ARGUMENT=2,
 	NODE_PIPELINE,
 	NODE_REDIRECTION
 }	t_node_type;

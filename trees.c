@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:47 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/21 11:46:22 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/23 16:27:04 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_ast_node	*create_node_tree(t_node_type type, const char *data)
 		return (NULL);
 	}
 	new_node->type = type;
-	if (type == NODE_COMMAND || type == NODE_ARGUMENT)
+	if (type == NODE_REDIRECTION || type == NODE_COMMAND || type == NODE_ARGUMENT)
 	{
 		if (data != NULL)
 			new_node->data = strdup(data);
@@ -50,8 +50,10 @@ void	print_tree_utils(t_ast_node *root, int space)
 		printf(" ");
 	if (root->type == NODE_PIPELINE)
 		printf("PIPELINE\n");
+	else if (root->type == NODE_REDIRECTION)
+		printf(">\n");
 	else if (root->data != NULL)
-		printf("%s\n", root->data);
+		printf("%s - %d\n", root->data, root->type);
 	else
 		printf("(null)\n");
 	print_tree_utils(root->left, space);
