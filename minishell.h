@@ -74,8 +74,8 @@ t_list *tokenize(const char *s);
 
 // parser.c file
 t_ast_node	*parse(t_list *stream);
-t_ast_node	*parse_command(t_ast_node **root, const char *data);
-t_ast_node	*parse_pipeline(t_ast_node **root, char *data);
+void	parse_command(t_ast_node **root, const char *data);
+void	parse_pipeline(t_ast_node **root, char *data);
 
 // trees.c file
 t_ast_node      *create_node_tree(t_node_type type, const char *data);

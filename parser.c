@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 
-t_ast_node	*parse_command(t_ast_node **root, const char *data)
+void	parse_command(t_ast_node **root, const char *data)
 {
 	t_ast_node	*current;
 
@@ -51,10 +51,9 @@ t_ast_node	*parse_command(t_ast_node **root, const char *data)
 			}
 		}
 	}
-	return (*root);
 }
 
-t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
+void	parse_pipeline(t_ast_node **root, char *data)
 {
 	t_ast_node	*current;
 	t_ast_node	*new_node;
@@ -66,7 +65,6 @@ t_ast_node	*parse_pipeline(t_ast_node **root, char *data)
 		*root = new_node;
 		new_node->right = current;
 	}
-	return (*root);
 }
 
 t_ast_node	*find_mostleft_cmd(t_ast_node **root)
@@ -101,7 +99,7 @@ t_ast_node	*find_mostright_cmd(t_ast_node **root)
         return (last_node);
 }
 
-t_ast_node	*parse_redir_out(t_ast_node **root, char *data)
+void	parse_redir_out(t_ast_node **root, char *data)
 {
 	t_ast_node	*temp;
 	t_ast_node	*new_node;
@@ -113,17 +111,28 @@ t_ast_node	*parse_redir_out(t_ast_node **root, char *data)
 		temp = *root;
 		*root = new_node;
 		new_node->right = temp;
-		return (*root);
 	}
 	else if ((*root)->type == NODE_PIPELINE)
 	{
 		temp = find_mostleft_cmd(root);
 		(*root)->left = new_node;
 		new_node->right = temp;
-		return (*root);
 	}
-	return (*root);
 }
+
+/*
+t_ast_node	*parse_redir_in(t_ast_node **root)
+{
+}
+
+t_ast_node	*parse_redir_append(t_ast_node **root)
+{
+}
+
+t_ast_node	*parse_redir_heredoc(t_ast_node	**root)
+{
+}
+*/
 
 t_ast_node	*parse(t_list *stream)
 {
@@ -135,9 +144,9 @@ t_ast_node	*parse(t_list *stream)
 	while (temp_node != NULL)
 	{
 		if (temp_node->type == TOKEN_WORD)
-			tree = parse_command(&tree, temp_node->data);
+			parse_command(&tree, temp_node->data);
 		else if (temp_node->type == TOKEN_PIPE)
-			tree = parse_pipeline(&tree, NULL);
+			parse_pipeline(&tree, NULL);
 		else if (temp_node->type == TOKEN_REDIR_OUT)
 			parse_redir_out(&tree, temp_node->data);
 		temp_node = temp_node->next;
