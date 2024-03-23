@@ -51,9 +51,9 @@ void	print_tree_utils(t_ast_node *root, int space)
 	if (root->type == NODE_PIPELINE)
 		printf("PIPELINE\n");
 	else if (root->type == NODE_REDIRECTION)
-		printf(">\n");
+		printf("REDIRECTION\n");
 	else if (root->data != NULL)
-		printf("%s - %d\n", root->data, root->type);
+		printf("%s\n", root->data);
 	else
 		printf("(null)\n");
 	print_tree_utils(root->left, space);

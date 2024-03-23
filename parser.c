@@ -74,7 +74,6 @@ t_ast_node	*find_mostleft_cmd(t_ast_node **root)
 	t_ast_node	*current;
 	t_ast_node	*last_node;
 
-	last_node = NULL;
 	current = *root;
 	while (current->left != NULL) 
 	{
@@ -99,26 +98,29 @@ t_ast_node	*find_mostright_cmd(t_ast_node **root)
 			last_node = current;
                 current = current->right;
 	}
-        return (current);
+        return (last_node);
 }
 
-t_ast_node	*parse_redir_out(t_ast_node **root)
+t_ast_node	*parse_redir_out(t_ast_node **root, char *data)
 {
-	t_ast_node	*last_node;
-	t_ast_node	*current;
+	t_ast_node	*temp;
 	t_ast_node	*new_node;
 
-	current = *root;
-	last_node = find_mostleft_cmd(root);
-	if (current->type == NODE_PIPELINE)
-	{
-		while (current != last_node)
-			current = current->left;
 
-		new_node = create_node_tree(NODE_REDIRECTION, ">");
-		if (a
-		last_node->right = current;
-		current->right = new_node;
+	new_node = create_node_tree(NODE_REDIRECTION, data);
+	if ((*root)->type == NODE_COMMAND)
+	{
+		temp = *root;
+		*root = new_node;
+		new_node->right = temp;
+		return (*root);
+	}
+	else if ((*root)->type == NODE_PIPELINE)
+	{
+		temp = find_mostleft_cmd(root);
+		(*root)->left = new_node;
+		new_node->right = temp;
+		return (*root);
 	}
 	return (*root);
 }
@@ -137,7 +139,7 @@ t_ast_node	*parse(t_list *stream)
 		else if (temp_node->type == TOKEN_PIPE)
 			tree = parse_pipeline(&tree, NULL);
 		else if (temp_node->type == TOKEN_REDIR_OUT)
-			parse_redir_out(&tree);
+			parse_redir_out(&tree, temp_node->data);
 		temp_node = temp_node->next;
 	}
 	return (tree);
