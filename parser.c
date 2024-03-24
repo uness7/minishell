@@ -120,19 +120,69 @@ void	parse_redir_out(t_ast_node **root, char *data)
 	}
 }
 
-/*
-t_ast_node	*parse_redir_in(t_ast_node **root)
+void	parse_redir_append(t_ast_node **root, char *data)
 {
+	t_ast_node      *temp;
+        t_ast_node      *new_node;
+
+
+        new_node = create_node_tree(NODE_REDIRECTION_APPEND, data);
+        if ((*root)->type == NODE_COMMAND)
+        {
+                temp = *root;
+                *root = new_node;
+                new_node->right = temp;
+        }                                                                                                                      
+        else if ((*root)->type == NODE_PIPELINE)
+        {   
+                temp = find_mostleft_cmd(root);
+                (*root)->left = new_node;
+                new_node->right = temp;
+        }   
+
 }
 
-t_ast_node	*parse_redir_append(t_ast_node **root)
+void	parse_redir_in(t_ast_node **root, char *data)
 {
+	t_ast_node      *temp;
+        t_ast_node      *new_node;
+
+
+        new_node = create_node_tree(NODE_REDIRECTION_IN, data);
+        if ((*root)->type == NODE_COMMAND)
+        {
+                temp = *root;
+                *root = new_node;
+                new_node->right = temp;
+        }
+        else if ((*root)->type == NODE_PIPELINE)
+        {
+                temp = find_mostleft_cmd(root);
+                (*root)->left = new_node;
+                new_node->right = temp;
+        }
 }
 
-t_ast_node	*parse_redir_heredoc(t_ast_node	**root)
+void	parse_redir_heredoc(t_ast_node	**root, char *data)
 {
+	t_ast_node      *temp;
+        t_ast_node      *new_node;
+
+
+        new_node = create_node_tree(NODE_REDIRECTION_HEREDOC, data);
+        if ((*root)->type == NODE_COMMAND)
+        {
+                temp = *root;
+                *root = new_node;
+                new_node->right = temp;
+        }
+        else if ((*root)->type == NODE_PIPELINE)
+        {
+                temp = find_mostleft_cmd(root);
+                (*root)->left = new_node;
+                new_node->right = temp;
+        }
 }
-*/
 
 t_ast_node	*parse(t_list *stream)
 {
@@ -149,6 +199,12 @@ t_ast_node	*parse(t_list *stream)
 			parse_pipeline(&tree, NULL);
 		else if (temp_node->type == TOKEN_REDIR_OUT)
 			parse_redir_out(&tree, temp_node->data);
+		else if (temp_node->type == TOKEN_REDIR_APPEND)
+			parse_redir_append(&tree, temp_node->data);
+		else if (temp_node->type == TOKEN_REDIR_IN)
+			parse_redir_in(&tree, temp_node->data);
+		else if (temp_node->type == TOKEN_REDIR_HEREDOC)
+			parse_redir_heredoc(&tree, temp_node->data);
 		temp_node = temp_node->next;
 	}
 	return (tree);

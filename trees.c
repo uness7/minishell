@@ -23,7 +23,7 @@ t_ast_node	*create_node_tree(t_node_type type, const char *data)
 		return (NULL);
 	}
 	new_node->type = type;
-	if (type == NODE_REDIRECTION_OUT || type == NODE_COMMAND || type == NODE_ARGUMENT)
+	if (type == NODE_REDIRECTION_IN || type == NODE_REDIRECTION_APPEND || type == NODE_REDIRECTION_OUT || type == NODE_COMMAND || type == NODE_ARGUMENT)
 	{
 		if (data != NULL)
 			new_node->data = strdup(data);
@@ -51,7 +51,13 @@ void	print_tree_utils(t_ast_node *root, int space)
 	if (root->type == NODE_PIPELINE)
 		printf("PIPELINE\n");
 	else if (root->type == NODE_REDIRECTION_OUT)
-		printf("REDIRECTION OUT\n");
+		printf("REDIR.OUT\n");
+	else if (root->type == NODE_REDIRECTION_APPEND)
+		printf("APPEND");
+	else if (root->type == NODE_REDIRECTION_IN)
+		printf("REDIR.IN\n");
+	else if (root->type == NODE_REDIRECTION_HEREDOC)
+		printf("HEREDOCC\n");
 	else if (root->data != NULL)
 		printf("%s\n", root->data);
 	else
