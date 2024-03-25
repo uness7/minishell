@@ -14,3 +14,24 @@ Token Types :
 	- TOKEN_REDIR_APPEND -- '>>'
 	- TOKEN_REDIR_HEREDOC -- '<<'
 	- TOKEN_ENV_VAR -- env and such
+
+
+EXECUTION OF ABSTRACT SYNTAX TREE : 
+
+- Trees are not linear data structure, so traversing a tree and visiting every node is a necessity.
+
+- Traversing trees : we have 2 algorithms for this matter.
+	1. Breadth-first
+	2. Depth-first
+
+- We can either go root -> left -> right, left -> root -> right, or left -> right -> root and that's preorder, inorder, and postorder respectfully.
+
+
+- If root == NULL ==> tree is empty
+- If root->type == NODE_COMMAND ==> A sim
+
+
+
+
+
+

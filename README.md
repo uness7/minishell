@@ -42,15 +42,18 @@
 			NODE_COMMAND, 
 			NODE_ARGUMENT,
 			NODE_PIPELINE,
-			NODE_REDIRECTION,
+			NODE_REDIRECTION_OUT,
+			NODE_REDIRECTION_IN,
+			NODE_REDIRECTION_APPEND,
+			NODE_REDIRECTION_HEREDOC
 		};
 	`
 
 ### Parsing Redirection Characters :
 
 1. '>' : output redirection
-	- This type of redirection needs a command and a taget attached to it.		
-	- After parsing of a simple commnd like "ls -al > file.txt, the AST shoudl look something like this : 
+	- This type of redirection requires a command and a taget attached to it.		
+	- After parsing, let's take as an example, a simple commnd like ls -al > file.txt, the AST should look something like this : 
   
 	  
 			`			------> -al
@@ -63,3 +66,8 @@
 2. '>>' : appending commands output
 3. '<' : Input redirection
 4. '<<' : Here Document
+
+
+### Execution :
+
+	For this part, we'll need to traverse the AST in a manner we keep the right order of the command (simple or complex), and then print out the result.

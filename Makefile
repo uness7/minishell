@@ -13,6 +13,7 @@ CFILES = lexer.c \
 	 linked_lists.c \
 	 trees.c \
 	 minishell.c \
+	 executor.c \
 
 OBJECTS = $(CFILES:.c=.o)
 

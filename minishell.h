@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/23 15:51:52 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/25 18:06:50 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <wait.h>
 
 
 typedef enum e_token_type
@@ -84,4 +87,9 @@ void	parse_pipeline(t_ast_node **root, char *data);
 t_ast_node      *create_node_tree(t_node_type type, const char *data);
 void	print_tree(t_ast_node *root);
 
+
+// executor.c file
+char	**build_command(t_ast_node *root);
+void	execute(char **av);
+int		find_number_nodes(t_ast_node *root);
 #endif
