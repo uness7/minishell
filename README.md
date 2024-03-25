@@ -51,11 +51,15 @@
 1. '>' : output redirection
 	- This type of redirection needs a command and a taget attached to it.		
 	- After parsing of a simple commnd like "ls -al > file.txt, the AST shoudl look something like this : 
-		`			-l
-				ls
-		NODE_REDIR_OUT		-a
-				file.txt
-   		`
+  
+	  
+			`			------> -al
+				----> ls ---->
+   					  	------> null
+  			> ---->
+  
+   				-----> file.txt
+   			`
 2. '>>' : appending commands output
 3. '<' : Input redirection
 4. '<<' : Here Document
