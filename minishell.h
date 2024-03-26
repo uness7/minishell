@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/25 18:06:50 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/26 17:46:07 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,15 @@ void	print_tree(t_ast_node *root);
 
 // executor.c file
 char	**build_command(t_ast_node *root);
-void	execute(char **av);
+void	execute(char *cmd_path, char **av, char **envp);
 int		find_number_nodes(t_ast_node *root);
+
+
+// utils.c files
+char	*find_paths(char **envp);
+char	*find_cmd(char **paths, char *cmd);
+char	*ft_strjoin(char *s1, char *s2);
+char	**ft_strtok(char *s);
+int	ft_strncmp(char *s1, char *s2, unsigned int n);
+
 #endif

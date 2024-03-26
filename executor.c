@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 16:51:00 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/26 16:21:42 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/26 17:12:57 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,18 @@ char	**build_command(t_ast_node *root)
 	return (av);
 }
 
-void	execute(char **av)
+void	execute(char *cmd_path, char **envp, char **av)
 {
-	pid_t	id, wid;
+	pid_t	id;
+	pid_t	wid;
 	int		status;
+
 
 	id = fork();
 	status = 0;
 	if (id == 0)
 	{
-		if (execvp(av[0], av) == -1)
+		if (execve(cmd_path, av, envp) == -1)
 			perror("exevp : ");
 		exit(EXIT_FAILURE);
 	}

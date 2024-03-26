@@ -14,6 +14,8 @@ CFILES = lexer.c \
 	 trees.c \
 	 minishell.c \
 	 executor.c \
+	 utils.c \
+	 utils2.c \
 
 OBJECTS = $(CFILES:.c=.o)
 
