@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/25 18:11:54 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/26 16:32:47 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,9 @@ int	main(void)
 		if (input == NULL)
 			break ;
 		tree = parse(tokenize(input));
-		if (tree == NULL)
-			break ;
-		if (tree->type == NODE_COMMAND)
-		{
-			av = build_command(tree);
-			execute(av);
-			free(av);
-		}
-		else
-		{
-			printf("ooops\n");
-			exit(0);
-		}
+		av = build_command(tree);
+		execute(av);
+		free(av);
 		free(input);
 	}
 	return (0);

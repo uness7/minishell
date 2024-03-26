@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 16:51:00 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/25 18:09:24 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/26 16:21:42 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,13 @@ char	**build_command(t_ast_node *root)
 			i++;
 		}
 	}
-	av[i] = NULL; // NULL-terminate the argument array
+	av[i] = NULL;
 	return (av);
 }
 
 void	execute(char **av)
 {
-	pid_t	id;
+	pid_t	id, wid;
 	int		status;
 
 	id = fork();
@@ -101,7 +101,7 @@ void	execute(char **av)
 	{
 		if (execvp(av[0], av) == -1)
 			perror("exevp : ");
-	//	exit(0);
+		exit(EXIT_FAILURE);
 	}
 	else if (id < 0)
 	{
@@ -110,8 +110,9 @@ void	execute(char **av)
 	}
 	else
 	{
+		wid = waitpid(id, &status, WUNTRACED);
 		while (!WIFEXITED(status) && !WIFSIGNALED(status))
-			waitpid(id, &status, WUNTRACED);
+			wid = waitpid(id, &status, WUNTRACED);
 	}
 	return ;
 }
