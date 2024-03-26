@@ -23,16 +23,13 @@ t_ast_node	*create_node_tree(t_node_type type, const char *data)
 		return (NULL);
 	}
 	new_node->type = type;
-	if (type == NODE_REDIRECTION_IN || type == NODE_REDIRECTION_APPEND || type == NODE_REDIRECTION_OUT || type == NODE_COMMAND || type == NODE_ARGUMENT)
+	if (data != NULL)
+		new_node->data = strdup(data);
+	if (new_node->data == NULL)
 	{
-		if (data != NULL)
-			new_node->data = strdup(data);
-		if (new_node->data == NULL)
-		{
-			printf("Error allocating memroy:0 weird.\n");
-			free(new_node);
-			return (NULL);
-		}
+		printf("Error allocating memroy:0.\n");
+		free(new_node);
+		return (NULL);
 	}
 	new_node->left = NULL;
 	new_node->right = NULL;

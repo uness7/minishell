@@ -23,7 +23,6 @@
 # include <fcntl.h>
 # include <wait.h>
 
-
 typedef enum e_token_type
 {
 	TOKEN_WORD,

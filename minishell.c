@@ -12,26 +12,37 @@
 
 #include "minishell.h"
 
-int     main(void)
+int	main(void)
 {
-	char	*input;
+	char		*input;
+	char		**av;
 	t_ast_node	*tree;
 
 	while (1)
 	{
-		input =	readline("minishell> ");
-        	tree = parse(tokenize(input));
+		input = readline("minishell> ");
+		if (input == NULL)
+			break ;
+		tree = parse(tokenize(input));
+		if (tree == NULL)
+			break ;
 		if (tree->type == NODE_COMMAND)
 		{
-			int i = 0;
-			char **av = build_command(tree);
-			while (av[i])
-			{
-				printf("%s\n", av[i]);
-				i++;
-			}
+			av = build_command(tree);
+			execute(av);
+			free(av);
+		}
+		else
+		{
+			printf("ooops\n");
+			exit(0);
 		}
 		free(input);
 	}
-	return 0;
+	return (0);
 }
+
+
+/***
+
+***/

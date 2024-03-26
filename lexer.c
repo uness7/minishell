@@ -95,7 +95,7 @@ t_list	*tokenize(const char *s)
 	if (list == NULL)
 	{
 		printf("Error allocating memory\n");
-		return (0);
+		return (NULL);
 	}
 	init_list(list);
 	while (*s)
@@ -106,7 +106,6 @@ t_list	*tokenize(const char *s)
 			handle_special_chars(&s, &list);
 		else
 			handle_words(&s, &list);
-		s++;
 	}
 	return (list);
 }
