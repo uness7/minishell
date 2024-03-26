@@ -90,10 +90,9 @@ char	**build_command(t_ast_node *root)
 	return (av);
 }
 
-void	execute(char *cmd_path, char **envp, char **av)
+void	execute(char *cmd, char **av, char **envp)
 {
 	pid_t	id;
-	pid_t	wid;
 	int		status;
 
 
@@ -101,8 +100,8 @@ void	execute(char *cmd_path, char **envp, char **av)
 	status = 0;
 	if (id == 0)
 	{
-		if (execve(cmd_path, av, envp) == -1)
-			perror("exevp : ");
+		if (execve(cmd, av, envp) == -1)
+			perror("execve : ");
 		exit(EXIT_FAILURE);
 	}
 	else if (id < 0)
@@ -112,9 +111,9 @@ void	execute(char *cmd_path, char **envp, char **av)
 	}
 	else
 	{
-		wid = waitpid(id, &status, WUNTRACED);
+		waitpid(id, &status, WUNTRACED);
 		while (!WIFEXITED(status) && !WIFSIGNALED(status))
-			wid = waitpid(id, &status, WUNTRACED);
+			waitpid(id, &status, WUNTRACED);
 	}
 	return ;
 }

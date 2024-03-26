@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	main(int ac, char **argv, char *envp[])
+int	main(int ac, char **argv, char **envp)
 {
 	(void)ac;
     	(void)argv;
@@ -27,12 +27,14 @@ int	main(int ac, char **argv, char *envp[])
 		input = readline("minishell> ");
 		if (input == NULL)
 			break ;
+
 		paths = find_paths(envp);
 		cmd_path = ft_strtok(paths);
 		av = build_command(parse(tokenize(input)));
 		cmd = find_cmd(cmd_path, av[0]);
-		//printf("cmd %s\n", cmd);exit(0);
+
 		execute(cmd, av, envp);
+
 		free(av);
 		free(input);
 	}
