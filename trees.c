@@ -23,6 +23,7 @@ t_ast_node	*create_node_tree(t_node_type type, const char *data)
 		return (NULL);
 	}
 	new_node->type = type;
+//	printf("data : %s\n", data);
 	if (data != NULL)
 		new_node->data = strdup(data);
 	if (new_node->data == NULL)
@@ -56,7 +57,7 @@ void	print_tree_utils(t_ast_node *root, int space)
 	else if (root->type == NODE_REDIRECTION_HEREDOC)
 		printf("HEREDOCC\n");
 	else if (root->data != NULL)
-		printf("%s\n", root->data);
+		printf("%s\t%d\n", root->data, root->type);
 	else
 		printf("(null)\n");
 	print_tree_utils(root->left, space);

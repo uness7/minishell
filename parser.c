@@ -82,7 +82,6 @@ t_ast_node	*find_mostleft_cmd(t_ast_node **root)
 	return (last_node);
 }
 
-/* A function that returns the last node added that is of type NODE_COMMAND */
 t_ast_node	*find_mostright_cmd(t_ast_node **root)
 {
 	t_ast_node      *current;
@@ -196,7 +195,7 @@ t_ast_node	*parse(t_list *stream)
 		if (temp_node->type == TOKEN_WORD)
 			parse_command(&tree, temp_node->data);
 		else if (temp_node->type == TOKEN_PIPE)
-			parse_pipeline(&tree, NULL);
+			parse_pipeline(&tree, temp_node->data);
 		else if (temp_node->type == TOKEN_REDIR_OUT)
 			parse_redir_out(&tree, temp_node->data);
 		else if (temp_node->type == TOKEN_REDIR_APPEND)

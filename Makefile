@@ -1,6 +1,6 @@
 CC = cc
 
-CFLAGS =
+CFLAGS = 
 
 INCLUDES = -I./libft
 
@@ -16,6 +16,7 @@ CFILES = lexer.c \
 	 executor.c \
 	 utils.c \
 	 utils2.c \
+	 executor_redir_out.c \
 
 OBJECTS = $(CFILES:.c=.o)
 

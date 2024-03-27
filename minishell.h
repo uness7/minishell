@@ -22,7 +22,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/wait.h>
-# include "libft/libft.h"
+//# include "libft/libft.h"
 
 
 typedef struct s_redir_cmd
@@ -30,15 +30,6 @@ typedef struct s_redir_cmd
         char    *target;
         char    **av;
 }       t_redir_cmd;
-
-
-
-typedef struct s_redir_cmd
-{
-        char    *target;
-        char    **av;
-}       t_redir_cmd;
-
 
 typedef enum e_token_type
 {
@@ -124,6 +115,6 @@ t_redir_cmd	*build_cmd_redir_out(t_ast_node *root);
 
 
 // malloc_err is called whenever there might be error allocating memory
-void	malloc_err(void);
+void	*malloc_err(void);
 
 #endif
