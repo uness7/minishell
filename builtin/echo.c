@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 21:42:27 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/26 14:56:03 by hbenaddi         ###   ########.fr       */
+/*   Updated: 2024/03/27 13:10:30 by hbenaddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,27 +63,27 @@ static int	count_arg(char **argument)
 
 int	ft_echo(char **argument)
 {
-	int	index;
+	int	i;
 	int	is_n;
 	int	res;
 
-	index = 1;
+	i = 1;
 	is_n = 0;
 	res = count_arg(argument);
 	if (res > 1)
 	{
-		while (argument[index] && argument[1][0] == '-' && argument[1][1] == 'n'
-			&& ft_strchr(argument[index], 'n'))
+		while (argument[i] && argument[1][0] == '-' && argument[1][1] == 'n'
+			&& ft_strchr(argument[i], 'n'))
 		{
 			is_n = 1;
-			index++;
+			i++;
 		}
-		while (argument[index])
+		while (argument[i])
 		{
-			ft_putstr_fd(argument[index], 1);
-			if (argument[index + 1] && argument[1][0])
+			ft_putstr_fd(argument[i], 1);
+			if (argument[i + 1] && argument[1][0]) // Si il existe un argument suivant et l'argument actuel n'est pas vide, imprime un espace.
 				write(1, " ", 1);
-			index++;
+			i++;
 		}
 	}
 	if (is_n == 0)
@@ -91,7 +91,12 @@ int	ft_echo(char **argument)
 	return (1);
 }
 
-int	main(int argc, char *argv[])
+int		main(void)
 {
-	ft_echo(argv);
+	// Définition des arguments à passer à ft_echo.
+	// Nous pouvons définir ici différents scénarios de test.
+	char *args[] = {"echo", "-n", "HELLOWOrLD\n", "oui" , NULL};
+
+	// Appel de ft_echo avec le tableau d'arguments défini.
+	ft_echo(args);
 }
