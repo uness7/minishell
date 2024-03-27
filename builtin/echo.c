@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 21:42:27 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/27 13:10:30 by hbenaddi         ###   ########.fr       */
+/*   Updated: 2024/03/27 13:22:55 by hbenaddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ int	ft_echo(char **argument)
 	res = count_arg(argument);
 	if (res > 1)
 	{
-		while (argument[i] && argument[1][0] == '-' && argument[1][1] == 'n'
-			&& ft_strchr(argument[i], 'n'))
+		while (argument[i] && argument[1][0] == '-' && argument[1][1] == 'n' && ft_strchr(argument[i], 'n'))
 		{
 			is_n = 1;
 			i++;

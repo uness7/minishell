@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/26 17:46:07 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/27 13:22:50 by hbenaddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include <wait.h>
+# include <sys/wait.h>
 
 typedef enum e_token_type
 {
