@@ -6,21 +6,11 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 09:37:59 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/22 16:36:39 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/22 17:00:55 by hbenaddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void check_is_print(char *s, char *token, t_list *list)
-{
-    int i = 0;
-    while (*s != '\0' && *s != ' ')
-        token[i++] = *s++;
-    token[i] = '\0';
-    append(list, token, TOKEN_WORD);
-}
-
 
 void check_pipe(const char *s, char *token, t_list *list)
 {
