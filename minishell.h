@@ -32,6 +32,14 @@ typedef struct s_redir_cmd
 }       t_redir_cmd;
 
 
+
+typedef struct s_redir_cmd
+{
+        char    *target;
+        char    **av;
+}       t_redir_cmd;
+
+
 typedef enum e_token_type
 {
 	TOKEN_WORD,
