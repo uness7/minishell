@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtin.c                                     :+:      :+:    :+:   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 13:26:24 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/27 17:38:40 by hbenaddi         ###   ########.fr       */
+/*   Created: 2023/10/31 10:02:35 by yzioual           #+#    #+#             */
+/*   Updated: 2023/11/03 15:01:03 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int exec_builtin(int result)
+void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
-    if(ft_echo(result) == 1)
-    
+	if (lst == NULL || f == NULL)
+		return ;
+	while (lst != NULL)
+	{
+		f(lst->content);
+		lst = lst->next;
+	}
 }

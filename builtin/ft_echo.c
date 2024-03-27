@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 21:42:27 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/27 13:22:55 by hbenaddi         ###   ########.fr       */
+/*   Updated: 2024/03/27 17:38:39 by hbenaddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,11 @@ int	ft_echo(char **argument)
 	}
 	if (is_n == 0)
 		write(1, "\n", 1);
-	return (1);
+	return (SUCCES);
 }
 
 int		main(void)
 {
-	// Définition des arguments à passer à ft_echo.
-	// Nous pouvons définir ici différents scénarios de test.
 	char *args[] = {"echo", "-n", "HELLOWOrLD\n", "oui" , NULL};
-
-	// Appel de ft_echo avec le tableau d'arguments défini.
 	ft_echo(args);
 }

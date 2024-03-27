@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtin.c                                     :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 13:26:24 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/27 17:38:40 by hbenaddi         ###   ########.fr       */
+/*   Created: 2023/10/17 11:04:17 by yzioual           #+#    #+#             */
+/*   Updated: 2023/11/04 12:08:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
-#include "../minishell.h"
-
-int exec_builtin(int result)
+int	ft_isalnum(int c)
 {
-    if(ft_echo(result) == 1)
-    
+	if ((c < '0' || c > '9') && ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')))
+		return (0);
+	return (1);
 }

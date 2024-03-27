@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/27 13:22:50 by hbenaddi         ###   ########.fr       */
+/*   Updated: 2024/03/27 17:38:35 by hbenaddi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,10 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <sys/wait.h>
-//# include "libft/libft.h"
 
 
-typedef struct s_redir_cmd
-{
-        char    *target;
-        char    **av;
-}       t_redir_cmd;
+# define SUCCES 1
+# define ERROR 0
 
 typedef enum e_token_type
 {
@@ -75,6 +71,14 @@ typedef struct s_ast_node
 }	t_ast_node;
 
 
+//struct environnement
+typedef	struct s_env
+{
+	char	*value;
+	struct s_env *next;
+}	t_env;
+
+
 // linkedList.c file
 t_node *create_node_list(char *data, t_token_type type);
 void init_list(t_list *list);
@@ -94,7 +98,6 @@ void	parse_pipeline(t_ast_node **root, char *data);
 t_ast_node      *create_node_tree(t_node_type type, const char *data);
 void	print_tree(t_ast_node *root);
 
-
 // executor.c file
 char	**build_command(t_ast_node *root);
 void	execute(char *cmd_path, char **av, char **envp);
@@ -108,13 +111,10 @@ char	*ft_strjoin(char *s1, char *s2);
 char	**ft_strtok(char *s);
 int	ft_strncmp(char *s1, char *s2, unsigned int n);
 
+//Builtin
 
-// executor_redir_out.c file
-void    execute_redir_out(char *cmd_path, char *target, char **av, char **envp);
-t_redir_cmd	*build_cmd_redir_out(t_ast_node *root);
+char	*ft_strchr(const char *str, int c);
+int	ft_echo(char **argument);
 
-
-// malloc_err is called whenever there might be error allocating memory
-void	*malloc_err(void);
 
 #endif

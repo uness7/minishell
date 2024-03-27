@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtin.c                                     :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 13:26:24 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/27 17:38:40 by hbenaddi         ###   ########.fr       */
+/*   Created: 2023/10/31 09:53:31 by yzioual           #+#    #+#             */
+/*   Updated: 2023/10/31 09:54:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int exec_builtin(int result)
+int	ft_lstsize(t_list *lst)
 {
-    if(ft_echo(result) == 1)
-    
+	int	i;
+
+	i = 0;
+	while (lst != NULL)
+	{
+		i++;
+		lst = lst->next;
+	}
+	return (i);
 }

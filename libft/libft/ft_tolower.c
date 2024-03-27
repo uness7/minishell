@@ -1,19 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtin.c                                     :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 13:26:24 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/27 17:38:40 by hbenaddi         ###   ########.fr       */
+/*   Created: 2023/10/19 08:51:38 by yzioual           #+#    #+#             */
+/*   Updated: 2023/11/04 12:31:37 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int exec_builtin(int result)
+int	ft_tolower(int c)
 {
-    if(ft_echo(result) == 1)
-    
+	if (c >= 'A' && c <= 'Z')
+	{
+		c += 32;
+		return (c);
+	}
+	return (c);
 }

@@ -1,15 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_cmd.c                                        :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/23 12:42:51 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/24 13:20:21 by hbenaddi         ###   ########.fr       */
+/*   Created: 2023/10/19 10:28:09 by yzioual           #+#    #+#             */
+/*   Updated: 2023/10/30 11:28:01 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
+void	*ft_memset(void *str, int c, size_t n)
+{
+	unsigned int	i;
+	char			*dest;
 
+	i = 0;
+	dest = str;
+	while (i < n)
+	{
+		dest[i] = (char)c;
+		i++;
+	}
+	return (str);
+}

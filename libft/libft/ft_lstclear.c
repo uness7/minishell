@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtin.c                                     :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/27 13:26:24 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/27 17:38:40 by hbenaddi         ###   ########.fr       */
+/*   Created: 2023/10/31 10:00:07 by yzioual           #+#    #+#             */
+/*   Updated: 2023/11/03 14:59:25 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int exec_builtin(int result)
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-    if(ft_echo(result) == 1)
-    
+	t_list	*temp;
+
+	if (!lst || !del)
+		return ;
+	while (*lst != NULL)
+	{
+		temp = (*lst)->next;
+		del((*lst)->content);
+		free(*lst);
+		*lst = temp;
+	}
+	*lst = NULL;
 }
