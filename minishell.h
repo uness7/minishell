@@ -24,6 +24,14 @@
 # include <sys/wait.h>
 # include "libft/libft.h"
 
+
+typedef struct s_redir_cmd
+{
+        char    *target;
+        char    **av;
+}       t_redir_cmd;
+
+
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -100,5 +108,14 @@ char	*find_cmd(char **paths, char *cmd);
 char	*ft_strjoin(char *s1, char *s2);
 char	**ft_strtok(char *s);
 int	ft_strncmp(char *s1, char *s2, unsigned int n);
+
+
+// executor_redir_out.c file
+void    execute_redir_out(char *cmd_path, char *target, char **av, char **envp);
+t_redir_cmd	*build_cmd_redir_out(t_ast_node *root);
+
+
+// malloc_err is called whenever there might be error allocating memory
+void	malloc_err(void);
 
 #endif
