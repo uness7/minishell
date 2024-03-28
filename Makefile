@@ -1,6 +1,6 @@
 CC = cc
 
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror
 
 INCLUDES = -I./libft
 
@@ -18,6 +18,7 @@ CFILES = lexer.c \
 	 utils2.c \
 	 executor_redir_out.c \
 	 executor_redir_append.c \
+	 executor_redir_heredoc.c \
 
 OBJECTS = $(CFILES:.c=.o)
 

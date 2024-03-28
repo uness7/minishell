@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/28 15:25:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/28 16:52:36 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@
 
 # define SUCCES 1
 # define ERROR 0
+
+typedef struct s_redir_heredoc
+{
+	char	**av;
+	char	*delimeter;
+	char	**input;
+}	t_redir_heredoc;
 
 typedef struct s_redir_cmd
 {
@@ -128,8 +135,9 @@ void    execute_redir_append(char *cmd_path, char *target, char **av, char **env
 t_redir_cmd	*build_cmd_redir_append(t_ast_node *root);
 
 // executor_redir_heredoc.c file:
-void	execute_redir_heredoc(char *cmd_path, char *delimeter, char **av, char **envp);
-t_redir_cmd	*build_cmd_redir_heredoc(t_ast_node *root);
+void	execute_redir_heredoc(char *cmd_path,  char **input, char **av, char **envp);
+t_redir_heredoc	*build_cmd_redir_heredoc(t_ast_node *root);
+char	**get_input(char *eof);
 
 void	*malloc_err(void);
 
