@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 09:37:59 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/03/22 17:00:55 by hbenaddi         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:20:19 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	check_quote(char *s, char *token, t_list *list)
 	append(list, token, TOKEN_WORD);
 }
 
-t_list	*tokenize(char *s)
+t_list	*tokenize(const char *s)
 {
 	t_list	*list;
 	char	*token;

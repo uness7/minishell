@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/27 17:38:35 by hbenaddi         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:25:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,9 @@ t_redir_cmd	*build_cmd_redir_out(t_ast_node *root);
 void    execute_redir_append(char *cmd_path, char *target, char **av, char **envp);
 t_redir_cmd	*build_cmd_redir_append(t_ast_node *root);
 
+// executor_redir_heredoc.c file:
+void	execute_redir_heredoc(char *cmd_path, char *delimeter, char **av, char **envp);
+t_redir_cmd	*build_cmd_redir_heredoc(t_ast_node *root);
 
 void	*malloc_err(void);
 

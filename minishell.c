@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/03/26 18:01:18 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/03/28 15:23:21 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	main(int ac, char **argv, char **envp)
 		tree = parse(tokenize(input));
 		if (tree == NULL)
 			break ;
-		if (tree->type == NODE_COMMAND)
+ 		if (tree->type == NODE_COMMAND)
 		{
 			av = build_command(tree);
 			cmd = find_cmd(ft_strtok(find_paths(envp)), av[0]);
