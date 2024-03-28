@@ -24,7 +24,7 @@ int	main(int ac, char **argv, char **envp)
 
 	while (1)
 	{
-		//printf("\033[0;31m");
+		printf("\033[0;31m");
 		input = readline("minishell> ");
 		if (input == NULL)
 			break ;
@@ -50,6 +50,16 @@ int	main(int ac, char **argv, char **envp)
 			redir = build_cmd_redir_append(tree);
 			cmd = find_cmd(ft_strtok(find_paths(envp)), redir->av[0]);
 			execute_redir_append(cmd, redir->target, redir->av, envp);
+		}
+		else if (tree->type == NODE_REDIRECTION_HEREDOC)
+		{
+			printf("heeeeeeeeeeeeeere\n");
+			exit(0);
+		}
+		else if (tree->type == NODE_REDIRECTION_IN)
+		{
+			printf("inppppuuuuuuuuuuuuuuuut\n");
+			exit(0);
 		}
 		else if (tree->type == NODE_PIPELINE)
 		{
