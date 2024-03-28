@@ -20,10 +20,11 @@ int	main(int ac, char **argv, char **envp)
 	char	**av;
 	char	*cmd;
 	t_ast_node	*tree;
-	t_redir_cmd	*redir_out;
+	t_redir_cmd	*redir;
 
 	while (1)
 	{
+		//printf("\033[0;31m");
 		input = readline("minishell> ");
 		if (input == NULL)
 			break ;
@@ -40,9 +41,15 @@ int	main(int ac, char **argv, char **envp)
 		}
 		else if (tree->type == NODE_REDIRECTION_OUT)
 		{
-			redir_out = build_cmd_redir_out(tree);	
-			cmd = find_cmd(ft_strtok(find_paths(envp)), redir_out->av[0]);
-			execute_redir_out(cmd, redir_out->target, redir_out->av, envp);
+			redir = build_cmd_redir_out(tree);	
+			cmd = find_cmd(ft_strtok(find_paths(envp)), redir->av[0]);
+			execute_redir_out(cmd, redir->target, redir->av, envp);
+		}
+		else if (tree->type == NODE_REDIRECTION_APPEND)
+		{
+			redir = build_cmd_redir_append(tree);
+			cmd = find_cmd(ft_strtok(find_paths(envp)), redir->av[0]);
+			execute_redir_append(cmd, redir->target, redir->av, envp);
 		}
 		else if (tree->type == NODE_PIPELINE)
 		{

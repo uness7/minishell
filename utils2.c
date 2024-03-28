@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+void	*malloc_err(void)
+{
+	printf("Error allocating memory\n");
+	return (NULL);
+}
+
 size_t	ft_strlen(char *s)
 {
 	size_t	i;

@@ -113,8 +113,20 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n);
 
 //Builtin
 
+<<<<<<< Updated upstream
 char	*ft_strchr(const char *str, int c);
 int	ft_echo(char **argument);
+=======
+// executor_redir_out.c file
+void    execute_redir_out(char *cmd_path, char *target, char **av, char **envp);
+t_redir_cmd	*build_cmd_redir_out(t_ast_node *root);
+
+// executor_redir_append.c file
+void    execute_redir_append(char *cmd_path, char *target, char **av, char **envp);
+t_redir_cmd	*build_cmd_redir_append(t_ast_node *root);
+
+
+>>>>>>> Stashed changes
 
 
 #endif

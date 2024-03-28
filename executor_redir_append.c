@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_redir_cmd	*build_cmd_redir_out(t_ast_node *root)
+t_redir_cmd	*build_cmd_redir_append(t_ast_node *root)
 {
 	t_redir_cmd	*result;
 
@@ -24,7 +24,7 @@ t_redir_cmd	*build_cmd_redir_out(t_ast_node *root)
 	return (result);
 }
 
-void	execute_redir_out(char *cmd_path, char *target, char **av, char **envp)
+void	execute_redir_append(char *cmd_path, char *target, char **av, char **envp)
 {
 	pid_t	id;
 	int		status;
@@ -34,7 +34,7 @@ void	execute_redir_out(char *cmd_path, char *target, char **av, char **envp)
 	{
 		printf("target is null\n");exit(1);
 	}
-	fd = open(target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(target, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
 		perror("open ");
