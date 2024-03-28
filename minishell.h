@@ -27,6 +27,12 @@
 # define SUCCES 1
 # define ERROR 0
 
+typedef struct s_redir_cmd
+{
+	char	**av;
+	char	*target;
+}	t_redir_cmd;
+
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -111,12 +117,8 @@ char	*ft_strjoin(char *s1, char *s2);
 char	**ft_strtok(char *s);
 int	ft_strncmp(char *s1, char *s2, unsigned int n);
 
-//Builtin
-
-<<<<<<< Updated upstream
 char	*ft_strchr(const char *str, int c);
 int	ft_echo(char **argument);
-=======
 // executor_redir_out.c file
 void    execute_redir_out(char *cmd_path, char *target, char **av, char **envp);
 t_redir_cmd	*build_cmd_redir_out(t_ast_node *root);
@@ -126,7 +128,6 @@ void    execute_redir_append(char *cmd_path, char *target, char **av, char **env
 t_redir_cmd	*build_cmd_redir_append(t_ast_node *root);
 
 
->>>>>>> Stashed changes
-
+void	*malloc_err(void);
 
 #endif
