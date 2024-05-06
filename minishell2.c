@@ -1,0 +1,121 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell2.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/16 13:17:38 by yzioual           #+#    #+#             */
+/*   Updated: 2024/05/06 23:15:14 by yzioual          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+void	check_env_var(t_redir_cmd *redir, t_stock *stock)
+{
+	t_env	*var;
+	char	**av;
+	char	*to_find;
+
+	av = redir->av;
+	if (ft_strncmp(*av, "$", 1) == 0)
+	{
+		to_find = av[0];
+		to_find++;
+		var = find_env_var(&(stock->env), to_find);
+		if (var != NULL)
+			redir->av[0] = var->value;
+	}
+}
+
+void	run_redir_out_command(t_stock *stock, char *input, t_ast_node *tree)
+{
+	char		*cmd;
+	t_redir_cmd	*redir;
+
+	redir = build_cmd_redir_out(stock->arena, tree);
+	if (redir == NULL || redir->av == NULL || redir->target == NULL)
+	{
+		printf("Syntax error :( \n");
+		*(stock->status) = 127;
+		return ;
+	}
+	cmd = NULL;
+	check_env_var(redir, stock);
+	if (has_multiple_redir_out(input) == true)
+		_run_redir_out_command(stock, redir, input);
+	else
+		_run_redir_out_command2(stock, redir, cmd);
+}
+
+void	run_redir_append_command(t_stock *stock, char *input, t_ast_node *tree)
+{
+	char		*cmd;
+	t_redir_cmd	*redir;
+
+	redir = build_cmd_redir_append(stock->arena, tree);
+	check_env_var(redir, stock);
+	if (redir == NULL || redir->av == NULL || redir->target == NULL)
+	{
+		printf("Syntax error :(\n");
+		*(stock->status) = 127;
+		return ;
+	}
+	cmd = NULL;
+	if (has_multiple_redir_append(input) == true)
+		_run_redir_append_command(stock, redir, input);
+	else
+		_run_redir_append_command2(stock, redir, cmd);
+}
+
+void	run_redir_in_command(t_stock *stock, t_ast_node *tree)
+{
+	t_redir_cmd	*redir;
+	char		*cmd;
+
+	redir = build_cmd_redir_in(stock->arena, tree);
+	check_env_var(redir, stock);
+	if (redir == NULL || redir->av == NULL || redir->target == NULL)
+	{
+		printf("Syntax error :(\n");
+		*(stock->status) = 127;
+		return ;
+	}
+	cmd = NULL;
+	if (ft_strstr(redir->av[0], "/"))
+	{
+		*(stock->status) = execute_redir_in(stock, redir->av[0], redir->target,
+				redir->av);
+	}
+	else
+	{
+		cmd = find_cmd(stock->arena, ft_strtok(stock->arena,
+					find_paths(env_list_arr(stock->arena, stock->env,
+							env_list_size(stock->env)))), redir->av[0]);
+		*(stock->status) = execute_redir_in(stock, cmd, redir->target,
+				redir->av);
+	}
+}
+
+void	run_redir_heredoc_command(t_stock *stock, char *input, t_ast_node *tree)
+
+{
+	char			*cmd;
+	t_redir_heredoc	*rh;
+
+	rh = build_cmd_redir_heredoc(stock->arena, tree);
+	if (rh == NULL || rh->delimeter == NULL || rh->av == NULL)
+	{
+		printf("Syntax error :( \n");
+		add_or_update_env(stock->arena, &(stock->env), "?",
+			ft_itoa(stock->arena, 127));
+		return ;
+	}
+	cmd = NULL;
+	expand_env_var_heredoc(rh, stock);
+	if (has_multiple_delimeters(input) == true)
+		_run_redir_heredoc_command(stock, rh, input);
+	else
+		_run_redir_heredoc_command2(stock, rh, cmd);
+}
