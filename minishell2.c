@@ -12,23 +12,6 @@
 
 #include "minishell.h"
 
-void	check_env_var(t_redir_cmd *redir, t_stock *stock)
-{
-	t_env	*var;
-	char	**av;
-	char	*to_find;
-
-	av = redir->av;
-	if (ft_strncmp(*av, "$", 1) == 0)
-	{
-		to_find = av[0];
-		to_find++;
-		var = find_env_var(&(stock->env), to_find);
-		if (var != NULL)
-			redir->av[0] = var->value;
-	}
-}
-
 void	run_redir_out_command(t_stock *stock, char *input, t_ast_node *tree)
 {
 	char		*cmd;
@@ -42,7 +25,6 @@ void	run_redir_out_command(t_stock *stock, char *input, t_ast_node *tree)
 		return ;
 	}
 	cmd = NULL;
-	check_env_var(redir, stock);
 	if (has_multiple_redir_out(input) == true)
 		_run_redir_out_command(stock, redir, input);
 	else
@@ -55,7 +37,6 @@ void	run_redir_append_command(t_stock *stock, char *input, t_ast_node *tree)
 	t_redir_cmd	*redir;
 
 	redir = build_cmd_redir_append(stock->arena, tree);
-	check_env_var(redir, stock);
 	if (redir == NULL || redir->av == NULL || redir->target == NULL)
 	{
 		printf("Syntax error :(\n");
@@ -75,7 +56,6 @@ void	run_redir_in_command(t_stock *stock, t_ast_node *tree)
 	char		*cmd;
 
 	redir = build_cmd_redir_in(stock->arena, tree);
-	check_env_var(redir, stock);
 	if (redir == NULL || redir->av == NULL || redir->target == NULL)
 	{
 		printf("Syntax error :(\n");
@@ -113,7 +93,6 @@ void	run_redir_heredoc_command(t_stock *stock, char *input, t_ast_node *tree)
 		return ;
 	}
 	cmd = NULL;
-	expand_env_var_heredoc(rh, stock);
 	if (has_multiple_delimeters(input) == true)
 		_run_redir_heredoc_command(stock, rh, input);
 	else

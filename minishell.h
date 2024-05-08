@@ -302,8 +302,7 @@ char					*join_args(t_arena *arena, char **args);
 
 /* Built-ins */
 bool					_isbuiltin(t_arena *arena, char *input);
-void					_runbuiltins(t_arena *arena, char *input, t_env *env,
-							int *d);
+void					_runbuiltins(t_stock *stock, char *input);
 char					*trim_space(char *str);
 char					*trim_quotes(t_arena *arena, char *str);
 void					ft_exit(t_arena *arena, char *argv, int *status);
@@ -323,7 +322,7 @@ char					**custom_split(char *input_string, char delimiter);
 char					**ft_str_copy(t_arena *arena, char **envp);
 void					custom_echo(t_arena *arena, char *input, t_env *envp);
 void					custom_unset(char *input, t_env *env);
-void					custom_export(t_arena *arena, char *input, t_env *env);
+void					custom_export(t_stock *stock, char *input);
 void					custom_cd(t_arena *arena, char *input, t_env *env);
 void					custom_exit(char *input, int *status);
 void					search_value(char **envp_cp, char **arg);
@@ -430,4 +429,11 @@ char					**get_input_helper(t_arena *arena, int i, \
 void					copy_result(t_arena *arena, char *input, \
 		char ***result, int *count);
 void					swap(char **av);
+
+/* Expander */
+char    *expand_variables(t_stock *stock, const char *input);
+
+
+
+
 #endif

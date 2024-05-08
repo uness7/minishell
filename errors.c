@@ -28,7 +28,7 @@ void	execve_err(t_arena *arena, t_env *env)
 {
 	printf("Command Not Found\n");
 	add_or_update_env(arena, &env, "?", ft_itoa(arena, 127));
-	//exit(127);
+	exit(127);
 }
 
 void	err(void)

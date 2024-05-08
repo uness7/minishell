@@ -70,52 +70,10 @@ void	run_simple_command(t_stock *stock, t_ast_node *tree, char *input)
 	char	**av;
 
 	av = build_command(stock->arena, tree);
-	signal(SIGINT, handle_sig2);
-	signal(SIGQUIT, handle_sig);
-	if (strstr(av[0], "expr"))
+	if (ft_strstr(av[0], "expr"))
 		*(stock->status) = run_expr(stock, av, input);
 	else if (ft_strcmp(av[0], "awk") == 0)
 		run_awk(stock, av);
 	else
 		run_simple_command_helper(stock, av);
-}
-
-void	expand_env_var_in_pipes(t_cmd **commands, t_stock *stock)
-{
-	t_env	*var;
-	char	**av;
-	char	*to_find;
-	t_cmd	**temp;
-
-	temp = commands;
-	while (*temp)
-	{
-		av = (*temp)->av;
-		if (ft_strncmp(av[0], "$", 1) == 0)
-		{
-			to_find = av[0];
-			to_find++;
-			var = find_env_var(&(stock->env), to_find);
-			if (var != NULL)
-				(*temp)->av[0] = var->value;
-		}
-		temp++;
-	}
-}
-
-void	expand_env_var_heredoc(t_redir_heredoc *rh, t_stock *stock)
-{
-	t_env	*var;
-	char	**av;
-	char	*to_find;
-
-	av = rh->av;
-	if (ft_strncmp(*av, "$", 1) == 0)
-	{
-		to_find = av[0];
-		to_find++;
-		var = find_env_var(&(stock->env), to_find);
-		if (var != NULL)
-			rh->av[0] = var->value;
-	}
 }

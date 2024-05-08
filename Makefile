@@ -59,6 +59,7 @@ CFILES = lexer.c \
 	 multiple_redir_heredoc5.c \
 	 itoa.c \
 	 dodjo.c \
+	 expander.c \
 
 OBJECTS = $(CFILES:.c=.o)
 

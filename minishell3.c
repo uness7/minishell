@@ -49,31 +49,31 @@ static char	*produce_input(t_arena *arena, char *input)
 	return (join_args(arena, args));
 }
 
-void	_runbuiltins(t_arena *arena, char *input, t_env *env, int *status)
+void	_runbuiltins(t_stock *stock, char *input)
 {
-	input = produce_input(arena, input);
-	if (ft_strncmp(trim_quotes(arena, input), "pwd", 3) == 0)
-		ft_pwd(arena);
-	else if (ft_strncmp("env", trim_quotes(arena, input), 3) == 0)
-		print_env(env);
-	else if (ft_strncmp(trim_quotes(arena, input), "exit", 4) == 0)
-		ft_exit(arena, input, status);
-	else if (ft_strncmp(trim_quotes(arena, input), "cd", 2) == 0)
+	input = produce_input(stock->arena, input);
+	if (ft_strncmp(trim_quotes(stock->arena, input), "pwd", 3) == 0)
+		ft_pwd(stock->arena);
+	else if (ft_strncmp("env", trim_quotes(stock->arena, input), 3) == 0)
+		print_env(stock->env);
+	else if (ft_strncmp(trim_quotes(stock->arena, input), "exit", 4) == 0)
+		ft_exit(stock->arena, input, stock->status);
+	else if (ft_strncmp(trim_quotes(stock->arena, input), "cd", 2) == 0)
 	{
 		if (ft_strncmp(input, "cd..", 4) == 0)
 			return ;
-		custom_cd(arena, trim_quotes(arena, input), env);
+		custom_cd(stock->arena, trim_quotes(stock->arena, input), stock->env);
 	}
-	else if (ft_strncmp(trim_quotes(arena, input), "export",
+	else if (ft_strncmp(trim_quotes(stock->arena, input), "export",
 			ft_strlen("export")) == 0)
-		custom_export(arena, input, env);
-	else if (ft_strncmp(trim_quotes(arena, input), "unset",
+		custom_export(stock, input);
+	else if (ft_strncmp(trim_quotes(stock->arena, input), "unset",
 			ft_strlen("unset")) == 0)
-		custom_unset(trim_quotes(arena, input), env);
-	else if (ft_strncmp(trim_quotes(arena, input), "echo",
+		custom_unset(trim_quotes(stock->arena, input), stock->env);
+	else if (ft_strncmp(trim_quotes(stock->arena, input), "echo",
 			ft_strlen("echo")) == 0)
-		custom_echo(arena, trim_quotes(arena, input), env);
-	add_or_update_env(arena, &env, "?", ft_itoa(arena, *status));
+		custom_echo(stock->arena, trim_quotes(stock->arena, input), stock->env);
+	add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, *(stock->status)));
 }
 
 char	*join_args(t_arena *arena, char **args)
@@ -117,6 +117,6 @@ void	run_pipeline_command(t_stock *stock, t_ast_node *tree)
 	extract_commands(stock->arena, tree, &commands, &num_commands);
 	commands[num_commands] = NULL;
 	inverse_commands_order(stock->arena, commands);
-	expand_env_var_in_pipes(commands, stock);
+//	expand_env_var_in_pipes(commands, stock);
 	*(stock->status) = execute_pipeline(stock, commands, &i, &fd);
 }

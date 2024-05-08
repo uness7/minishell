@@ -61,7 +61,6 @@ static void	execute_redir_out_command(t_stock *stock, t_redir_cmd *redir,
 
 void	_run_redir_out_command(t_stock *stock, t_redir_cmd *redir, char *input)
 {
-	int		i;
 	int		j;
 	char	**targets;
 	char	**new_args;
@@ -69,7 +68,6 @@ void	_run_redir_out_command(t_stock *stock, t_redir_cmd *redir, char *input)
 
 	targets = extract_files(stock->arena, input);
 	av = redir->av;
-	i = 1;
 	j = 1;
 	new_args = arena_alloc(stock->arena, sizeof(char *) * ARGS);
 	new_args[0] = ft_strdup(stock->arena, redir->av[0]);

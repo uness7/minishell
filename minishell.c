@@ -17,9 +17,7 @@ static void	dispenser(t_ast_node *tree, t_stock *stock, char *input)
 	if (tree != NULL)
 	{
 		if (tree->type == NODE_COMMAND && _isbuiltin(stock->arena, input))
-			_runbuiltins(stock->arena, input, stock->env, stock->status);
-		else if (tree->type == NODE_COMMAND && ft_strncmp(input, "$", 1) == 0)
-			expand_var(stock, input);
+			_runbuiltins(stock, input);
 		else if (tree->type == NODE_COMMAND)
 			run_simple_command(stock, tree, input);
 		else if (tree->type == NODE_REDIRECTION_OUT)
@@ -48,28 +46,22 @@ static void	run_minishell2(t_stock *stock, char *input)
 	t_ast_node	*tree;
 	t_list		*list;
 
-	if (ft_strncmp(trim_space(input), "<<", 2) == 0
-		&& ft_strlen(trim_space(input)) > 2)
-		heredoc(stock->arena, input);
-	else
+	input = expand_variables(stock, input);
+//	printf("%s\n", input); exit(0);
+	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
+	tree = parse(stock->arena, list);
+	if (is_input_valid2(trim_space(input)) && \
+			is_input_valid(trim_space(input)) && \
+			check_invalid_combinations(stock->arena, list, stock->env))
 	{
-		list = tokenize(stock->arena, trim_quotes(stock->arena,
-					trim_space(input)));
-		tree = parse(stock->arena, list);
-		*(stock->status) = 0;
-		if (is_input_valid2(trim_space(input))
-			&& is_input_valid(trim_space(input))
-			&& check_invalid_combinations(stock->arena, list, stock->env))
-		{
-			signal(SIGINT, handle_sig2);
-			if (tree != NULL)
-				dispenser(tree, stock, input);
-			add_or_update_env(stock->arena, &(stock->env), "?",
+		signal(SIGINT, handle_sig2);
+		if (tree != NULL)
+			dispenser(tree, stock, input);
+		add_or_update_env(stock->arena, &(stock->env), "?",
 				ft_itoa(stock->arena, *(stock->status)));
-		}
-		else
-			cmd_not_found(stock);
 	}
+	else
+		cmd_not_found(stock);
 }
 
 static void	run_minishell(t_stock *stock)
