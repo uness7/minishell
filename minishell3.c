@@ -34,6 +34,7 @@ bool	_isbuiltin(t_arena *arena, char *input)
 	return (is_builtin);
 }
 
+/*
 static char	*produce_input(t_arena *arena, char *input)
 {
 	int		i;
@@ -48,10 +49,12 @@ static char	*produce_input(t_arena *arena, char *input)
 	}
 	return (join_args(arena, args));
 }
+*/
 
 void	_runbuiltins(t_stock *stock, char *input)
 {
-	input = produce_input(stock->arena, input);
+//	input = produce_input(stock->arena, input);
+//	printf("input : %s\n", input); exit(0);
 	if (ft_strncmp(trim_quotes(stock->arena, input), "pwd", 3) == 0)
 		ft_pwd(stock->arena);
 	else if (ft_strncmp("env", trim_quotes(stock->arena, input), 3) == 0)

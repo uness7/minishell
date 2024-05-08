@@ -47,7 +47,6 @@ static void	run_minishell2(t_stock *stock, char *input)
 	t_list		*list;
 
 	input = expand_variables(stock, input);
-//	printf("%s\n", input); exit(0);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	tree = parse(stock->arena, list);
 	if (is_input_valid2(trim_space(input)) && \
