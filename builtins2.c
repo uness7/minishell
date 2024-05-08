@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 19:38:00 by yzioual           #+#    #+#             */
-/*   Updated: 2024/04/30 17:48:40 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/08 18:49:55 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,20 @@ void	custom_cd(t_arena *arena, char *input, t_env *env)
 	ft_cd(arena, path, env);
 }
 
+bool	check_env_var_rules(char *name)
+{
+	int		i;
+
+	i = 0;
+	while (name[i])
+	{
+		if (!isdigit(name[i]) && !isalnum(name[i]) && name[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
 void	custom_export(t_stock *stock, char *input)
 {
 	char	*cmd;
@@ -132,11 +146,16 @@ void	custom_export(t_stock *stock, char *input)
 		args = ft_split_2(var);
 		if (args != NULL)
 		{
-			while (*args)
+		while (*args)
 			{
-				if (strstr(*args, "="))
+				if (ft_strstr(*args, "="))
 				{
 					name = ft_strtok_2(*args, "=");
+					if (isdigit(name[0]) && check_env_var_rules(name))
+					{
+						printf("bash: export: `%s': not a valid identifier\n", *args);
+						return ;
+					}
 					value = ft_strtok_2(NULL, "=");
 					if (value == NULL)
 						value = ft_strdup(stock->arena, "(null)");

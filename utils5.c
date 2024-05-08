@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 18:11:16 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/03 15:46:32 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/08 18:14:22 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char	*ft_strncpy(char *dest, const char *src, size_t n)
 	return (dest);
 }
 
+/*
 char	*ft_strstr(char *haystack, char *needle)
 {
 	char	*h;
@@ -67,6 +68,29 @@ char	*ft_strstr(char *haystack, char *needle)
 		haystack++;
 	}
 	return (NULL);
+}
+*/
+
+char *ft_strstr(char *str, char *to_find)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		j = 0;
+		while (to_find[j] == str[i + j])
+		{
+			if (to_find[j + 1] == '\0')
+			{
+				return (str + i);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (0);
 }
 
 char	*trim_quotes(t_arena *arena, char *str)

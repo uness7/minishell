@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/06 23:11:20 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/08 18:06:19 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static void	run_minishell2(t_stock *stock, char *input)
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	tree = parse(stock->arena, list);
+
 	if (is_input_valid2(trim_space(input)) && \
 			is_input_valid(trim_space(input)) && \
 			check_invalid_combinations(stock->arena, list, stock->env))
