@@ -433,6 +433,9 @@ void					swap(char **av);
 /* Expander */
 char    *expand_variables(t_stock *stock, const char *input);
 
+/* Tools */
+char	**ft_split_2(const char *str);
+
 
 
 

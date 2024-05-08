@@ -35,98 +35,24 @@ void	check_n_option(char ***args, char *str, int *all_n)
 	}
 }
 
-static void	print_value_inside_quotes(t_arena *arena, char *str)
+static void	print_value(char **args)
 {
-	char	**subargs;
+	char	*temp;
 
-	subargs = ft_split(arena, trim_quotes(arena, str), ' ');
-	while (*subargs)
-	{
-		if (ft_strstr(*subargs, "$"))
-		{
-			if (ft_strncmp(*subargs, "$", 2) == 0)
-				printf("$\n");
-		}
-		else
-			printf("%s", *subargs);
-		if (*(subargs + 1) != NULL)
-			printf(" ");
-		subargs++;
-	}
-}
-
-static void	print_value(t_arena *arena, char **args)
-{
 	while (*args)
 	{
-		if (ft_strstr(*args, "-"))
-			handle_n_arg(*args);
-		else if (ft_strncmp(*args, "\"", 1) == 0)
-			print_value_inside_quotes(arena, *args);
-		else if (ft_strncmp(*args, "\'", 1) == 0)
-			printf("%s ", trim_single_quotes(arena, *args));
+		temp = *args;
+		if (ft_strstr(temp, "-"))
+			handle_n_arg(temp);
 		else
-			printf("%s", trim_quotes(arena, *args));
+		{
+			if (ft_strncmp(temp, "\"", 1) == 0 || ft_strncmp(temp, "'", 1) == 0)
+				temp++;
+			printf("%s", temp);
+		}
+		printf(" ");
 		args++;
 	}
-}
-
-#include <stdlib.h>
-#include <string.h>
-
-/*
-*/
-char    **ft_split_echo(char *s)
-{
-    char    **res;
-    int     len = strlen(s);
-    int     i = 0;
-    int     k = 0;
-    int     start = 0;
-
-    res = malloc(sizeof(char *) * (len + 1));
-    if (res == NULL)
-        return NULL;
-
-    while (s[i])
-    {
-        if (s[i] == '\"')
-        {
-            start = ++i;
-            while (s[i] && s[i] != '\"')
-                i++;
-            res[k] = malloc(sizeof(char) * (i - start + 1));
-            strncpy(res[k], s + start, i - start);
-            res[k++][i - start] = '\0';
-            i++;
-        }
-        else if (s[i] == '\'')
-        {
-            start = ++i;
-            while (s[i] && s[i] != '\'')
-                i++;
-            res[k] = malloc(sizeof(char) * (i - start + 1));
-            strncpy(res[k], s + start, i - start);
-            res[k++][i - start] = '\0';
-            i++;
-        }
-        else if (s[i] != ' ')
-        {
-            start = i;
-            while (s[i] && s[i] != ' ' && s[i] != '\'' && s[i] != '\"')
-                i++;
-            res[k] = malloc(sizeof(char) * (i - start + 1));
-            strncpy(res[k], s + start, i - start);
-            res[k++][i - start] = '\0';
-        }
-        else
-        {
-            i++;
-        }
-    }
-
-    res[k] = NULL;
-    return res;
 }
 
 int	ft_echo(t_arena *arena, char *input, char **envp_cp)
@@ -137,10 +63,9 @@ int	ft_echo(t_arena *arena, char *input, char **envp_cp)
 	int		all_n;
 
 	(void)envp_cp;
-	args = ft_split_echo(input);	
-	while (*args)
-		printf("%s\n", *args++);
-//	exit(0);
+	(void)arena;
+	args = ft_split_2(input);	
+	args++;
 	n_flag = 0;
 	if (ft_strncmp(*args, "-", 1) == 0)
 	{
@@ -155,7 +80,7 @@ int	ft_echo(t_arena *arena, char *input, char **envp_cp)
 		if (n_flag == 1)
 			args++;
 	}
-	print_value(arena, args);
+	print_value(args);
 	if (n_flag == 0)
 		printf("\n");
 	return (0);
