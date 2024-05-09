@@ -1,28 +1,33 @@
 #include "minishell.h"
 
-/*
- *
- * malloc, isalnum, strcpy, strlen
- *
- * */
+bool	is_single_quotes(char c)
+{
+	if (c == '\'')
+		return (true);
+	return (false);
+}
 
 char    *expand_variables(t_stock *stock, const char *input)
 {
+	int                     var_len;
+	int			inside_single_quotes;
         const char      *current;
         char            *out_ptr;
         char            var_name[128];
-        int                     var_len;
         char	*var_value;
 	char	*start;
         char	*output;
 	t_env	*env;
 	
+	inside_single_quotes = 0;
 	current = input;
 	output = arena_alloc(stock->arena, strlen(input) + 1024);
         out_ptr = output;
         while (*current)
         {
-		if (*current == '$' && (!(*(current - 1) && *(current - 1) == '\'')))
+		if (is_single_quotes(*current) == true)
+			inside_single_quotes = !inside_single_quotes;			
+		if (*current == '$' && !inside_single_quotes)
 		{
 				current++;
 				start = out_ptr;

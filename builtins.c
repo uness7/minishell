@@ -80,18 +80,3 @@ char	**env_list_arr(t_arena *arena, t_env *temp, int size)
 	env_args[i] = NULL;
 	return (env_args);
 }
-
-void	custom_echo(t_arena *arena, char *input, t_env *env)
-{
-	int		size;
-	t_env	*temp;
-
-	size = array_size(ft_split(arena, input, ' '));
-	if (size == 1)
-	{
-		printf("\n");
-		return ;
-	}
-	temp = env;
-	ft_echo(arena, input, env_list_arr(arena, temp, env_list_size(env)));
-}

@@ -35,6 +35,20 @@
 # define TARGETS 20
 # define ARGS 20
 
+typedef enum e_echo_type
+{
+	WORD,
+	_SPACE,
+	ECHO,
+	N_ARG
+}						t_echo_type;
+
+typedef struct t_echo_arr
+{
+	t_echo_type			type;
+	char				*data;
+}						t_echo_arr;
+
 typedef struct s_env
 {
 	char				*value;
@@ -306,7 +320,7 @@ void					_runbuiltins(t_stock *stock, char *input);
 char					*trim_space(char *str);
 char					*trim_quotes(t_arena *arena, char *str);
 void					ft_exit(t_arena *arena, char *argv, int *status);
-int						ft_echo(t_arena *arena, char *argv, char **envp);
+int						ft_echo(t_arena *arena, char *argv);
 void					append_env_node(t_arena *arena, t_env **head,
 							char *name, char *value);
 void					free_env_list(t_env *head);
@@ -424,19 +438,18 @@ int						array_size(char **arr);
 void					close_exit(void);
 void					handle_sig_heredoc(int sig);
 void					err(void);
-char					**get_input_helper(t_arena *arena, int i, \
-		int count, char *eof);
-void					copy_result(t_arena *arena, char *input, \
-		char ***result, int *count);
+char					**get_input_helper(t_arena *arena, int i, int count,
+							char *eof);
+void					copy_result(t_arena *arena, char *input, char ***result,
+							int *count);
 void					swap(char **av);
 
 /* Expander */
-char    *expand_variables(t_stock *stock, const char *input);
+char					*expand_variables(t_stock *stock, const char *input);
 
 /* Tools */
-char	**ft_split_2(const char *str);
-
-
-
+char					**ft_split_2(const char *str);
+t_echo_arr				**split(t_arena *arena, char *input);
+int					is_space(char c);
 
 #endif

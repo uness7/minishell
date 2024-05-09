@@ -49,7 +49,7 @@ char	**ft_split_2(const char *str)
 	}
 	result = (char **)malloc((word_count + 1) * sizeof(char *));
 	if (result == NULL)
-		return (NULL); // Memory allocation failed
+		return (NULL);
 	word_index = 0;
 	start_index = 0;
 	quoted_start = -1;
@@ -64,10 +64,8 @@ char	**ft_split_2(const char *str)
 			{
 				if (quoted_start != -1 && i - start_index > 1)
 				{
-					result[word_index] = (char *)malloc((i - start_index + 1)
-							* sizeof(char));
-					strncpy(result[word_index], str + start_index, i
-						- start_index);
+					result[word_index] = malloc((i - start_index + 1) * sizeof(char));
+					strncpy(result[word_index], str + start_index, i - start_index);
 					result[word_index][i - start_index] = '\0';
 					word_index++;
 				}
@@ -79,8 +77,7 @@ char	**ft_split_2(const char *str)
 		{
 			if (i > start_index)
 			{
-				result[word_index] = (char *)malloc((i - start_index + 1)
-						* sizeof(char));
+				result[word_index] = malloc((i - start_index + 1) * sizeof(char));
 				strncpy(result[word_index], str + start_index, i - start_index);
 				result[word_index][i - start_index] = '\0';
 				word_index++;
@@ -165,8 +162,7 @@ void	custom_export(t_stock *stock, char *input)
 					else
 						++value;
 					if (value != NULL && name != NULL)
-						add_or_update_env(stock->arena, &(stock->env), name,
-								trim_quotes(stock->arena, value));
+						add_or_update_env(stock->arena, &(stock->env), name, value);
 				}
 				args++;
 			}

@@ -12,76 +12,71 @@
 
 #include "minishell.h"
 
-void	check_n_option(char ***args, char *str, int *all_n)
+bool	check_str_for_n_char(char *str)
 {
-	int	j;
+	int	i;
 
-	j = 0;
-	if (str[0] == '-' && ft_strlen(str) > 1)
+	i = 1;
+	while (str[i])
 	{
-		*all_n = 1;
-		j = 1;
-		while ((size_t)j < ft_strlen(str))
-		{
-			if (str[j] != 'n')
-			{
-				*all_n = 0;
-				break ;
-			}
-			j++;
-		}
-		if (*all_n)
-			(*args)++;
+		if (str[i] != 'n')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+void	jump_spaces(t_echo_arr ***arr)
+{
+	int	i;
+
+	i = 0;
+	while ((*arr)[i] != NULL)
+	{
+		if ((*arr)[i]->type != _SPACE)
+			break ;
+		(*arr)++;
+		i++;
 	}
 }
 
-static void	print_value(char **args)
+int	ft_echo(t_arena *arena, char *input)
 {
-	char	*temp;
+	int			i;
+	int			flag;
+	t_echo_arr	**echo_args;
 
-	while (*args)
+	i = 0;
+	flag = 0;
+	echo_args = split(arena, input);
+	jump_spaces(&echo_args);
+	while (echo_args[i] != NULL)
 	{
-		temp = *args;
-		if (ft_strstr(temp, "-"))
-			handle_n_arg(temp);
-		else
+		if (ft_strncmp(echo_args[i]->data, "-", 1) == 0
+			&& check_str_for_n_char(echo_args[i]->data))
 		{
-			if (ft_strncmp(temp, "\"", 1) == 0 || ft_strncmp(temp, "'", 1) == 0)
-				temp++;
-			printf("%s", temp);
+			i++;
+			flag = 1;
 		}
-		printf(" ");
-		args++;
-	}
-}
-
-int	ft_echo(t_arena *arena, char *input, char **envp_cp)
-{
-	char	**args;
-	char	**temp;
-	int		n_flag;
-	int		all_n;
-
-	(void)envp_cp;
-	(void)arena;
-	args = ft_split_2(input);	
-	args++;
-	n_flag = 0;
-	if (ft_strncmp(*args, "-", 1) == 0)
-	{
-		temp = args;
-		temp++;
-		while (*temp)
+		if (echo_args[i] && echo_args[i]->type == WORD)
+			printf("%s", echo_args[i]->data);
+//		else if (echo_args[i] && echo_args[i]->type == _SPACE
+//			&& ft_strncmp(echo_args[i - 1]->data, "-", 1) == 0
+//					&& !check_str_for_n_char(echo_args[i - 1]->data))
+//			printf(" ");
+		else if (echo_args[i] && echo_args[i - 1] && echo_args[i + 1] &&
+				echo_args[i-1]->type == WORD &&
+				echo_args[i+1]->type == WORD &&
+			       echo_args[i]->type == _SPACE &&
+			       !(ft_strncmp(echo_args[i - 1]->data, "-", 1) == 0 \
+				       && check_str_for_n_char(echo_args[i - 1]->data)))
 		{
-			check_n_option(&args, *temp, &all_n);
-			temp++;
+			printf(" ");
 		}
-		check_n_arg(&n_flag, args);
-		if (n_flag == 1)
-			args++;
+
+		i++;
 	}
-	print_value(args);
-	if (n_flag == 0)
+	if (flag == 0)
 		printf("\n");
 	return (0);
 }

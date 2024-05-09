@@ -17,7 +17,7 @@ static void	dispenser(t_ast_node *tree, t_stock *stock, char *input)
 	if (tree != NULL)
 	{
 		if (tree->type == NODE_COMMAND && _isbuiltin(stock->arena, input))
-			_runbuiltins(stock, input);
+			_runbuiltins(stock, trim_space(input));
 		else if (tree->type == NODE_COMMAND)
 			run_simple_command(stock, tree, input);
 		else if (tree->type == NODE_REDIRECTION_OUT)

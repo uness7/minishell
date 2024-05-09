@@ -75,7 +75,7 @@ void	_runbuiltins(t_stock *stock, char *input)
 		custom_unset(trim_quotes(stock->arena, input), stock->env);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "echo",
 			ft_strlen("echo")) == 0)
-		custom_echo(stock->arena, trim_quotes(stock->arena, input), stock->env);
+		ft_echo(stock->arena, trim_quotes(stock->arena, input));
 	add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, *(stock->status)));
 }
 
