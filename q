@@ -17,9 +17,8 @@ static t_redir_heredoc	*extract_data(t_arena *arena, t_ast_node *root,
 {
 	if (root->right)
 	{
-		result->av[*i] = arena_alloc(arena, sizeof(t_hd_arr));
-		result->av[*i]->data = ft_strdup(arena, root->right->data);
-		result->av[*i]->type = DELI;
+		result->av[(*i)]->data = ft_strdup(arena, root->right->data);
+		result->av[(*i)]->type = DELI;
 		(*i)++;
 	}
 	if (root->left)
@@ -30,14 +29,12 @@ static t_redir_heredoc	*extract_data(t_arena *arena, t_ast_node *root,
 		{
 			if (root->left->data != NULL)
 			{
-				result->av[*i] = arena_alloc(arena, sizeof(t_hd_arr));
 				result->av[*i]->data = ft_strdup(arena, root->left->data);
 				result->av[*i]->type = CMD;
 				(*i)++;
 			}
 			while (root->left->right != NULL)
 			{
-				result->av[*i] = arena_alloc(arena, sizeof(t_hd_arr));
 				result->av[(*i)]->data = ft_strdup(arena, root->left->right->data);
 				result->av[(*i)++]->type = ARG;
 				root->left->right = root->left->right->right;
@@ -47,12 +44,10 @@ static t_redir_heredoc	*extract_data(t_arena *arena, t_ast_node *root,
 	}
 	else
 	{
-		result->av[*i] = arena_alloc(arena, sizeof(t_hd_arr));
 		result->av[*i]->data = ft_strdup(arena, "-1");
 		result->av[*i]->type = NO_CMD;
 		(*i)++;
 	}
-	result->av[*i] = NULL;
 	return (result);
 }
 

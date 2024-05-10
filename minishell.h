@@ -35,12 +35,24 @@
 # define TARGETS 20
 # define ARGS 20
 
+typedef enum e_hd_type
+{
+	DELI = 1,
+	CMD = 2,
+	ARG = 3,
+	NO_CMD = 4
+}						t_hd_type;
+
+typedef struct s_hd_arr
+{
+	t_hd_type	type;
+	char		*data;
+}						t_hd_arr;
+
 typedef enum e_echo_type
 {
 	WORD,
 	_SPACE,
-	ECHO,
-	N_ARG
 }						t_echo_type;
 
 typedef struct t_echo_arr
@@ -127,10 +139,7 @@ typedef struct s_sk_1
 
 typedef struct s_redir_heredoc
 {
-	char				**av;
-	char				*delimeter;
-	char				**input;
-	int				count;
+	t_hd_arr			**av;
 }						t_redir_heredoc;
 
 typedef struct s_redir_cmd
