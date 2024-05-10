@@ -48,8 +48,10 @@ static void	run_minishell2(t_stock *stock, char *input)
 
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
+	print_list(list); printf("\n");
 	tree = parse(stock->arena, list);
-
+	print_tree(tree);
+//	exit(0);
 	if (is_input_valid2(trim_space(input)) && \
 			is_input_valid(trim_space(input)) && \
 			check_invalid_combinations(stock->arena, list, stock->env))

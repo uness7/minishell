@@ -13,23 +13,34 @@
 #include "minishell.h"
 
 static t_redir_heredoc	*extract_data(t_arena *arena, t_ast_node *root,
-		t_redir_heredoc *result)
+		t_redir_heredoc *result, int *i)
 {
-	result->av = build_command(arena, root->right);
-	if (root->left == NULL || root->left->data == NULL)
-		return (NULL);
-	result->delimeter = ft_strdup(arena, root->left->data);
-	if (result->delimeter == NULL)
-		return (NULL);
+	if (root->right)
+		result->av[(*i)++] = ft_strdup(arena, root->right->data);
+	if (root->left)
+	{
+		if (root->left->type == NODE_REDIRECTION_HEREDOC)
+		{
+			result = extract_data(arena, root->left, result, i);
+		}
+		else if (root->left->type == NODE_COMMAND)
+		{
+			if (root->data != NULL)
+				result->av[(*i)++] = ft_strdup(arena, root->data);
+		}
+	}
 	return (result);
 }
 
 t_redir_heredoc	*build_cmd_redir_heredoc(t_arena *arena, t_ast_node *root)
 {
 	t_redir_heredoc	*result;
+	int				i;
 
 	result = arena_alloc(arena, sizeof(t_redir_heredoc));
-	return (extract_data(arena, root, result));
+	result->av = arena_alloc(arena, sizeof(char *) * (10));
+	i = 0;
+	return (extract_data(arena, root, result, &i));
 }
 
 static void	write_input(char **input, int fd_in, int fd_out)

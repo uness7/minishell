@@ -61,10 +61,17 @@ static void	parse_redir_in(t_arena *arena, t_ast_node **root, char *data)
 	t_ast_node	*temp;
 	t_ast_node	*new_node;
 
-	if (*root == NULL)
-		return ;
 	new_node = create_node_tree(arena, NODE_REDIRECTION_IN, data);
-	if ((*root)->type == NODE_COMMAND)
+	if (*root == NULL)
+	{
+		*root = new_node;
+	}
+	else if ((*root)->type == NODE_REDIRECTION_IN)
+	{
+		new_node = create_node_tree(arena, NODE_ARGUMENT, data);
+		(*root)->left = new_node;
+	}
+	else if ((*root)->type == NODE_COMMAND)
 	{
 		temp = *root;
 		*root = new_node;
@@ -82,6 +89,7 @@ static t_ast_node	*dispenser(t_arena *arena, t_node *temp_node)
 {
 	int			is_last;
 	t_ast_node	*tree;
+	t_node		*prev;
 
 	tree = NULL;
 	is_last = 0;
@@ -89,7 +97,9 @@ static t_ast_node	*dispenser(t_arena *arena, t_node *temp_node)
 	{
 		if (temp_node->next == NULL)
 			is_last = 1;
-		if (temp_node->type == TOKEN_WORD)
+		if (temp_node->type == TOKEN_WORD && prev->type == TOKEN_REDIR_IN)
+			parse_redir_in(arena, &tree, temp_node->data);
+		else if (temp_node->type == TOKEN_WORD)
 			parse_command(arena, &tree, temp_node->data, is_last);
 		else if (temp_node->type == TOKEN_PIPE)
 			parse_pipeline(arena, &tree, temp_node->data);
@@ -101,6 +111,7 @@ static t_ast_node	*dispenser(t_arena *arena, t_node *temp_node)
 			parse_redir_in(arena, &tree, temp_node->data);
 		else if (temp_node->type == TOKEN_REDIR_HEREDOC)
 			parse_redir_heredoc(arena, &tree, temp_node->data);
+		prev = temp_node;
 		temp_node = temp_node->next;
 	}
 	return (tree);

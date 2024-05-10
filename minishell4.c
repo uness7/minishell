@@ -61,19 +61,3 @@ void	update_var(t_arena *arena, t_env **env, char *input)
 		add_or_update_env(arena, env, name, value);
 	return ;
 }
-
-void	heredoc(t_arena *arena, char *input)
-{
-	char	*rd;
-
-	(void)input;
-	signal(SIGINT, handle_sig_heredoc);
-	rd = readline("> ");
-	if (!rd)
-	{
-		free(rd);
-		free_arena(arena);
-		exit(127);
-	}
-	free(rd);
-}

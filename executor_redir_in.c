@@ -49,6 +49,7 @@ int	execute_redir_in(t_stock *stock, char *cmd, char *target, char **av)
 	int		status;
 	int		fd;
 
+
 	fd = -1;
 	id = fork();
 	status = 0;

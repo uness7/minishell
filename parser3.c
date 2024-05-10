@@ -17,14 +17,23 @@ void	parse_redir_heredoc(t_arena *arena, t_ast_node **root, char *data)
 	t_ast_node	*temp;
 	t_ast_node	*new_node;
 
-	if (*root == NULL)
-		return ;
 	new_node = create_node_tree(arena, NODE_REDIRECTION_HEREDOC, data);
-	if ((*root)->type == NODE_COMMAND)
+	if (*root == NULL)
+	{
+		*root = new_node;
+		(*root)->left = NULL;
+	}
+	else if ((*root)->type == NODE_COMMAND)
 	{
 		temp = *root;
 		*root = new_node;
-		new_node->right = temp;
+		new_node->left = temp;
+	}
+	else if ((*root)->type == NODE_REDIRECTION_HEREDOC)
+	{
+		temp = *root;
+		*root = new_node;
+		new_node->left = temp;
 	}
 	else if ((*root)->type == NODE_PIPELINE)
 	{

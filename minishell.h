@@ -130,6 +130,7 @@ typedef struct s_redir_heredoc
 	char				**av;
 	char				*delimeter;
 	char				**input;
+	int				count;
 }						t_redir_heredoc;
 
 typedef struct s_redir_cmd

@@ -85,6 +85,12 @@ void	run_redir_heredoc_command(t_stock *stock, char *input, t_ast_node *tree)
 	t_redir_heredoc	*rh;
 
 	rh = build_cmd_redir_heredoc(stock->arena, tree);
+
+	char	**av = rh->av;
+	while (*av)
+		printf("%s\n", *av++);
+	exit(0);
+
 	if (rh == NULL || rh->delimeter == NULL || rh->av == NULL)
 	{
 		printf("Syntax error :( \n");
