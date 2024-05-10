@@ -60,6 +60,7 @@ CFILES = lexer.c \
 	 itoa.c \
 	 dodjo.c \
 	 expander.c \
+	 get_next_line.c \
 	 split_echo.c \
 
 OBJECTS = $(CFILES:.c=.o)

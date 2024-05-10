@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 19:38:00 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/08 18:49:55 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/10 18:58:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void	custom_export(t_stock *stock, char *input)
 				if (ft_strstr(*args, "="))
 				{
 					name = ft_strtok_2(*args, "=");
-					if (isdigit(name[0]) && check_env_var_rules(name))
+					if (isdigit(name[0]) || !check_env_var_rules(name))
 					{
 						printf("bash: export: `%s': not a valid identifier\n", *args);
 						return ;

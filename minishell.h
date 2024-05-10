@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/06 22:29:25 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/10 18:01:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define ECHO_SIZE 100
 # define TARGETS 20
 # define ARGS 20
+# define BUFFER_SIZE 10
 
 typedef enum e_hd_type
 {
@@ -317,7 +318,7 @@ void					run_redir_out_command(t_stock *stock, char *input,
 void					run_redir_append_command(t_stock *stock, char *input,
 							t_ast_node *tree);
 void					run_redir_in_command(t_stock *stock, t_ast_node *tree);
-void					run_redir_heredoc_command(t_stock *stock, char *input,
+void					run_redir_heredoc_command(t_stock *stock,
 							t_ast_node *tree);
 int						run_expr(t_stock *stock, char **av, char *input);
 
@@ -461,5 +462,8 @@ char					*expand_variables(t_stock *stock, const char *input);
 char					**ft_split_2(const char *str);
 t_echo_arr				**split(t_arena *arena, char *input);
 int					is_space(char c);
+/* gnl */
+
+char	*get_next_line(int fd);
 
 #endif

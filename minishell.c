@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/08 18:06:19 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/10 18:35:22 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	dispenser(t_ast_node *tree, t_stock *stock, char *input)
 		else if (tree->type == NODE_REDIRECTION_APPEND)
 			run_redir_append_command(stock, input, tree);
 		else if (tree->type == NODE_REDIRECTION_HEREDOC)
-			run_redir_heredoc_command(stock, input, tree);
+			run_redir_heredoc_command(stock, tree);
 		else if (tree->type == NODE_REDIRECTION_IN)
 			run_redir_in_command(stock, tree);
 		else if (tree->type == NODE_PIPELINE)
@@ -48,9 +48,9 @@ static void	run_minishell2(t_stock *stock, char *input)
 
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-	print_list(list); printf("\n");
+	//print_list(list); printf("\n");
 	tree = parse(stock->arena, list);
-	print_tree(tree);
+	//print_tree(tree);
 //	exit(0);
 	if (is_input_valid2(trim_space(input)) && \
 			is_input_valid(trim_space(input)) && \
