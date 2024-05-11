@@ -6,64 +6,77 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/10 18:35:22 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/11 19:37:10 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	dispenser(t_ast_node *tree, t_stock *stock, char *input)
-{
-	if (tree != NULL)
-	{
-		if (tree->type == NODE_COMMAND && _isbuiltin(stock->arena, input))
-			_runbuiltins(stock, trim_space(input));
-		else if (tree->type == NODE_COMMAND)
-			run_simple_command(stock, tree, input);
-		else if (tree->type == NODE_REDIRECTION_OUT)
-			run_redir_out_command(stock, input, tree);
-		else if (tree->type == NODE_REDIRECTION_APPEND)
-			run_redir_append_command(stock, input, tree);
-		else if (tree->type == NODE_REDIRECTION_HEREDOC)
-			run_redir_heredoc_command(stock, tree);
-		else if (tree->type == NODE_REDIRECTION_IN)
-			run_redir_in_command(stock, tree);
-		else if (tree->type == NODE_PIPELINE)
-			run_pipeline_command(stock, tree);
-	}
+void print_program(char **args) {
+    if (args == NULL) {
+        printf("Arguments: None\n");
+        return;
+    }
+    printf("Arguments:\n");
+    for (int i = 0; args[i] != NULL; i++) {
+        printf("  [%d]: %s\n", i, args[i]);
+    }
 }
 
-static void	cmd_not_found(t_stock *stock)
-{
-	ft_putstr_fd("Command Not Found\n", 1);
-	*(stock->status) = 127;
-	add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena,
-			*(stock->status)));
+void print_programs(t_program **programs) {
+    if (programs == NULL) {
+        printf("No programs to display.\n");
+        return;
+    }
+
+    int index = 0;
+    while (programs[index] != NULL) {
+        t_program *p = programs[index];
+        printf("Program %d:\n", index);
+        printf("  Command: %s\n", p->cmd ? p->cmd : "None");
+        print_program(p->args);
+        printf("  File descriptors: in=%d, out=%d\n", p->fd_in, p->fd_out);
+        printf("  Here Document Flag: %s\n", p->f_heredoc ? "Yes" : "No");
+        printf("\n");
+        index++;
+    }
+}
+
+
+void reverse_programs(t_program **programs) {
+    if (!programs) return;  // Handle null pointer
+
+    int length = 0;
+    // Calculate the length of the array
+    while (programs[length]) {
+        length++;
+    }
+
+    // Reverse the array
+    for (int i = 0; i < length / 2; i++) {
+        t_program *temp = programs[i];
+        programs[i] = programs[length - i - 1];
+        programs[length - i - 1] = temp;
+    }
 }
 
 static void	run_minishell2(t_stock *stock, char *input)
 {
+	t_program	**programs;
 	t_ast_node	*tree;
 	t_list		*list;
 
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-	//print_list(list); printf("\n");
 	tree = parse(stock->arena, list);
+	//(void)programs;
 	//print_tree(tree);
-//	exit(0);
-	if (is_input_valid2(trim_space(input)) && \
-			is_input_valid(trim_space(input)) && \
-			check_invalid_combinations(stock->arena, list, stock->env))
-	{
-		signal(SIGINT, handle_sig2);
-		if (tree != NULL)
-			dispenser(tree, stock, input);
-		add_or_update_env(stock->arena, &(stock->env), "?",
-				ft_itoa(stock->arena, *(stock->status)));
-	}
-	else
-		cmd_not_found(stock);
+	//printf("\n\n\n");
+	programs = extract_programs(tree, strlen(input));	
+	reverse_programs(programs);
+	//print_programs(programs);
+	run_programs(programs, stock->envp, stock->arena);
+
 }
 
 static void	run_minishell(t_stock *stock)

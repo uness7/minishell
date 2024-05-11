@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 15:21:32 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/06 17:57:42 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/11 11:56:05 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,20 @@ t_redir_heredoc	*build_cmd_redir_heredoc(t_arena *arena, t_ast_node *root)
 	return (extract_data(arena, root, result, &i));
 }
 
-static void	write_input(char *input, int fd_in, int fd_out)
+static void	write_input(char **input, int fd_in, int fd_out)
 {
 	close(fd_in);
-	ft_putstr_fd(input, fd_out);
-	if (input + 1 != NULL)
-		ft_putstr_fd("\n", fd_out);
+	while (*input)
+	{
+		ft_putstr_fd(*input, fd_out);
+		if (*(input + 1) != NULL)
+			ft_putstr_fd("\n", fd_out);
+		input++;
+	}
 	close(fd_out);
 }
 
-int	execute_redir_heredoc(t_stock *stock, char *cmd, char *input, char **av)
+int	execute_redir_heredoc(t_stock *stock, char *cmd, char **input, char **av)
 {
 	pid_t	id;
 	int		status;

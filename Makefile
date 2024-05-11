@@ -1,6 +1,6 @@
 CC = cc
 
-CFLAGS = #-Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g
 
 RDLINE = -lreadline
 
@@ -62,6 +62,8 @@ CFILES = lexer.c \
 	 expander.c \
 	 get_next_line.c \
 	 split_echo.c \
+	 heredoc.c \
+	 execute.c \
 
 OBJECTS = $(CFILES:.c=.o)
 

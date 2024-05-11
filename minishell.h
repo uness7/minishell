@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/10 18:01:16 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/11 18:52:55 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@
 #define BUFFERSIZE 1024
 #define READ_END 0
 #define WRITE_END 1
+
+
+
 
 
 typedef enum e_hd_type
@@ -196,6 +199,45 @@ typedef struct s_ast_node
 	struct s_ast_node	*right;
 }						t_ast_node;
 
+
+
+
+
+
+///////////////      Programs        /////////////////////
+
+typedef struct s_program
+{
+	t_node_type	type;
+	int	fd_out;
+	int	fd_in;
+	int	f_heredoc;
+	char	**args;
+	char	*cmd;
+}						t_program;
+
+
+t_program       *extract_program_command(t_ast_node *root);
+t_program       *extract_program_redir_in(t_ast_node *root);
+t_program       *extract_program_redir_out_append(t_ast_node *root, int a);
+t_program       **extract_programs(t_ast_node *root, int programs_count);
+t_program       **extract_programs_pipeline(t_ast_node *root, \
+		t_program **programs, int programs_count, int *i);
+void		run_programs(t_program **programs, char **envp, t_arena *arena);
+
+///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
 // builtins
 void					ft_cd(t_arena *arena, char *path, t_env *env);
 char					*get_dir(t_arena *arena);
@@ -262,7 +304,7 @@ t_redir_cmd				*build_cmd_redir_append(t_arena *arena,
 
 // executor_redir_heredoc.c file:
 int						execute_redir_heredoc(t_stock *stock, char *cmd_path,
-							char *input, char **av);
+							char **input, char **av);
 
 t_redir_heredoc			*build_cmd_redir_heredoc(t_arena *arena,
 							t_ast_node *root);
