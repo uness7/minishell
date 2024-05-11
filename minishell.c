@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/11 19:37:10 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 00:21:23 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void print_programs(t_program **programs) {
         printf("  Command: %s\n", p->cmd ? p->cmd : "None");
         print_program(p->args);
         printf("  File descriptors: in=%d, out=%d\n", p->fd_in, p->fd_out);
-        printf("  Here Document Flag: %s\n", p->f_heredoc ? "Yes" : "No");
+        printf("  Here Document Flag: %s\n", p->fd_heredoc ? "Yes" : "No");
         printf("\n");
         index++;
     }
@@ -69,8 +69,8 @@ static void	run_minishell2(t_stock *stock, char *input)
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	tree = parse(stock->arena, list);
-	//(void)programs;
-	//print_tree(tree);
+//	(void)programs;
+//	print_tree(tree);
 	//printf("\n\n\n");
 	programs = extract_programs(tree, strlen(input));	
 	reverse_programs(programs);

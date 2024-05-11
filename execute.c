@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/11 19:36:40 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 00:29:53 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ void	run_programs(t_program **programs, char **envp, t_arena *arena)
 				close(pipefd[0]);
 				dup2(pipefd[1], STDOUT_FILENO);
 			}
-
-			// specific cases
 			if (programs[i]->type == NODE_REDIRECTION_IN)
 			{
 				dup2(programs[i]->fd_in, STDIN_FILENO);
@@ -57,8 +55,9 @@ void	run_programs(t_program **programs, char **envp, t_arena *arena)
 			}
 			else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
 			{
-				dup2(programs[i]->fd_in, STDIN_FILENO);
-				close(programs[i]->fd_in);
+				close(STDIN_FILENO);
+				dup2(programs[i]->fd_heredoc, STDIN_FILENO);
+				close(programs[i]->fd_heredoc);
 			}
 			execve(path, programs[i]->args, envp);
 			perror("execve failed: ");
@@ -115,7 +114,7 @@ t_program	*extract_program_command(t_ast_node *root)
 		j++;
 		temp = temp->right;
 	}
-	program->f_heredoc = 0;
+	program->fd_heredoc = 0;
 	program->args[j] = NULL;
 	program->type = NODE_COMMAND;
 	return (program);
@@ -158,7 +157,7 @@ t_program	*extract_program_redir_in(t_ast_node *root)
 		j++;
 		temp = temp->right;
 	}
-	program->f_heredoc = 0;
+	program->fd_heredoc = 0;
 	program->args[j] = NULL;
 	program->type = NODE_REDIRECTION_IN;
 	return (program);
@@ -203,7 +202,7 @@ t_program	*extract_program_redir_out_append(t_ast_node *root, int f_out)
 		j++;
 		temp = temp->right;
 	}
-	program->f_heredoc = 0;
+	program->fd_heredoc = 0;
 	program->type = NODE_REDIRECTION_OUT;
 	program->args[j] = NULL;
 	return (program);
@@ -248,6 +247,98 @@ t_program	**extract_programs_pipeline(t_ast_node *root, t_program **programs , \
 	return (programs);
 }
 
+void handle_tty_signals() {
+	struct sigaction sa;
+	sa.sa_handler = SIG_IGN; // Ignore SIGTTIN and SIGTTOU
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+
+	sigaction(SIGTTIN, &sa, NULL);
+	sigaction(SIGTTOU, &sa, NULL);
+}
+
+int	heredoc(char *delim)
+{
+	int		nbytes;
+	int		len;
+	char buff[BUFFERSIZE + 1];
+	int		write_fd;
+	int		read_fd;
+
+
+	handle_tty_signals();
+	write_fd = open("tmp.txt", O_RDWR | O_CREAT | O_TRUNC, 0600);
+	if (write_fd == -1) return -1;
+	read_fd = dup(write_fd);
+	//unlink("tmp.txt");
+	len = strlen(delim);
+	write(1, "heredoc> ", 9);
+	while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+	{
+		buff[nbytes] = 0;
+		if (nbytes == len + 1 && (memcmp(delim, buff, len) == 0) \
+				&& buff[nbytes - 1] == '\n')
+			break ;
+		write(write_fd, buff, nbytes);
+		write(1, "heredoc> ", 9);
+	}
+	close(write_fd);
+	return (read_fd);
+}
+void	handle_signal(int signum)
+{
+	exit(signum);
+	printf("\nReceived signal %d, exiting gracefully...\n", signum);
+}
+
+
+
+/*
+char **heredoc_input(char *deli) {
+
+	struct sigaction sa;
+
+	// Set up signal handling
+	sa.sa_handler = handle_signal;
+	sa.sa_flags = SA_RESTART;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}
+*/
+
+t_program	*extract_program_heredoc(t_ast_node *root)
+{
+	int		j;
+	char	*deli;
+	t_ast_node	*temp;
+	t_program	*program;
+
+	j = 0;
+	program = malloc(sizeof(t_program));
+	if (program == NULL) return NULL;
+	program->fd_out = 1;	
+	program->fd_in = 0;
+	deli = strdup(root->right->data);
+	setpgid(0, 0);  // Set the child's process group ID to its own PID
+	tcsetpgrp(STDIN_FILENO, getpid());
+	program->fd_heredoc = heredoc(deli);
+	program->cmd = strdup(root->left->data);	
+	if (program->cmd == NULL) return NULL;
+	program->args = malloc(sizeof(char *) * 100);
+	if (program->args == NULL) return NULL;
+	temp = root->left;	
+	while (temp != NULL)
+	{
+		program->args[j] = strdup(temp->data);
+		if (program->args[j]  == NULL) return NULL;
+		j++;
+		temp = temp->right;
+	}
+	program->args[j] = NULL;
+	return (program);
+}
+
 t_program	**extract_programs(t_ast_node *root, int programs_count)
 {
 	int		i;
@@ -269,6 +360,8 @@ t_program	**extract_programs(t_ast_node *root, int programs_count)
 		else
 			programs[i++] = extract_program_redir_out_append(root, 0);
 	}
+	else if (root->type == NODE_REDIRECTION_HEREDOC)
+		programs[i++] = extract_program_heredoc(root);
 	else if (root->type == NODE_PIPELINE)
 	{
 		programs = extract_programs_pipeline(root, programs, programs_count, &i);

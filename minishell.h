@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/11 18:52:55 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/11 23:22:37 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <termios.h>
 
 # define SUCCES 1
 # define ERROR 0
@@ -211,7 +212,7 @@ typedef struct s_program
 	t_node_type	type;
 	int	fd_out;
 	int	fd_in;
-	int	f_heredoc;
+	int	fd_heredoc;
 	char	**args;
 	char	*cmd;
 }						t_program;
