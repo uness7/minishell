@@ -35,6 +35,10 @@
 # define TARGETS 20
 # define ARGS 20
 # define BUFFER_SIZE 10
+#define BUFFERSIZE 1024
+#define READ_END 0
+#define WRITE_END 1
+
 
 typedef enum e_hd_type
 {
@@ -258,7 +262,7 @@ t_redir_cmd				*build_cmd_redir_append(t_arena *arena,
 
 // executor_redir_heredoc.c file:
 int						execute_redir_heredoc(t_stock *stock, char *cmd_path,
-							char **input, char **av);
+							char *input, char **av);
 
 t_redir_heredoc			*build_cmd_redir_heredoc(t_arena *arena,
 							t_ast_node *root);
@@ -436,7 +440,7 @@ void					free_arena(t_arena *arena);
 void					*arena_alloc(t_arena *arena, size_t size);
 
 void					expand_var(t_stock *stock, char *input);
-void					heredoc(t_arena *arena, char *input);
+//void					heredoc(t_arena *arena, char *input);
 void					expand_env_var_in_pipes(t_cmd **commands,
 							t_stock *stock);
 void					expand_env_var_heredoc(t_redir_heredoc *rh,

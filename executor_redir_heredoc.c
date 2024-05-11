@@ -67,20 +67,16 @@ t_redir_heredoc	*build_cmd_redir_heredoc(t_arena *arena, t_ast_node *root)
 	return (extract_data(arena, root, result, &i));
 }
 
-static void	write_input(char **input, int fd_in, int fd_out)
+static void	write_input(char *input, int fd_in, int fd_out)
 {
 	close(fd_in);
-	while (*input)
-	{
-		ft_putstr_fd(*input, fd_out);
-		if (*(input + 1) != NULL)
-			ft_putstr_fd("\n", fd_out);
-		input++;
-	}
+	ft_putstr_fd(input, fd_out);
+	if (input + 1 != NULL)
+		ft_putstr_fd("\n", fd_out);
 	close(fd_out);
 }
 
-int	execute_redir_heredoc(t_stock *stock, char *cmd, char **input, char **av)
+int	execute_redir_heredoc(t_stock *stock, char *cmd, char *input, char **av)
 {
 	pid_t	id;
 	int		status;

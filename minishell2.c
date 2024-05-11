@@ -78,29 +78,48 @@ void	run_redir_in_command(t_stock *stock, t_ast_node *tree)
 	}
 }
 
-void	quite_heredoc(int a)
+int	heredoc(char *delim)
 {
-	(void)a;
-	write(1, "\n", 1);
-	exit(0);
+	char	buff[BUFFERSIZE + 1];
+
+	int hfd[2], nbytes, len;
+	if (pipe(hfd) == -1)
+	{
+		return (-1);
+	}
+	len = strlen(delim);
+	write(1, "heredoc> ", 9);
+	while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+	{
+		buff[nbytes] = 0;
+		if (nbytes == len + 1 && (memcmp(delim, buff, len) == 0) && buff[nbytes
+			- 1] == '\n')
+		{
+			break ;
+		}
+		write(hfd[WRITE_END], buff, nbytes);
+		write(1, "heredoc> ", 9);
+	}
+	close(hfd[WRITE_END]);
+	return (hfd[READ_END]);
 }
 
 void	run_redir_heredoc_command(t_stock *stock, t_ast_node *tree)
 
 {
-	int		count_deli;
-	int		count_arg;
-	int		i;
-	int		j;
-	int		k;
-	int		no_cmd_flag;
-	t_redir_heredoc	*rh;
-	t_hd_arr	**av;
-	char	**delimiters;
-	char	**args;
-	char	*cmd;
-	char	*last_deli;
-	char	*second_last_deli;
+	int count_deli;
+	int count_arg;
+	int i;
+	int j;
+	int k;
+	int no_cmd_flag;
+	t_redir_heredoc *rh;
+	t_hd_arr **av;
+	char **delimiters;
+	char **args;
+	char *cmd;
+	char *last_deli;
+	char *second_last_deli;
 
 	last_deli = NULL;
 	second_last_deli = NULL;
@@ -122,18 +141,13 @@ void	run_redir_heredoc_command(t_stock *stock, t_ast_node *tree)
 			no_cmd_flag = 1;
 		i++;
 	}
-	/*
-	printf("count of deli : %d\n", count_deli);
-	printf("count of args : %d\n", count_arg);
-	printf("no cmd flag : %d\n", no_cmd_flag);
-	*/
+
 	delimiters = arena_alloc(stock->arena, sizeof(char *) * (count_deli + 1));
 	args = arena_alloc(stock->arena, sizeof(char *) * (count_arg + 1));
 
-	// making delimiters and args arrays
 	i = 0;
 	cmd = NULL;
-	k = 1;
+	k = 0;
 	while (av[i])
 	{
 		if (av[i]->type == DELI)
@@ -144,71 +158,35 @@ void	run_redir_heredoc_command(t_stock *stock, t_ast_node *tree)
 			cmd = ft_strdup(stock->arena, av[i]->data);
 		i++;
 	}
-	args[0] = cmd;
-	/*
-	i = 0;
-	while (delimiters[i])
-	{
-		printf("deli : %s\n", delimiters[i]);
-		i++;
-	}
 
-	i = 0;
-	while (args[i])
-	{
-		printf("args : %s\n", args[i]);
-		i++;
-	}
-	
-	if (no_cmd_flag == 1)
-		printf("There was no command detected\n");
-	else
-		printf("cmd : %s\n", cmd);
-		*/
 	last_deli = ft_strdup(stock->arena, delimiters[0]);
 	if (delimiters[1] != NULL)
 		second_last_deli = ft_strdup(stock->arena, delimiters[1]);
+
 	/*
-	printf("last deli : %s\n", last_deli);
-	if (second_last_deli != NULL)
-		printf("second last deli : %s\n", last_deli);
-		*/
+		* We have access to :
+		* 	- cmd
+		* 	- args
+		* 	- last deli
+		* */
 
-	//printf("input : %s\n", input);
+	signal(SIGINT, handle_sig);
+	int fd = heredoc(last_deli);
+	char buffer[BUFFERSIZE + 1];
+	char stored_data[BUFFERSIZE + 1];
+	size_t total_bytes_read = 0;
+	ssize_t bytes_read;
 
-	pid_t	pid;
-	int	status;
-	int	fd[2];
-	
-	pipe(fd);
-	pid = fork();
-
-	signal(SIGINT, SIG_IGN);
-	if (!pid)
+	while ((bytes_read = read(fd, buffer, BUFFERSIZE)) > 0)
 	{
-		signal(SIGINT, quite_heredoc);
-		char	*line = NULL;
-		//char	**input = arena_alloc(arena, sizeof(char *)); 
-		char	*input = "";
-		while (1)
-		{
-			line = readline("> ");
-			if (line == NULL)
-				break ;
-			if (ft_strcmp(line, last_deli) == 0)
-			{
-				free(line);
-				break ;
-			}
-			input = ft_strjoin(stock->arena, input, line);
-			input = ft_strjoin(stock->arena, input, "\n");
-			free(line);
-		}
-		write(fd[1], input, sizeof(input));
-		write(1, "\n", 1);
-		exit(1);
+		buffer[bytes_read] = '\0';
+		memcpy(stored_data + total_bytes_read, buffer, bytes_read);
+		total_bytes_read += bytes_read;
 	}
-	waitpid(pid, &status, 0);
-	dup2(fd[0], 0);
-	execve(cmd, args, stock->envp);
+
+	stored_data[total_bytes_read] = '\0';
+	close(fd);
+
+	char *av2[] = {"/usr/bin/sort", NULL};
+	execute_redir_heredoc(stock, "/usr/bin/sort", stored_data, av2);
 }
