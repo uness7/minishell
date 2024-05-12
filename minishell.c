@@ -6,13 +6,14 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 18:00:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 18:09:05 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void print_program(char **args) {
+void print_program(char **args)
+{
 	if (args == NULL) {
 		printf("Arguments: None\n");
 		return;
@@ -23,7 +24,8 @@ void print_program(char **args) {
 	}
 }
 
-void print_programs(t_program **programs) {
+void	print_programs(t_program **programs)
+{
 	if (programs == NULL) {
 		printf("No programs to display.\n");
 		return;
@@ -43,19 +45,23 @@ void print_programs(t_program **programs) {
 }
 
 
-void reverse_programs(t_program **programs)
+void	reverse_programs(t_program **programs)
 {
-	int length = 0;
+	int	length;
+	int	i;
 
+	length = 0;
+	i = 0;
 	if (!programs)
 		return ;
-	while (programs[length]) {
+	while (programs[length])
 		length++;
-	}
-	for (int i = 0; i < length / 2; i++) {
+	while (i < length / 2)
+	{
 		t_program *temp = programs[i];
 		programs[i] = programs[length - i - 1];
 		programs[length - i - 1] = temp;
+		i++;
 	}
 }
 
@@ -67,14 +73,18 @@ static void	run_minishell2(t_stock *stock, char *input)
 
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-	tree = parse(stock->arena, list);
-	//(void)programs;
-	//print_tree(tree);
-	//printf("\n\n\n");
-	programs = extract_programs(tree, strlen(input));	
-	reverse_programs(programs);
-	//print_programs(programs);
-	run_programs(programs, stock->envp, stock, input);
+	if (is_input_valid(input) && is_input_valid2(input) \
+			&& check_invalid_combinations(stock->arena, list, stock->env))
+	{
+		tree = parse(stock->arena, list);
+		//(void)programs;
+		//print_tree(tree);
+		//printf("\n\n\n");
+		programs = extract_programs(tree, strlen(input));	
+		reverse_programs(programs);
+		//print_programs(programs);
+		run_programs(programs, stock->envp, stock, input);
+	}
 }
 
 static void	run_minishell(t_stock *stock)
