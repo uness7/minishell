@@ -224,7 +224,7 @@ t_program       *extract_program_redir_out_append(t_ast_node *root, int a);
 t_program       **extract_programs(t_ast_node *root, int programs_count);
 t_program       **extract_programs_pipeline(t_ast_node *root, \
 		t_program **programs, int programs_count, int *i);
-void		run_programs(t_program **programs, char **envp, t_arena *arena);
+void		run_programs(t_program **programs, char **envp, t_stock *stock, char *input);
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -375,6 +375,7 @@ char					*join_args(t_arena *arena, char **args);
 /* Built-ins */
 bool					_isbuiltin(t_arena *arena, char *input);
 void					_runbuiltins(t_stock *stock, char *input);
+
 char					*trim_space(char *str);
 char					*trim_quotes(t_arena *arena, char *str);
 void					ft_exit(t_arena *arena, char *argv, int *status);

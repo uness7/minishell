@@ -75,7 +75,7 @@ static void	run_minishell2(t_stock *stock, char *input)
 	programs = extract_programs(tree, strlen(input));	
 	reverse_programs(programs);
 	//print_programs(programs);
-	run_programs(programs, stock->envp, stock->arena);
+	run_programs(programs, stock->envp, stock, input);
 
 }
 
@@ -86,7 +86,7 @@ static void	run_minishell(t_stock *stock)
 	while (1)
 	{
 		init_signal();
-		input = readline("\033[0;35mninjashell 🥷 > \033[0m ");
+		input = readline("\033[0;35m~> %  \033[0m ");
 		if (!input)
 		{
 			printf("exit\n");

@@ -12,65 +12,74 @@
 
 #include "minishell.h"
 
-void	run_programs(t_program **programs, char **envp, t_arena *arena)
+// maybe i should implement extract_builtin command
+
+void	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 {
 	pid_t	pid;
 	int		i;
 	int		pipefd[2];
 	int		last_fd;
 	char	*path;
+        int		next_exists;
 
-
+	(void)input;
 	i = 0;
 	last_fd = STDIN_FILENO;
 	while (programs[i])
 	{
-		if (programs[i + 1] && pipe(pipefd) == -1)
+		next_exists = programs[i + 1] != NULL;
+		if (next_exists && pipe(pipefd) == -1)
 		{
 			perror("Pipe syscall failed: ");
 			exit(EXIT_FAILURE);
 		}
-		path = find_cmd(arena, ft_strtok(arena, \
-					find_paths(envp)), programs[i]->cmd);
-		pid = fork();
-		if (pid == 0)
+		if (_isbuiltin(stock->arena, programs[i]->cmd) && !next_exists)
+			_runbuiltins(stock, input);
+		else
 		{
+			path = find_cmd(stock->arena, ft_strtok(stock->arena, \
+						find_paths(envp)), programs[i]->cmd);
+			pid = fork();
+			if (pid == 0)
+			{
+				if (i > 0)
+					dup2(last_fd, STDIN_FILENO);
+				if (programs[i + 1])
+				{
+					close(pipefd[0]);
+					dup2(pipefd[1], STDOUT_FILENO);
+				}
+				if (programs[i]->type == NODE_REDIRECTION_IN)
+				{
+					dup2(programs[i]->fd_in, STDIN_FILENO);
+					close(programs[i]->fd_in);
+				}
+				else if (programs[i]->type == NODE_REDIRECTION_OUT ||
+						programs[i]->type == NODE_REDIRECTION_APPEND)
+				{
+					dup2(programs[i]->fd_out, STDOUT_FILENO);
+					close(programs[i]->fd_out);
+				}
+				else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
+				{
+					close(STDIN_FILENO);
+					dup2(programs[i]->fd_heredoc, STDIN_FILENO);
+					close(programs[i]->fd_heredoc);
+				}
+				execve(path, programs[i]->args, envp);
+				perror("execve failed: ");
+				exit(0);
+			}
+			else if (pid < 0)
+				fork_err();
 			if (i > 0)
-				dup2(last_fd, STDIN_FILENO);
+				close(last_fd);
 			if (programs[i + 1])
 			{
-				close(pipefd[0]);
-				dup2(pipefd[1], STDOUT_FILENO);
+				close(pipefd[1]);
+				last_fd = pipefd[0];
 			}
-			if (programs[i]->type == NODE_REDIRECTION_IN)
-			{
-				dup2(programs[i]->fd_in, STDIN_FILENO);
-				close(programs[i]->fd_in);
-			}
-			else if (programs[i]->type == NODE_REDIRECTION_OUT ||
-				programs[i]->type == NODE_REDIRECTION_APPEND)
-			{
-				dup2(programs[i]->fd_out, STDOUT_FILENO);
-				close(programs[i]->fd_out);
-			}
-			else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
-			{
-				close(STDIN_FILENO);
-				dup2(programs[i]->fd_heredoc, STDIN_FILENO);
-				close(programs[i]->fd_heredoc);
-			}
-			execve(path, programs[i]->args, envp);
-			perror("execve failed: ");
-			exit(0);
-		}
-		else if (pid < 0)
-			fork_err();
-		if (i > 0)
-			close(last_fd);
-		if (programs[i + 1])
-		{
-			close(pipefd[1]);
-			last_fd = pipefd[0];
 		}
 		i++;
 	}
