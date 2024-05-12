@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/11 23:22:37 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 15:54:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ typedef struct s_program
 
 
 t_program       *extract_program_command(t_ast_node *root);
+t_program       *extract_program_heredoc(t_ast_node *root);
 t_program       *extract_program_redir_in(t_ast_node *root);
 t_program       *extract_program_redir_out_append(t_ast_node *root, int a);
 t_program       **extract_programs(t_ast_node *root, int programs_count);

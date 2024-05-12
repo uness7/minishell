@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 00:21:23 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 17:45:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,13 @@ static void	run_minishell2(t_stock *stock, char *input)
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	tree = parse(stock->arena, list);
-//	(void)programs;
-//	print_tree(tree);
+	//(void)programs;
+	//print_tree(tree);
 	//printf("\n\n\n");
 	programs = extract_programs(tree, strlen(input));	
 	reverse_programs(programs);
 	//print_programs(programs);
 	run_programs(programs, stock->envp, stock, input);
-
 }
 
 static void	run_minishell(t_stock *stock)
