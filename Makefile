@@ -14,11 +14,6 @@ CFILES = lexer.c \
 	 linked_lists.c \
 	 trees.c \
 	 minishell.c \
-	 minishell2.c \
-	 minishell3.c \
-	 minishell4.c \
-	 minishell5.c \
-	 executor.c \
 	 utils.c \
 	 utils2.c \
 	 utils3.c \
@@ -26,15 +21,6 @@ CFILES = lexer.c \
 	 utils5.c \
 	 utils6.c \
 	 utils7.c \
-	 executor_redir_out.c \
-	 executor_redir_append.c \
-	 executor_redir_heredoc.c \
-	 _executor_redir_heredoc.c \
-	 executor_redir_in.c \
-	 pipelines.c \
-	 pipelines2.c \
-	 pipelines3.c \
-	 pipelines4.c \
 	 ft_exit.c \
 	 ft_pwd.c \
 	 ft_cd.c \
@@ -46,21 +32,16 @@ CFILES = lexer.c \
 	 ft_echo3.c \
 	 builtins.c \
 	 builtins2.c \
+	 builtins3.c \
 	 signal.c \
 	 errors.c \
 	 errors2.c \
 	 input_validation.c \
 	 input_validation2.c \
 	 input_validation3.c \
-	 multiple_redir_heredoc.c \
-	 multiple_redir_heredoc2.c \
-	 multiple_redir_heredoc3.c \
-	 multiple_redir_heredoc4.c \
-	 multiple_redir_heredoc5.c \
 	 itoa.c \
 	 dodjo.c \
 	 expander.c \
-	 get_next_line.c \
 	 split_echo.c \
 	 execute.c \
 

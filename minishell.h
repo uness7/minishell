@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 15:54:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 18:04:02 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,16 +230,6 @@ void		run_programs(t_program **programs, char **envp, t_stock *stock, char *inpu
 ///////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-
-
-
 // builtins
 void					ft_cd(t_arena *arena, char *path, t_env *env);
 char					*get_dir(t_arena *arena);
@@ -274,11 +264,6 @@ t_ast_node				*create_node_tree(t_arena *arena, t_node_type type,
 							char *data);
 void					print_tree(t_ast_node *root);
 
-// executor.c file
-char					**build_command(t_arena *arena, t_ast_node *root);
-int						execute(t_stock *stock, char *cmd_path, char **av);
-int						find_number_nodes(t_ast_node *root);
-
 // utils.c files
 char					*find_paths(char **envp);
 char					*find_cmd(t_arena *arena, char **paths, char *cmd);
@@ -292,85 +277,15 @@ int						ft_atoi(const char *str);
 long int				ft_atol(char *str);
 int						is_num(char *str);
 
-// executor_redir_out.c file
-int						execute_redir_out(t_stock *stock, char *cmd_path,
-							char *target, char **av);
-t_redir_cmd				*build_cmd_redir_out(t_arena *arena, t_ast_node *root);
-
-// executor_redir_append.c file
-int						execute_redir_append(t_stock *stock, char *cmd_path,
-							char *target, char **av);
-
-t_redir_cmd				*build_cmd_redir_append(t_arena *arena,
-							t_ast_node *root);
-
-// executor_redir_heredoc.c file:
-int						execute_redir_heredoc(t_stock *stock, char *cmd_path,
-							char **input, char **av);
-
-t_redir_heredoc			*build_cmd_redir_heredoc(t_arena *arena,
-							t_ast_node *root);
-char					**get_input(t_arena *arena, char *eof);
-
 void					malloc_err(void);
 void					ft_putstr_fd(char *str, int fd);
 void					free_array(char **s);
 
-// execuotr_redir_in.c file :
-int						execute_redir_in(t_stock *stock, char *cmd_path,
-							char *target, char **av);
-
-t_redir_cmd				*build_cmd_redir_in(t_arena *arena, t_ast_node *root);
-
-// pipelines.c file :
-int						execute_pipeline(t_stock *stock, t_cmd **commands,
-							int *i, int *fd);
-void					extract_commands(t_arena *arena, t_ast_node *tree,
-							t_cmd ***commands, int *num_commands);
-void					inverse_commands_order(t_arena *arena, t_cmd **cmd);
 void					add_to_array(t_cmd **a1, char **a2);
 
-void					execute_tree(t_ast_node *tree, char **envp);
-void					_execute_pipeline(t_ast_node *tree, char **envp);
-int						_execute_redir_heredoc(t_stock *stock, int fd[2],
-							t_cmd *cmd);
 void					close_fd(int fd[2]);
 void					exchange_fd(int fd_prev[2], int fd_curr[2]);
 
-/* Rest of pipelines files */
-void					run_r_out(t_stock *stock, t_sk_1 *sk, char *path,
-							t_cmd *cmd);
-void					run_r_in(t_stock *stock, t_sk_1 *sk, char *path,
-							t_cmd *cmd);
-void					extract_subcommand_simple(t_arena *arena,
-							t_ast_node *node, t_cmd ***commands,
-							int *num_commands);
-void					extract_subcommand_r_out(t_arena *arena,
-							t_ast_node *node, t_cmd ***commands,
-							int *num_commands);
-void					extract_subcommand_r_in(t_arena *arena,
-							t_ast_node *node, t_cmd ***commands,
-							int *num_commands);
-void					extract_subcommand_r_append(t_arena *arena,
-							t_ast_node *node, t_cmd ***commands,
-							int *num_commands);
-void					extract_subcommand_r_heredoc(t_arena *arena,
-							t_ast_node *node, t_cmd ***commands,
-							int *num_commands);
-
-/* Minishell */
-void					run_simple_command(t_stock *stock, t_ast_node *tree,
-							char *input);
-void					run_redir_out_command(t_stock *stock, char *input,
-							t_ast_node *tree);
-void					run_redir_append_command(t_stock *stock, char *input,
-							t_ast_node *tree);
-void					run_redir_in_command(t_stock *stock, t_ast_node *tree);
-void					run_redir_heredoc_command(t_stock *stock,
-							t_ast_node *tree);
-int						run_expr(t_stock *stock, char **av, char *input);
-
-void					run_pipeline_command(t_stock *stock, t_ast_node *tree);
 char					*join_args(t_arena *arena, char **args);
 
 /* Built-ins */
@@ -433,34 +348,7 @@ char					**ft_split(t_arena *arena, const char *s, char delim);
 /* Input Validation */
 bool					is_input_valid(char *input);
 bool					has_valid_heredoc(char *s);
-/* multiple redir heredoc */
-bool					has_multiple_redir_heredoc(char *input);
-void					run_multiple_redir_out(t_arena *arena, char *input);
-char					**extract_files(t_arena *arena, char *input);
-char					**extract_args(t_arena *arena, char *input);
-bool					has_multiple_redir_out(char *command);
-bool					has_multiple_redir_in(char *command);
-bool					has_multiple_redir_append(char *command);
-bool					has_multiple_delimeters(char *command);
-void					_run_redir_out_command(t_stock *stock,
-							t_redir_cmd *redir, char *input);
-void					_run_redir_out_command2(t_stock *stock,
-							t_redir_cmd *redir, char *cmd);
-
-void					_run_redir_append_command(t_stock *stock,
-							t_redir_cmd *redir, char *input);
-void					_run_redir_append_command2(t_stock *stock,
-							t_redir_cmd *redir, char *cmd);
-
-void					_run_redir_heredoc_command(t_stock *stock,
-							t_redir_heredoc *rh, char *input);
-void					_run_redir_heredoc_command2(t_stock *stock,
-							t_redir_heredoc *rh, char *cmd);
-
-/* Input Validation */
-
-bool					check_invalid_combinations(t_arena *arena, t_list *list,
-							t_env *env);
+bool					check_invalid_combinations(t_arena *arena, t_list *list, t_env *env);
 bool					check1(t_node *temp);
 bool					check2(t_node *temp);
 bool					check3(t_node *temp);
@@ -485,7 +373,6 @@ void					free_arena(t_arena *arena);
 void					*arena_alloc(t_arena *arena, size_t size);
 
 void					expand_var(t_stock *stock, char *input);
-//void					heredoc(t_arena *arena, char *input);
 void					expand_env_var_in_pipes(t_cmd **commands,
 							t_stock *stock);
 void					expand_env_var_heredoc(t_redir_heredoc *rh,
@@ -498,21 +385,15 @@ int						array_size(char **arr);
 void					close_exit(void);
 void					handle_sig_heredoc(int sig);
 void					err(void);
-char					**get_input_helper(t_arena *arena, int i, int count,
-							char *eof);
-void					copy_result(t_arena *arena, char *input, char ***result,
-							int *count);
 void					swap(char **av);
 
 /* Expander */
 char					*expand_variables(t_stock *stock, const char *input);
 
 /* Tools */
-char					**ft_split_2(const char *str);
+
 t_echo_arr				**split(t_arena *arena, char *input);
 int					is_space(char c);
-/* gnl */
-
-char	*get_next_line(int fd);
+char					**ft_split_2(const char *str);
 
 #endif

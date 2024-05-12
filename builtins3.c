@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell3.c                                       :+:      :+:    :+:   */
+/*   builtins3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 19:59:22 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/06 13:47:50 by yzioual          ###   ########.fr       */
+/*   Created: 2024/05/12 17:53:43 by yzioual           #+#    #+#             */
+/*   Updated: 2024/05/12 17:54:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 bool	_isbuiltin(t_arena *arena, char *input)
 {
@@ -33,23 +34,6 @@ bool	_isbuiltin(t_arena *arena, char *input)
 		is_builtin = true;
 	return (is_builtin);
 }
-
-/*
-static char	*produce_input(t_arena *arena, char *input)
-{
-	int		i;
-	char	**args;
-
-	i = 0;
-	args = ft_split(arena, input, ' ');
-	while (args[i])
-	{
-		args[i] = trim_quotes(arena, args[i]);
-		i++;
-	}
-	return (join_args(arena, args));
-}
-*/
 
 void	_runbuiltins(t_stock *stock, char *input)
 {
@@ -104,22 +88,4 @@ char	*join_args(t_arena *arena, char **args)
 		args++;
 	}
 	return (input);
-}
-
-void	run_pipeline_command(t_stock *stock, t_ast_node *tree)
-{
-	t_cmd	**commands;
-	int		num_commands;
-	int		i;
-	int		fd;
-
-	commands = NULL;
-	i = 0;
-	fd = -1;
-	num_commands = 0;
-	extract_commands(stock->arena, tree, &commands, &num_commands);
-	commands[num_commands] = NULL;
-	inverse_commands_order(stock->arena, commands);
-//	expand_env_var_in_pipes(commands, stock);
-	*(stock->status) = execute_pipeline(stock, commands, &i, &fd);
 }

@@ -6,58 +6,57 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 17:45:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 18:00:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void print_program(char **args) {
-    if (args == NULL) {
-        printf("Arguments: None\n");
-        return;
-    }
-    printf("Arguments:\n");
-    for (int i = 0; args[i] != NULL; i++) {
-        printf("  [%d]: %s\n", i, args[i]);
-    }
+	if (args == NULL) {
+		printf("Arguments: None\n");
+		return;
+	}
+	printf("Arguments:\n");
+	for (int i = 0; args[i] != NULL; i++) {
+		printf("  [%d]: %s\n", i, args[i]);
+	}
 }
 
 void print_programs(t_program **programs) {
-    if (programs == NULL) {
-        printf("No programs to display.\n");
-        return;
-    }
+	if (programs == NULL) {
+		printf("No programs to display.\n");
+		return;
+	}
 
-    int index = 0;
-    while (programs[index] != NULL) {
-        t_program *p = programs[index];
-        printf("Program %d:\n", index);
-        printf("  Command: %s\n", p->cmd ? p->cmd : "None");
-        print_program(p->args);
-        printf("  File descriptors: in=%d, out=%d\n", p->fd_in, p->fd_out);
-        printf("  Here Document Flag: %s\n", p->fd_heredoc ? "Yes" : "No");
-        printf("\n");
-        index++;
-    }
+	int index = 0;
+	while (programs[index] != NULL) {
+		t_program *p = programs[index];
+		printf("Program %d:\n", index);
+		printf("  Command: %s\n", p->cmd ? p->cmd : "None");
+		print_program(p->args);
+		printf("  File descriptors: in=%d, out=%d\n", p->fd_in, p->fd_out);
+		printf("  Here Document Flag: %s\n", p->fd_heredoc ? "Yes" : "No");
+		printf("\n");
+		index++;
+	}
 }
 
 
-void reverse_programs(t_program **programs) {
-    if (!programs) return;  // Handle null pointer
+void reverse_programs(t_program **programs)
+{
+	int length = 0;
 
-    int length = 0;
-    // Calculate the length of the array
-    while (programs[length]) {
-        length++;
-    }
-
-    // Reverse the array
-    for (int i = 0; i < length / 2; i++) {
-        t_program *temp = programs[i];
-        programs[i] = programs[length - i - 1];
-        programs[length - i - 1] = temp;
-    }
+	if (!programs)
+		return ;
+	while (programs[length]) {
+		length++;
+	}
+	for (int i = 0; i < length / 2; i++) {
+		t_program *temp = programs[i];
+		programs[i] = programs[length - i - 1];
+		programs[length - i - 1] = temp;
+	}
 }
 
 static void	run_minishell2(t_stock *stock, char *input)

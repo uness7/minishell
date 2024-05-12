@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 18:11:16 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/08 18:14:22 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/12 17:57:30 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,6 @@ char	*ft_strncpy(char *dest, const char *src, size_t n)
 		dest[i] = '\0';
 	return (dest);
 }
-
-/*
-char	*ft_strstr(char *haystack, char *needle)
-{
-	char	*h;
-	char	*n;
-
-	h = haystack;
-	n = needle;
-	if (*needle == '\0' || *haystack == '\0'
-		|| ft_strlen(needle) > ft_strlen(haystack))
-		return (NULL);
-	while (*haystack != '\0')
-	{
-		while (*h != '\0' && *n != '\0' && *h == *n)
-		{
-			h++;
-			n++;
-		}
-		if (*n == '\0')
-			return ((char *)haystack);
-		haystack++;
-	}
-	return (NULL);
-}
-*/
 
 char *ft_strstr(char *str, char *to_find)
 {
