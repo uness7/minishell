@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/13 20:05:20 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/13 20:19:50 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ static void	run_minishell2(t_stock *stock, char *input)
 		//print_tree(tree);
 		programs = extract_programs(tree, 2 * strlen(input));	
 		//reverse_programs(programs);
-		print_programs(programs);
-		//int status = run_programs(programs, stock->envp, stock, input);
-		//add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, status));
+		//print_programs(programs);
+		int status = run_programs(programs, stock->envp, stock, input);
+		add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, status));
 //	}
 }
 
