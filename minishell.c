@@ -17,8 +17,6 @@ void	reverse_programs(t_program **programs);
 void    print_programs(t_program **programs);
 void print_program(char **args);
 
-
-
 static void	run_minishell2(t_stock *stock, char *input)
 {
 	t_program	**programs;
@@ -27,18 +25,17 @@ static void	run_minishell2(t_stock *stock, char *input)
 
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-	if (is_input_valid(input) && is_input_valid2(input) \
-			&& check_invalid_combinations(stock->arena, list, stock->env))
-	{
-		tree = parse(stock->arena, list);
-		//(void)programs;
-		//print_tree(tree);
-		//printf("\n\n\n");
-		programs = extract_programs(tree, strlen(input));	
-		reverse_programs(programs);
+//	if (is_input_valid(input) && is_input_valid2(input) && check_invalid_combinations(stock->arena, list, stock->env))
+//	{
+		tree = ast(stock->arena, list);
+		(void)programs;
+		print_tree(tree);
+		//programs = extract_programs(tree, strlen(input));	
+		//reverse_programs(programs);
 		//print_programs(programs);
-		run_programs(programs, stock->envp, stock, input);
-	}
+		//int status = run_programs(programs, stock->envp, stock, input);
+		//add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, status));
+//	}
 }
 
 void print_program(char **args)
@@ -132,14 +129,19 @@ int	main(int ac, char **argv, char **envp)
 		return (0);
 	}
 	status = 0;
+
 	stock.argv = argv;
 	stock.envp = envp;
+
 	envp_cp = envp;
 	env = ft_env(&arena, envp_cp);
+
 	stock.env = env;
 	stock.arena = &arena;
 	stock.status = &status;
+
 	add_or_update_env(&arena, &env, "?", ft_itoa(&arena, status));
+
 	run_minishell(&stock);
 	return (0);
 }

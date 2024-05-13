@@ -14,7 +14,7 @@
 
 // maybe i should implement extract_builtin command
 
-void	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
+int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 {
 	pid_t	pid;
 	int		i;
@@ -67,7 +67,7 @@ void	run_programs(t_program **programs, char **envp, t_stock *stock, char *input
 				}
 				execve(path, programs[i]->args, envp);
 				perror("execve failed: ");
-				exit(0);
+				exit(127);
 			}
 			else if (pid < 0)
 				fork_err();
@@ -85,6 +85,7 @@ void	run_programs(t_program **programs, char **envp, t_stock *stock, char *input
 		close(last_fd);
 	int	status = 0;
 	waitpid(pid, &status, 0);
+	return (WEXITSTATUS(status));
 }
 
 t_program	*extract_program_command(t_ast_node *root)
@@ -138,15 +139,19 @@ t_program	*extract_program_redir_in(t_ast_node *root)
 	j = 0;
 	program = malloc(sizeof(t_program));
 	if (program == NULL) return NULL;
-	if (root->left != NULL || root->left->data != NULL)
+	if (root->left != NULL && root->left->data != NULL)
 	{
-		filename = strdup(root->left->data);
-		if (filename == NULL) return (NULL);
-		fd = open(filename, O_RDONLY);
-		if (fd == -1)
+		while (root->left != NULL)
 		{
-			perror("Failed to open file");
-			return (NULL);
+			filename = strdup(root->left->data);
+			if (filename == NULL) return (NULL);
+			fd = open(filename, O_RDONLY);
+			if (fd == -1)
+			{
+				perror("Failed to open file");
+				return (NULL);
+			}
+			root->left = root->left->left;
 		}
 		program->fd_in = fd;
 	}
@@ -180,18 +185,22 @@ t_program	*extract_program_redir_out_append(t_ast_node *root, int f_out)
 	j = 0;
 	program = malloc(sizeof(t_program));
 	if (program == NULL) return NULL;
-	if (root->left != NULL || root->left->data != NULL)
+	if (root->left != NULL && root->left->data != NULL)
 	{
-		filename = strdup(root->left->data);
-		if (filename == NULL) return (NULL);
-		if (f_out == 1)
-			fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else
-			fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd == -1)
+		while (root->left != NULL)
 		{
-			perror("Failed to open file");
-			return (NULL);
+			filename = strdup(root->left->data);
+			if (filename == NULL) return (NULL);
+			if (f_out == 1)
+				fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			else
+				fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (fd == -1)
+			{
+				perror("Failed to open file");
+				return (NULL);
+			}
+			root->left = root->left->left;
 		}
 		program->fd_out = fd;
 	}

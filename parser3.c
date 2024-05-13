@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+/*
 void	parse_redir_heredoc(t_arena *arena, t_ast_node **root, char *data)
 {
 	t_ast_node	*temp;
@@ -42,3 +43,4 @@ void	parse_redir_heredoc(t_arena *arena, t_ast_node **root, char *data)
 		new_node->right = temp;
 	}
 }
+*/

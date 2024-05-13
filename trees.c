@@ -58,7 +58,7 @@ void	print_tree_utils(t_ast_node *root, int space)
 	else if (root->type == NODE_REDIRECTION_HEREDOC)
 		printf("HEREDOCC\n");
 	else if (root->data != NULL)
-		printf("%s\t%d\n", root->data, root->type);
+		printf("%s\n", root->data);
 	else
 		printf("(null)\n");
 	print_tree_utils(root->left, space);

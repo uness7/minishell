@@ -225,7 +225,7 @@ t_program       *extract_program_redir_out_append(t_ast_node *root, int a);
 t_program       **extract_programs(t_ast_node *root, int programs_count);
 t_program       **extract_programs_pipeline(t_ast_node *root, \
 		t_program **programs, int programs_count, int *i);
-void		run_programs(t_program **programs, char **envp, t_stock *stock, char *input);
+int		run_programs(t_program **programs, char **envp, t_stock *stock, char *input);
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -252,9 +252,9 @@ void					handle_special_chars(t_arena *arena, const char **s,
 // parser.c file
 t_ast_node				*parse(t_arena *arena, t_list *stream);
 void					parse_command(t_arena *arena, t_ast_node **root,
-							char *data, int is_last);
+							t_node *token, int f_flag);
 void					parse_pipeline(t_arena *arena, t_ast_node **root,
-							char *data);
+							t_node *temp_node);
 t_ast_node				*find_mostleft_cmd(t_ast_node **root);
 void					parse_redir_heredoc(t_arena *arena, t_ast_node **root,
 							char *data);
@@ -395,5 +395,6 @@ char					*expand_variables(t_stock *stock, const char *input);
 t_echo_arr				**split(t_arena *arena, char *input);
 int					is_space(char c);
 char					**ft_split_2(const char *str);
+t_ast_node				*ast(t_arena *arena, t_list *list);
 
 #endif

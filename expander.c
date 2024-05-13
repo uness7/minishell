@@ -35,7 +35,10 @@ char    *expand_variables(t_stock *stock, const char *input)
 				while (*current && (*current == '_' || isalnum(*current)))
 					var_name[var_len++] = *current++;
 				var_name[var_len] = '\0';
-				env = find_env_var(&(stock->env), var_name);
+				if (strlen(var_name) == 0)
+					env = find_env_var(&(stock->env), "?");
+				else
+					env = find_env_var(&(stock->env), var_name);
 				if (env != NULL)
 					var_value = env->value;
 				else

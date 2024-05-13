@@ -12,24 +12,41 @@
 
 #include "minishell.h"
 
-static void	parse_command_simple(t_arena *arena, t_ast_node **root, char *data,
-		int is_last)
+/*
+static void	parse_command_simple(t_arena *arena, t_ast_node **root, char *data, int f_flag)
 {
 	t_ast_node	*current;
+	t_ast_node	*new_node;
 
-	if ((*root)->right == NULL)
-		(*root)->right = create_node_tree(arena, NODE_ARGUMENT, data);
-	else if ((*root)->left == NULL && is_last == 1)
-		(*root)->left = create_node_tree(arena, NODE_ARGUMENT, data);
-	else
+	current = *root;
+	new_node = create_node_tree(arena, NODE_ARGUMENT, data);
+	if (current->type == NODE_REDIRECTION_OUT || \
+			current->type == NODE_REDIRECTION_IN || \
+			current->type == NODE_REDIRECTION_APPEND)
 	{
-		current = (*root);
-		while (current->right != NULL)
-			current = current->right;
-		current->right = create_node_tree(arena, NODE_ARGUMENT, data);
+		if (!current->left && !current->right)
+			current->left = new_node;
+		else if (current->left && !current->right)
+			current->right = new_node;
+		else if (!current->left && current->right)
+			current->left = new_node;
+		else
+		{
+			if (f_flag != 0 && ft_strncmp(current->data, "-", 1) == 0)
+			{
+				while (current->left != NULL)
+					current = current->left;
+				current->left = create_node_tree(arena, NODE_ARGUMENT, data);
+			}
+			else
+			{
+				while (current->right != NULL)
+					current = current->right;
+				current->right = create_node_tree(arena, NODE_ARGUMENT, data);
+			}
+		}
 	}
 }
-
 static void	parse_command_pipeline(t_arena *arena, t_ast_node *current,
 		char *data)
 {
@@ -47,18 +64,27 @@ static void	parse_command_pipeline(t_arena *arena, t_ast_node *current,
 	}
 }
 
-void	parse_command(t_arena *arena, t_ast_node **root, char *data,
-		int is_last)
+void	parse_command(t_arena *arena, t_ast_node **root, char *data, int f_flag)
 {
 	t_ast_node	*current;
 
 	current = *root;
 	if (*root == NULL)
+	{
 		*root = create_node_tree(arena, NODE_COMMAND, data);
+	}
+	else if ((*root)->type == NODE_COMMAND)
+	{
+		(*root)->right = create_node_tree(arena, NODE_COMMAND, data);
+	}
 	else if (current->type == NODE_PIPELINE)
+	{
 		parse_command_pipeline(arena, current, data);
+	}
 	else
-		parse_command_simple(arena, root, data, is_last);
+	{
+		parse_command_simple(arena, root, data, f_flag);
+	}
 }
 
 void	parse_pipeline(t_arena *arena, t_ast_node **root, char *data)
@@ -68,7 +94,7 @@ void	parse_pipeline(t_arena *arena, t_ast_node **root, char *data)
 
 	current = *root;
 	new_node = create_node_tree(arena, NODE_PIPELINE, data);
-	if (current != NULL)
+	if (current)
 	{
 		*root = new_node;
 		new_node->right = current;
@@ -89,3 +115,5 @@ t_ast_node	*find_mostleft_cmd(t_ast_node **root)
 	}
 	return (last_node);
 }
+
+*/
