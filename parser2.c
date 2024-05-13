@@ -6,94 +6,108 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:13:28 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/04 13:01:40 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/13 20:00:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-static void	parse_command_simple(t_arena *arena, t_ast_node **root, char *data, int f_flag)
+static void	parse_command_simple(t_arena *arena, t_ast_node **root, t_node *token, \
+		t_node *prev_token, int *f_flag)
 {
 	t_ast_node	*current;
 	t_ast_node	*new_node;
 
 	current = *root;
-	new_node = create_node_tree(arena, NODE_ARGUMENT, data);
+	new_node = create_node_tree(arena, NODE_ARGUMENT, token->data);
 	if (current->type == NODE_REDIRECTION_OUT || \
 			current->type == NODE_REDIRECTION_IN || \
 			current->type == NODE_REDIRECTION_APPEND)
 	{
-		if (!current->left && !current->right)
+		if (!current->left && prev_token->type == TOKEN_REDIR_OUT)
 			current->left = new_node;
-		else if (current->left && !current->right)
+		else if (!current->right && prev_token->type == TOKEN_WORD)
 			current->right = new_node;
-		else if (!current->left && current->right)
-			current->left = new_node;
 		else
 		{
-			if (f_flag != 0 && ft_strncmp(current->data, "-", 1) == 0)
+			if (*f_flag != 0)
 			{
 				while (current->left != NULL)
 					current = current->left;
-				current->left = create_node_tree(arena, NODE_ARGUMENT, data);
+				current->left = create_node_tree(arena, NODE_ARGUMENT, token->data);
 			}
 			else
 			{
 				while (current->right != NULL)
 					current = current->right;
-				current->right = create_node_tree(arena, NODE_ARGUMENT, data);
+				current->right = create_node_tree(arena, NODE_ARGUMENT, token->data);
 			}
 		}
 	}
-}
-static void	parse_command_pipeline(t_arena *arena, t_ast_node *current,
-		char *data)
-{
-	if (current->left && current->left->type == NODE_COMMAND)
+	else if (current->type == NODE_REDIRECTION_HEREDOC)
 	{
-		while (current->left != NULL)
-			current = current->left;
-		current->left = create_node_tree(arena, NODE_ARGUMENT, data);
-	}
-	else
-	{
-		while (current->left != NULL)
-			current = current->left;
-		current->left = create_node_tree(arena, NODE_COMMAND, data);
+		if (prev_token->type == TOKEN_REDIR_HEREDOC)
+		{
+			while (current->right != NULL)
+				current = current->right;
+			current->right = create_node_tree(arena, NODE_ARGUMENT, \
+					token->data);
+		}
 	}
 }
 
-void	parse_command(t_arena *arena, t_ast_node **root, char *data, int f_flag)
+static t_ast_node	*parse_command_pipeline(t_arena *arena, t_ast_node *current,
+		char *data, t_list *list)
 {
+	t_ast_node	*subtree = NULL;
+	(void)data;
+	(void)current;
+	subtree = parse(arena, list);
+	return subtree;
+}
+
+void	parse_command(t_arena *arena, t_ast_node **root, t_node *token, \
+		t_node *prev_token, int f_flag, t_list *list)
+{
+	t_ast_node	*temp;
 	t_ast_node	*current;
+	t_ast_node	*subtree = NULL;
 
 	current = *root;
 	if (*root == NULL)
 	{
-		*root = create_node_tree(arena, NODE_COMMAND, data);
+		*root = create_node_tree(arena, NODE_COMMAND, token->data);
 	}
 	else if ((*root)->type == NODE_COMMAND)
 	{
-		(*root)->right = create_node_tree(arena, NODE_COMMAND, data);
+		temp = (*root)->right;
+		if (temp == NULL)
+			(*root)->right = create_node_tree(arena, NODE_COMMAND, token->data);
+		else 
+		{
+			while (temp->right != NULL)
+				temp = temp->right;
+			temp->right = create_node_tree(arena, NODE_COMMAND, token->data);
+		}
 	}
 	else if (current->type == NODE_PIPELINE)
 	{
-		parse_command_pipeline(arena, current, data);
+		subtree = parse_command_pipeline(arena,NULL,NULL, list);
+		(*root)->left = subtree;
 	}
 	else
 	{
-		parse_command_simple(arena, root, data, f_flag);
+		parse_command_simple(arena, root, token, prev_token, &f_flag);
 	}
 }
 
-void	parse_pipeline(t_arena *arena, t_ast_node **root, char *data)
+void	parse_pipeline(t_arena *arena, t_ast_node **root, t_node *token)
 {
 	t_ast_node	*current;
 	t_ast_node	*new_node;
 
 	current = *root;
-	new_node = create_node_tree(arena, NODE_PIPELINE, data);
+	new_node = create_node_tree(arena, NODE_PIPELINE, token->data);
 	if (current)
 	{
 		*root = new_node;
@@ -115,5 +129,3 @@ t_ast_node	*find_mostleft_cmd(t_ast_node **root)
 	}
 	return (last_node);
 }
-
-*/

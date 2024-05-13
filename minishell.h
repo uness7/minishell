@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 18:04:02 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/13 17:46:15 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ void					handle_special_chars(t_arena *arena, const char **s,
 // parser.c file
 t_ast_node				*parse(t_arena *arena, t_list *stream);
 void					parse_command(t_arena *arena, t_ast_node **root,
-							t_node *token, int f_flag);
+							t_node *token, t_node *prev_token, int f_flag, t_list *list);
 void					parse_pipeline(t_arena *arena, t_ast_node **root,
 							t_node *temp_node);
 t_ast_node				*find_mostleft_cmd(t_ast_node **root);

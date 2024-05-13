@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 16:25:03 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/13 20:16:15 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,20 +229,8 @@ t_program	**extract_programs_pipeline(t_ast_node *root, t_program **programs , \
 	if (programs == NULL)
 		programs = malloc(sizeof(t_program *) * (2 * programs_count + 1));
 	if (programs == NULL) return NULL;
-	if (root->left->type == NODE_COMMAND)
-		programs[(*i)++] = extract_program_command(root->left);
-	else if (root->left->type == NODE_REDIRECTION_IN)
-		programs[(*i)++] = extract_program_redir_in(root->left);
-	else if (root->left->type == NODE_REDIRECTION_OUT)
-		programs[(*i)++] = extract_program_redir_out_append(root->left, 1);
-	else if (root->left->type == NODE_REDIRECTION_APPEND)
-		programs[(*i)++] = extract_program_redir_out_append(root->left, 0);
-	else if (root->left->type == NODE_REDIRECTION_HEREDOC)
-		programs[(*i)++] = extract_program_heredoc(root->left);
-	if (root->right->type == NODE_PIPELINE)
-		return extract_programs_pipeline(root->right, programs,\
-			       	programs_count, i);
-	else if (root->right->type == NODE_COMMAND)
+
+	if (root->right->type == NODE_COMMAND)
 		programs[(*i)++] = extract_program_command(root->right);
 	else if (root->right->type == NODE_REDIRECTION_IN)
 		programs[(*i)++] = extract_program_redir_in(root->right);
@@ -252,6 +240,21 @@ t_program	**extract_programs_pipeline(t_ast_node *root, t_program **programs , \
 		programs[(*i)++] = extract_program_redir_out_append(root->right, 0);
 	else if (root->right->type == NODE_REDIRECTION_HEREDOC)
 		programs[(*i)++] = extract_program_heredoc(root->right);
+
+	if (root->left->type == NODE_PIPELINE)
+		return extract_programs_pipeline(root->left, programs,\
+				programs_count, i);
+	else if (root->left->type == NODE_COMMAND)
+		programs[(*i)++] = extract_program_command(root->left);
+	else if (root->left->type == NODE_REDIRECTION_IN)
+		programs[(*i)++] = extract_program_redir_in(root->left);
+	else if (root->left->type == NODE_REDIRECTION_OUT)
+		programs[(*i)++] = extract_program_redir_out_append(root->left, 1);
+	else if (root->left->type == NODE_REDIRECTION_APPEND)
+		programs[(*i)++] = extract_program_redir_out_append(root->left, 0);
+	else if (root->left->type == NODE_REDIRECTION_HEREDOC)
+		programs[(*i)++] = extract_program_heredoc(root->left);
+
 	programs[*i] = NULL;
 	return (programs);
 }
@@ -281,6 +284,7 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 {
 	int		j;
 	char	*deli;
+	char	*deli2;
 	t_ast_node	*temp;
 	t_program	*program;
 
@@ -288,10 +292,17 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 	program = malloc(sizeof(t_program));
 	if (program == NULL) return NULL;
 	program->fd_out = 1;	
-	if (root->right->type != NODE_COMMAND)
+	deli = NULL;
+	deli2 = NULL;
+	while (root->right != NULL && root->right->right != NULL)
+    		root = root->right;
+	if (root->right->data != NULL)
 		deli = strdup(root->right->data);
 	else
-		deli = strdup(root->left->data);
+		printf("deli is null\n");
+	printf("data : %s\n", deli);
+	printf("data : %s\n", deli2);
+	exit(0);
 	program->fd_in = heredoc(deli);
 	if (root->right->type == NODE_COMMAND)
 		program->cmd = strdup(root->right->data);	

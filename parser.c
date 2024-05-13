@@ -6,13 +6,12 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/04 12:58:59 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/13 19:37:46 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
 static void	parse_redir_out(t_arena *arena, t_ast_node **root, char *data)
 {
 	t_ast_node	*temp;
@@ -35,10 +34,12 @@ static void	parse_redir_out(t_arena *arena, t_ast_node **root, char *data)
 			(*root)->right = new_node;
 		else
 		{
-			temp = (*root)->right;
-			while (temp->left != NULL)
-				temp = temp->left;
-			temp->left = new_node;
+			if ((*root)->right->type == NODE_COMMAND) 
+			{
+				temp = (*root)->right;
+				(*root)->right = new_node;
+				new_node->right = temp;
+			}
 		}
 	}
 }
@@ -91,7 +92,7 @@ static void	parse_redir_in(t_arena *arena, t_ast_node **root, char *data)
 	}
 }
 
-static t_ast_node	*dispenser(t_arena *arena, t_node *temp_node)
+static t_ast_node	*dispenser(t_arena *arena, t_list *list)
 {
 	t_ast_node	*tree;
 	t_node		*prev_token;
@@ -99,48 +100,47 @@ static t_ast_node	*dispenser(t_arena *arena, t_node *temp_node)
 
 	f_flag = 0;
 	tree = NULL;
-	while (temp_node != NULL)
+	while (list->head != NULL)
 	{
 		if ((prev_token->type == TOKEN_REDIR_OUT
 				|| prev_token->type == TOKEN_REDIR_IN
-				|| prev_token->type == TOKEN_REDIR_APPEND)
-			&& temp_node->type == TOKEN_WORD)
+				|| prev_token->type == TOKEN_REDIR_APPEND
+				|| prev_token->type == TOKEN_REDIR_HEREDOC)
+			&& list->head->type == TOKEN_WORD)
 			f_flag = 1;
-		if (temp_node->type == TOKEN_WORD)
+		if (list->head->type == TOKEN_WORD)
 		{
-			parse_command(arena, &tree, temp_node, f_flag);
+			parse_command(arena, &tree, list->head, prev_token, f_flag, list);
 		}
-		else if (temp_node->type == TOKEN_PIPE)
+		else if (list->head->type == TOKEN_PIPE)
 		{
-			parse_pipeline(arena, &tree, temp_node);
+			parse_pipeline(arena, &tree, list->head);
 		}
-		else if (temp_node->type == TOKEN_REDIR_OUT)
+		else if (list->head->type == TOKEN_REDIR_OUT)
 		{
-			parse_redir_out(arena, &tree, temp_node->data);
+			parse_redir_out(arena, &tree, list->head->data);
 		}
-		else if (temp_node->type == TOKEN_REDIR_APPEND)
+		else if (list->head->type == TOKEN_REDIR_APPEND)
 		{
-			parse_redir_append(arena, &tree, temp_node->data);
+			parse_redir_append(arena, &tree, list->head->data);
 		}
-		else if (temp_node->type == TOKEN_REDIR_IN)
+		else if (list->head->type == TOKEN_REDIR_IN)
 		{
-			parse_redir_in(arena, &tree, temp_node->data);
+			parse_redir_in(arena, &tree, list->head->data);
 		}
-		else if (temp_node->type == TOKEN_REDIR_HEREDOC)
+		else if (list->head->type == TOKEN_REDIR_HEREDOC)
 		{
-			parse_redir_heredoc(arena, &tree, temp_node->data);
+			parse_redir_heredoc(arena, &tree, list->head->data);
 		}
-		prev_token = temp_node;
-		temp_node = temp_node->next;
+		f_flag = 0;
+		prev_token = list->head;
+		if (list->head != NULL)
+			list->head = list->head->next;
 	}
 	return (tree);
 }
 
 t_ast_node	*parse(t_arena *arena, t_list *stream)
 {
-	t_node	*temp_node;
-
-	temp_node = stream->head;
-	return (dispenser(arena, temp_node));
+	return (dispenser(arena, stream));
 }
-*/

@@ -1,4 +1,5 @@
 #include "minishell.h"
+/*
 
 static void     parse_command_pipeline(t_arena *arena, t_ast_node *current, t_node *token, int f_flag)
 {
@@ -126,3 +127,4 @@ void    parse_command(t_arena *arena, t_ast_node **root, t_node *token, int f_fl
 		parse_command_simple(arena, root, token->data, f_flag);
 	}
 }
+*/
