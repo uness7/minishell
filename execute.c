@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/14 16:41:42 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/14 18:10:42 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,11 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 	char	*deli2;
 	t_ast_node	*temp;
 	t_program	*program;
+	int		f_no_cmd;
 
+	f_no_cmd = 0;
+	if (root->left == NULL)
+		f_no_cmd = 1;
 	program = malloc(sizeof(t_program));
 	if (program == NULL) return NULL;
 	program->fd_out = 1;	
@@ -384,6 +388,7 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 
 	program->fd_in = heredoc(deli, deli2, "tmp.txt");
 	unlink("tmp.txt");
+	return NULL;
 //	printf("%d\n", program->fd_in);
 
 //	write_file_to_stdout(program->fd_in);	

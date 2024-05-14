@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/14 16:36:39 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/14 18:15:21 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,31 +20,27 @@ void print_program(char **args);
 
 static void	run_minishell2(t_stock *stock, char *input)
 {
-	int		status;
+	char		**new_envp;
+	int		status = 0;
 	t_program	**programs;
 	t_ast_node	*tree;
 	t_list		*list;
 
+	new_envp = NULL;
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-//	if (is_input_valid(input) && is_input_valid2(input) && check_invalid_combinations(stock->arena, list, stock->env))
-//	{
+	if (check_invalid_combinations(stock->arena, list, stock->env))
+	{
 		tree = parse(stock->arena, list);
-		(void)programs;
-		//(void)status;
-		//print_tree(tree);
-		//printf("\n");
 		programs = extract_programs(tree, 2 * strlen(input));	
-		//reverse_programs(programs);
-	//	print_programs(programs);
-		//printf("\n");
-		char	**new_envp = env_list_arr(stock->arena, stock->env, env_list_size(stock->env));
-		status = run_programs(programs, new_envp, stock, input);
-		*(stock->status) = status;
+		new_envp = env_list_arr(stock->arena, \
+				stock->env, env_list_size(stock->env));
+		if (programs != NULL)
+			status = run_programs(programs, new_envp, stock, input);
+		//*(stock->status) = status;
 		if (g_status != 0)
 			*(stock->status) = g_status;
-		add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, status));
-//	}
+	}
 }
 
 void print_program(char **args)

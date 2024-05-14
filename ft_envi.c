@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:09:52 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/04/30 01:00:27 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/14 17:26:26 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,8 @@ t_env	*ft_env(t_arena *arena, char **env)
 	while (env[++i])
 		env_copy[i] = ft_strdup(arena, env[i]);
 	env_copy[i] = NULL;
-	i = 1;
+	i = 0;
 	env_list = NULL;
-	append_env_node(arena, &env_list, "?", 0);
 	while (env_copy[i])
 	{
 		name = ft_strtok_2(env_copy[i], "=");
