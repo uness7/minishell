@@ -80,13 +80,15 @@ t_env	*ft_env(t_arena *arena, char **env)
 	while (env[++i])
 		env_copy[i] = ft_strdup(arena, env[i]);
 	env_copy[i] = NULL;
-	i = -1;
+	i = 1;
 	env_list = NULL;
-	while (env_copy[++i])
+	append_env_node(arena, &env_list, "?", 0);
+	while (env_copy[i])
 	{
 		name = ft_strtok_2(env_copy[i], "=");
 		value = ft_strtok_2(NULL, "=");
 		append_env_node(arena, &env_list, name, value);
+		i++;
 	}
 	return (env_list);
 }

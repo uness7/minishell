@@ -6,13 +6,11 @@ RDLINE = -lreadline
 
 NAME = minishell
 
-CFILES = ast.c \
-	 lexer.c \
+CFILES = lexer.c \
 	 lexer2.c \
 	 parser.c \
 	 parser2.c \
 	 parser3.c \
-	 parser4.c \
 	 linked_lists.c \
 	 trees.c \
 	 minishell.c \

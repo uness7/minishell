@@ -33,7 +33,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 			perror("Pipe syscall failed: ");
 			exit(EXIT_FAILURE);
 		}
-		if (_isbuiltin(stock->arena, programs[i]->cmd) && !next_exists)
+		if (_isbuiltin(stock->arena, programs[i]->cmd)) 
 			_runbuiltins(stock, input);
 		else
 		{
@@ -66,7 +66,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 					close(programs[i]->fd_in);
 				}
 				execve(path, programs[i]->args, envp);
-				perror("execve failed: ");
+				printf("Command Not Found\n");
 				exit(127);
 			}
 			else if (pid < 0)

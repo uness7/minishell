@@ -12,19 +12,14 @@
 
 #include "minishell.h"
 
-void	handle_sig_heredoc(int sig)
-{
-	if (sig == SIGINT)
-		exit(130);
-}
-
 void	handle_sig(int sig)
 {
 	if (sig == SIGINT)
 	{
 		rl_replace_line("", 0);
-		rl_on_new_line();
 		printf("\n");
+		rl_on_new_line();
+		g_status = 130;
 		rl_redisplay();
 	}
 	if (sig == SIGQUIT)
@@ -32,27 +27,25 @@ void	handle_sig(int sig)
 		rl_replace_line("", 0);
 		printf("Quit (core dumped)\n");
 		rl_on_new_line();
-	}
-}
-
-void	handle_sig2(int sig)
-{
-	if (sig == SIGINT)
-	{
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		printf("\n");
-	}
-	if (sig == SIGQUIT)
-	{
-		rl_replace_line("", 0);
-		printf("Quit (core dumped)\n");
-		rl_on_new_line();
+		g_status = 131;
 	}
 }
 
 void	init_signal(void)
 {
-	signal(SIGINT, handle_sig);
-	signal(SIGQUIT, SIG_IGN);
+	struct sigaction	sa;
+
+	sa.sa_handler = handle_sig;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	if (sigaction(SIGINT, &sa, NULL) == -1)
+	{
+		perror("Error setting up SIGINT handler");
+		exit(EXIT_FAILURE);
+	}
+	if (sigaction(SIGQUIT, &sa, NULL) == -1)
+	{
+		perror("Error setting up SIGQUIT handler");
+		exit(EXIT_FAILURE);
+	}
 }

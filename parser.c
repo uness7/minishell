@@ -95,14 +95,14 @@ static void	parse_redir_in(t_arena *arena, t_ast_node **root, char *data)
 static t_ast_node	*dispenser(t_arena *arena, t_list *list)
 {
 	t_ast_node	*tree;
-	t_node		*prev_token;
+	t_node		*prev_token = NULL;
 	int			f_flag;
 
 	f_flag = 0;
 	tree = NULL;
 	while (list->head != NULL)
 	{
-		if ((prev_token->type == TOKEN_REDIR_OUT
+		if (prev_token != NULL && (prev_token->type == TOKEN_REDIR_OUT
 				|| prev_token->type == TOKEN_REDIR_IN
 				|| prev_token->type == TOKEN_REDIR_APPEND
 				|| prev_token->type == TOKEN_REDIR_HEREDOC)

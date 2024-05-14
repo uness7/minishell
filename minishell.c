@@ -12,13 +12,15 @@
 
 #include "minishell.h"
 
-/* PROTOTYPES */
+int	g_status = 0;
+
 void	reverse_programs(t_program **programs);
 void    print_programs(t_program **programs);
 void print_program(char **args);
 
 static void	run_minishell2(t_stock *stock, char *input)
 {
+	int		status;
 	t_program	**programs;
 	t_ast_node	*tree;
 	t_list		*list;
@@ -33,7 +35,10 @@ static void	run_minishell2(t_stock *stock, char *input)
 		programs = extract_programs(tree, 2 * strlen(input));	
 		//reverse_programs(programs);
 		//print_programs(programs);
-		int status = run_programs(programs, stock->envp, stock, input);
+		status = run_programs(programs, stock->envp, stock, input);
+		*(stock->status) = status;
+		if (g_status != 0)
+			*(stock->status) = g_status;
 		add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, status));
 //	}
 }
@@ -111,6 +116,7 @@ static void	run_minishell(t_stock *stock)
 		if (input[0] != '\0')
 			run_minishell2(stock, input);
 		free(input);
+		g_status = 0;
 	}
 }
 
@@ -120,7 +126,7 @@ int	main(int ac, char **argv, char **envp)
 	t_arena	arena;
 	t_env	*env;
 	char	**envp_cp;
-	int		status;
+	int	status = 0;
 
 	arena_init(&arena, ARENA_SIZE);
 	if (ac > 1)
@@ -128,8 +134,6 @@ int	main(int ac, char **argv, char **envp)
 		printf("Minishell dosen't take any arguments\n");
 		return (0);
 	}
-	status = 0;
-
 	stock.argv = argv;
 	stock.envp = envp;
 
@@ -139,8 +143,6 @@ int	main(int ac, char **argv, char **envp)
 	stock.env = env;
 	stock.arena = &arena;
 	stock.status = &status;
-
-	add_or_update_env(&arena, &env, "?", ft_itoa(&arena, status));
 
 	run_minishell(&stock);
 	return (0);
