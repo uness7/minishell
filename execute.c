@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/13 20:16:15 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/14 16:41:42 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 	int		pipefd[2];
 	int		last_fd;
 	char	*path;
-        int		next_exists;
+		int		next_exists;
 
 	i = 0;
 	last_fd = STDIN_FILENO;
+	signal(SIGQUIT, handle_quit);
+	signal(SIGINT, handle_sig);
 	while (programs[i])
 	{
 		next_exists = programs[i + 1] != NULL;
@@ -65,7 +67,10 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 					dup2(programs[i]->fd_in, STDIN_FILENO);
 					close(programs[i]->fd_in);
 				}
-				execve(path, programs[i]->args, envp);
+				if (strncmp(programs[i]->cmd, "./", 2) == 0 || strncmp(programs[i]->cmd, "/", 1) == 0)
+					execve(programs[i]->cmd, programs[i]->args, envp);
+				else
+					execve(path, programs[i]->args, envp);
 				printf("Command Not Found\n");
 				exit(127);
 			}
@@ -141,9 +146,11 @@ t_program	*extract_program_redir_in(t_ast_node *root)
 	if (program == NULL) return NULL;
 	if (root->left != NULL && root->left->data != NULL)
 	{
+		fd = -1;
 		while (root->left != NULL)
 		{
 			filename = strdup(root->left->data);
+			//printf("%s\n", filename);
 			if (filename == NULL) return (NULL);
 			fd = open(filename, O_RDONLY);
 			if (fd == -1)
@@ -151,11 +158,28 @@ t_program	*extract_program_redir_in(t_ast_node *root)
 				perror("Failed to open file");
 				return (NULL);
 			}
+			if (root->left->f_out != 0)
+				break ;
 			root->left = root->left->left;
 		}
 		program->fd_in = fd;
 	}
 	program->fd_out = 1;
+	if (root->left && root->left->f_out == 1)
+	{
+		char	*file;
+		int	fd;
+
+		file = strdup(root->left->data);
+		if (file == NULL) return NULL;
+		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd == -1)
+		{
+			perror("Failed to open file");
+			return (NULL);
+		}
+		program->fd_out = fd;
+	}
 	program->cmd = strdup(root->right->data);
 	if (program->cmd == NULL)
 		return (NULL);
@@ -259,26 +283,70 @@ t_program	**extract_programs_pipeline(t_ast_node *root, t_program **programs , \
 	return (programs);
 }
 
-int heredoc(char *delim) {
-    int hfd[2], nbytes, len;
-    char buff[BUFFERSIZE + 1];
+int	heredoc(char *start_delim, char *end_delim, const char *filename)
+{
+	int		nbytes, len_start, len_end;
+	char	buff[BUFFERSIZE + 1];
+	int		fd;
 
-    if (pipe(hfd) == -1) {
-        return -1;
-    }
-    len = strlen(delim);
-    write(1, "heredoc> ", 9);
-    while ((nbytes = read(0, buff, BUFFERSIZE)) > 0) {
-        buff[nbytes] = 0;
-        if (nbytes == len + 1 && (memcmp(delim, buff, len) == 0) && buff[nbytes - 1] == '\n') {
-            break ;
+	if (start_delim != NULL)
+		len_start = strlen(start_delim);
+	len_end = strlen(end_delim);
+
+	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd == -1)
+		return -1;
+	if (start_delim != NULL)
+	{
+		write(1, "heredoc> ", 9);
+		while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+		{
+			if (nbytes == -1 && errno == EINTR)
+				break ;
+			buff[nbytes] = 0;
+			if (nbytes == len_start + 1 && (memcmp(start_delim, buff, len_start) == 0) && buff[nbytes - 1] == '\n') {
+				break;
+			}
+			write(1, "heredoc> ", 9);
+		}
+	}
+	write(1, "heredoc> ", 9);
+	while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+	{
+			if (nbytes == -1 && errno == EINTR)
+				break ;
+		buff[nbytes] = 0;
+		if (nbytes == len_end + 1 && (memcmp(end_delim, buff, len_end) == 0) && buff[nbytes - 1] == '\n') {
+			break;
+		}
+		write(fd, buff, nbytes);
+		write(1, "heredoc> ", 9);
+	}
+	close(fd);
+	fd = open(filename, O_RDONLY);
+	return fd;
+}
+
+void write_file_to_stdout(int fd) {
+    ssize_t nbytes;
+    char buffer[BUFFERSIZE];
+
+    while ((nbytes = read(fd, buffer, BUFFERSIZE)) > 0) {
+        if (write(STDOUT_FILENO, buffer, nbytes) != nbytes) {
+            perror("write");
+            close(fd);
+            exit(EXIT_FAILURE);
         }
-        write(hfd[WRITE_END], buff, nbytes);
-        write(1, "heredoc> ", 9);
-    }    
-    close(hfd[WRITE_END]);
-    return (hfd[READ_END]);
-} 
+    }
+
+    if (nbytes == -1) {
+        perror("read");
+    }
+
+    // Close the file descriptor
+    close(fd);
+}
+
 
 t_program	*extract_program_heredoc(t_ast_node *root)
 {
@@ -288,35 +356,54 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 	t_ast_node	*temp;
 	t_program	*program;
 
-	j = 0;
 	program = malloc(sizeof(t_program));
 	if (program == NULL) return NULL;
 	program->fd_out = 1;	
 	deli = NULL;
 	deli2 = NULL;
-	while (root->right != NULL && root->right->right != NULL)
-    		root = root->right;
-	if (root->right->data != NULL)
-		deli = strdup(root->right->data);
-	else
-		printf("deli is null\n");
-	printf("data : %s\n", deli);
-	printf("data : %s\n", deli2);
-	exit(0);
-	program->fd_in = heredoc(deli);
-	if (root->right->type == NODE_COMMAND)
-		program->cmd = strdup(root->right->data);	
-	else
+
+	t_ast_node	*curr = root->right;
+	t_ast_node	*prev = NULL;
+
+	while (curr->right != NULL)
+	{
+		prev = curr;
+		curr = curr->right;
+	}
+
+	if (prev != NULL) 
+		deli = strdup(prev->data);
+	 if (curr != NULL)
+		deli2 = curr->data;
+
+	 /*
+	 printf("deli 1: %s\n", deli);
+	 printf("deli 2 : %s\n", deli2);
+	 exit(0);
+	 */
+
+	program->fd_in = heredoc(deli, deli2, "tmp.txt");
+	unlink("tmp.txt");
+//	printf("%d\n", program->fd_in);
+
+//	write_file_to_stdout(program->fd_in);	
+
+//	exit(0);
+
+	//program->fd_in = 1;
+	if (root->left->type == NODE_COMMAND)
 		program->cmd = strdup(root->left->data);	
+
 	if (program->cmd == NULL) return NULL;
+
 	program->args = malloc(sizeof(char *) * 100);
 	if (program->args == NULL) return NULL;
-	if (root->left->type != NODE_COMMAND)
-		temp = root->left;	
-	else
-		temp = root->right;
+	j = 0;
+	program->args[j++] = strdup(program->cmd);
+	temp = root->left->right;
 	while (temp != NULL)
 	{
+		//printf("arg : %s\n", root->left->right->data);
 		program->args[j] = strdup(temp->data);
 		if (program->args[j]  == NULL) return NULL;
 		j++;
@@ -341,7 +428,7 @@ t_program	**extract_programs(t_ast_node *root, int programs_count)
 	else if (root->type == NODE_REDIRECTION_IN)
 		programs[i++] = extract_program_redir_in(root);
 	else if (root->type == NODE_REDIRECTION_OUT ||
-		       	root->type == NODE_REDIRECTION_APPEND)
+			   	root->type == NODE_REDIRECTION_APPEND)
 	{
 		if (root->type == NODE_REDIRECTION_OUT)
 			programs[i++] = extract_program_redir_out_append(root, 1);

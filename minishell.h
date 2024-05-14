@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/13 17:46:15 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/14 15:48:27 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,8 @@ typedef enum e_node_type
 
 typedef struct s_ast_node
 {
+	int				f_in;
+	int				f_out;
 	t_node_type			type;
 	char				*data;
 	struct s_ast_node	*left;
@@ -325,6 +327,8 @@ char					**allocate_memory_echo(t_arena *arena);
 /* Signals */
 void					handle_sig(int sig);
 void					handle_sig2(int sig);
+void					handle_heredoc(int sig);
+void					handle_quit(int sig);
 void					init_signal(void);
 
 /* Errors */

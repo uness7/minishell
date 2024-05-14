@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/13 20:19:50 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/14 16:36:39 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,16 @@ static void	run_minishell2(t_stock *stock, char *input)
 //	if (is_input_valid(input) && is_input_valid2(input) && check_invalid_combinations(stock->arena, list, stock->env))
 //	{
 		tree = parse(stock->arena, list);
-		//(void)programs;
+		(void)programs;
+		//(void)status;
 		//print_tree(tree);
+		//printf("\n");
 		programs = extract_programs(tree, 2 * strlen(input));	
 		//reverse_programs(programs);
-		//print_programs(programs);
-		status = run_programs(programs, stock->envp, stock, input);
+	//	print_programs(programs);
+		//printf("\n");
+		char	**new_envp = env_list_arr(stock->arena, stock->env, env_list_size(stock->env));
+		status = run_programs(programs, new_envp, stock, input);
 		*(stock->status) = status;
 		if (g_status != 0)
 			*(stock->status) = g_status;
@@ -104,6 +108,7 @@ static void	run_minishell(t_stock *stock)
 	while (1)
 	{
 		init_signal();
+		signal(SIGQUIT, SIG_IGN);
 		input = readline("\033[0;35m~> %  \033[0m ");
 		if (!input)
 		{

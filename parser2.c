@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:13:28 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/13 20:00:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/14 12:16:32 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static void	parse_command_simple(t_arena *arena, t_ast_node **root, t_node *toke
 
 	current = *root;
 	new_node = create_node_tree(arena, NODE_ARGUMENT, token->data);
-	if (current->type == NODE_REDIRECTION_OUT || \
-			current->type == NODE_REDIRECTION_IN || \
-			current->type == NODE_REDIRECTION_APPEND)
+	if ((current->type == NODE_REDIRECTION_OUT ) || \
+			(current->type == NODE_REDIRECTION_IN ) \
+			|| current->type == NODE_REDIRECTION_APPEND)
 	{
 		if (!current->left && prev_token->type == TOKEN_REDIR_OUT)
 			current->left = new_node;
@@ -30,6 +30,8 @@ static void	parse_command_simple(t_arena *arena, t_ast_node **root, t_node *toke
 			current->right = new_node;
 		else
 		{
+			if (prev_token->type == TOKEN_REDIR_OUT && (current->type == NODE_REDIRECTION_IN || current->type == NODE_REDIRECTION_HEREDOC))
+				current->left->f_out = 1;
 			if (*f_flag != 0)
 			{
 				while (current->left != NULL)
