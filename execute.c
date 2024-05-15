@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 15:54:11 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 21:25:55 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 	while (programs[i])
 	{
 		next_exists = programs[i + 1] != NULL;
+		if (_isbuiltin(stock->arena, programs[i]->cmd))
+		{
+			_runbuiltins(stock, input);
+			break ;
+		}
 		if (next_exists && pipe(pipefd) == -1)
 		{
 			perror("Pipe syscall failed: ");
@@ -80,8 +85,8 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 				execve(programs[i]->cmd, programs[i]->args, envp);
 			else if (_isbuiltin(stock->arena, programs[i]->cmd))
 			{
-				printf("here\n");
-				exit(0);
+				_runbuiltins(stock, input);
+				exit(EXIT_SUCCESS);
  			}
 			else
 				execve(path, programs[i]->args, envp);
