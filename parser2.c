@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:13:28 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 14:02:55 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 15:57:10 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,14 @@ static void	parse_command_simple(t_arena *arena, t_ast_node **root, t_node *toke
 			current->right = create_node_tree(arena, NODE_ARGUMENT, \
 					token->data);
 			current->right->f_out = 1;
+		}
+		else
+		{
+			t_ast_node	*temp = current->left;
+			while (temp->right != NULL)
+				temp = temp->right;
+			temp->right = create_node_tree(arena, NODE_ARGUMENT, \
+					token->data);
 		}
 	}
 }
