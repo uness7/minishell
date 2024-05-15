@@ -48,7 +48,7 @@ static void	run_minishell2(t_stock *stock, char *input)
 		print_tree(tree);
 		printf("\n\n");
 		print_programs(programs);
-		exit(0);
+		   exit(0);
 		*/
 		new_envp = env_list_arr(stock->arena, \
 				stock->env, env_list_size(stock->env));

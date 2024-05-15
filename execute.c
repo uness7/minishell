@@ -16,6 +16,7 @@
 
 int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 {
+	(void)input;
 	int		p = 0;
 	pid_t	pid;
 	int		i;
@@ -37,66 +38,66 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 			perror("Pipe syscall failed: ");
 			exit(EXIT_FAILURE);
 		}
-		if (_isbuiltin(stock->arena, programs[i]->cmd)) 
-			_runbuiltins(stock, input);
-		else
+		path = find_cmd(stock->arena, ft_strtok(stock->arena, \
+					find_paths(envp)), programs[i]->cmd);
+		pid = fork();
+		if (pid == 0)
 		{
-			path = find_cmd(stock->arena, ft_strtok(stock->arena, \
-						find_paths(envp)), programs[i]->cmd);
-			pid = fork();
-			if (pid == 0)
+			if (i > 0)
+				dup2(last_fd, STDIN_FILENO);
+			if (programs[i + 1])
 			{
-				if (i > 0)
-					dup2(last_fd, STDIN_FILENO);
-				if (programs[i + 1])
-				{
-					close(pipefd[0]);
-					dup2(pipefd[1], STDOUT_FILENO);
-				}
-				if (programs[i]->type == NODE_REDIRECTION_IN)
-				{
-					if (programs[i]->fd_out != 1)
-					{
-						dup2(programs[i]->fd_out, STDOUT_FILENO);
-						close(programs[i]->fd_out);
-					}
-					dup2(programs[i]->fd_in, STDIN_FILENO);
-					close(programs[i]->fd_in);
-				}
-				else if (programs[i]->type == NODE_REDIRECTION_OUT ||
-						programs[i]->type == NODE_REDIRECTION_APPEND)
+				close(pipefd[0]);
+				dup2(pipefd[1], STDOUT_FILENO);
+			}
+			if (programs[i]->type == NODE_REDIRECTION_IN)
+			{
+				if (programs[i]->fd_out != 1)
 				{
 					dup2(programs[i]->fd_out, STDOUT_FILENO);
 					close(programs[i]->fd_out);
 				}
-				else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
-				{
-					if (programs[i]->fd_out != 1)
-					{
-						dup2(programs[i]->fd_out, STDOUT_FILENO);
-						close(programs[i]->fd_out);
-					}
-					dup2(programs[i]->fd_in, STDIN_FILENO);
-					close(programs[i]->fd_in);
-				}
-				if (strncmp(programs[i]->cmd, "./", 2) == 0 || strncmp(programs[i]->cmd, "/", 1) == 0)
-					execve(programs[i]->cmd, programs[i]->args, envp);
-				else
-					execve(path, programs[i]->args, envp);
-				printf("Command Not Found\n");
-				exit(127);
+				dup2(programs[i]->fd_in, STDIN_FILENO);
+				close(programs[i]->fd_in);
 			}
-			else if (pid < 0)
-				fork_err();
-			else
-				pids[p++] = pid;
-			if (i > 0)
-				close(last_fd);
-			if (programs[i + 1])
+			else if (programs[i]->type == NODE_REDIRECTION_OUT ||
+					programs[i]->type == NODE_REDIRECTION_APPEND)
 			{
-				close(pipefd[1]);
-				last_fd = pipefd[0];
+				dup2(programs[i]->fd_out, STDOUT_FILENO);
+				close(programs[i]->fd_out);
 			}
+			else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
+			{
+				if (programs[i]->fd_out != 1)
+				{
+					dup2(programs[i]->fd_out, STDOUT_FILENO);
+					close(programs[i]->fd_out);
+				}
+				dup2(programs[i]->fd_in, STDIN_FILENO);
+				close(programs[i]->fd_in);
+			}
+			if (strncmp(programs[i]->cmd, "./", 2) == 0 || strncmp(programs[i]->cmd, "/", 1) == 0)
+				execve(programs[i]->cmd, programs[i]->args, envp);
+			else if (_isbuiltin(stock->arena, programs[i]->cmd))
+			{
+				printf("here\n");
+				exit(0);
+ 			}
+			else
+				execve(path, programs[i]->args, envp);
+			printf("Command Not Found\n");
+			exit(127);
+		}
+		else if (pid < 0)
+			fork_err();
+		else
+			pids[p++] = pid;
+		if (i > 0)
+			close(last_fd);
+		if (programs[i + 1])
+		{
+			close(pipefd[1]);
+			last_fd = pipefd[0];
 		}
 		i++;
 	}

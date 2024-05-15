@@ -43,8 +43,6 @@ bool	is_input_valid2(char *s)
 			ft_strncmp(s, "|", 1) == 0  \
 			|| ft_strncmp(s, "||", 2) == 0)
 		return (false);
-	else if (ft_strncmp(s, "<|", 2) == 0 || ft_strncmp(s, ">|", 2) == 0)
-		return (false);
 	return (true);
 }
 
