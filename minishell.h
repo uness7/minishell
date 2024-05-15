@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/14 15:48:27 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 11:53:21 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ typedef struct s_program
 
 
 t_program       *extract_program_command(t_ast_node *root);
-t_program       *extract_program_heredoc(t_ast_node *root);
+t_program       *extract_program_heredoc(t_ast_node *root, int f_no_cmd);
 t_program       *extract_program_redir_in(t_ast_node *root);
 t_program       *extract_program_redir_out_append(t_ast_node *root, int a);
 t_program       **extract_programs(t_ast_node *root, int programs_count);
@@ -396,7 +396,7 @@ void					swap(char **av);
 char					*expand_variables(t_stock *stock, const char *input);
 
 /* Tools */
-
+bool    ends_with_pipe(t_arena *arena, char *s);
 t_echo_arr				**split(t_arena *arena, char *input);
 int					is_space(char c);
 char					**ft_split_2(const char *str);

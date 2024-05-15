@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/14 11:59:11 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 14:02:18 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,15 @@ static void	parse_redir_append(t_arena *arena, t_ast_node **root, char *data)
 		temp = *root;
 		*root = new_node;
 		new_node->right = temp;
+	}
+	else if ((*root)->type == NODE_REDIRECTION_IN)
+	{
+		temp = (*root)->left;
+		if (temp->right && temp->left)
+		{
+			new_node->f_out = 2;
+			temp->right = new_node;
+		}
 	}
 	else if ((*root)->type == NODE_PIPELINE)
 	{

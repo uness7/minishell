@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 11:44:53 by yzioual           #+#    #+#             */
-/*   Updated: 2024/04/29 20:05:07 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 11:17:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,6 @@ bool	has_logical_ops(char *s)
 	return (false);
 }
 
-static bool	check6(t_node *temp)
-{
-	if (temp->type == TOKEN_PIPE)
-	{
-		if (temp->next->type == TOKEN_REDIR_IN
-			|| temp->next->type == TOKEN_REDIR_OUT
-			|| temp->next->type == TOKEN_REDIR_APPEND
-			|| temp->next->type == TOKEN_REDIR_HEREDOC
-			|| temp->next->type == TOKEN_PIPE)
-		{
-			printf("Syntax error. \n");
-			return (false);
-		}
-	}
-	return (true);
-}
-
 bool	check_invalid_combinations(t_arena *arena, t_list *list, t_env *env)
 {
 	t_node	*temp;
@@ -78,7 +61,7 @@ bool	check_invalid_combinations(t_arena *arena, t_list *list, t_env *env)
 	while (temp != NULL && temp->next != NULL)
 	{
 		if (!check1(temp) || !check2(temp) || !check3(temp) || !check4(temp)
-			|| !check5(temp) || !check6(temp))
+			|| !check5(temp))
 			return (false);
 		temp = temp->next;
 	}

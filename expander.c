@@ -32,7 +32,6 @@ char *expand_variables(t_stock *stock, const char *input) {
         if (*current == '$' && !inside_single_quotes) {
             current++;
             if (*current == '?') {
-                // Handle the special case for $?
                 var_value = ft_itoa(stock->arena, *(stock->status));
                 ft_strcpy(out_ptr, var_value);
                 out_ptr += ft_strlen(var_value);

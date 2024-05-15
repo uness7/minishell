@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:47 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/04 12:31:37 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 13:48:45 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	print_tree_utils(t_ast_node *root, int space)
 	else if (root->type == NODE_REDIRECTION_OUT)
 		printf("REDIR.OUT\n");
 	else if (root->type == NODE_REDIRECTION_APPEND)
-		printf("APPEND");
+		printf("APPEND\n");
 	else if (root->type == NODE_REDIRECTION_IN)
 		printf("REDIR.IN\n");
 	else if (root->type == NODE_REDIRECTION_HEREDOC)

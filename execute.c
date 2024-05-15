@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/14 18:10:42 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 14:07:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 				}
 				if (programs[i]->type == NODE_REDIRECTION_IN)
 				{
+					if (programs[i]->fd_out != 1)
+					{
+						dup2(programs[i]->fd_out, STDOUT_FILENO);
+						close(programs[i]->fd_out);
+					}
 					dup2(programs[i]->fd_in, STDIN_FILENO);
 					close(programs[i]->fd_in);
 				}
@@ -64,6 +69,11 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 				}
 				else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
 				{
+					if (programs[i]->fd_out != 1)
+					{
+						dup2(programs[i]->fd_out, STDOUT_FILENO);
+						close(programs[i]->fd_out);
+					}
 					dup2(programs[i]->fd_in, STDIN_FILENO);
 					close(programs[i]->fd_in);
 				}
@@ -149,8 +159,9 @@ t_program	*extract_program_redir_in(t_ast_node *root)
 		fd = -1;
 		while (root->left != NULL)
 		{
+			if (root->left->f_out == 1 || root->left->f_out == 2)
+				break ;
 			filename = strdup(root->left->data);
-			//printf("%s\n", filename);
 			if (filename == NULL) return (NULL);
 			fd = open(filename, O_RDONLY);
 			if (fd == -1)
@@ -158,25 +169,29 @@ t_program	*extract_program_redir_in(t_ast_node *root)
 				perror("Failed to open file");
 				return (NULL);
 			}
-			if (root->left->f_out != 0)
-				break ;
 			root->left = root->left->left;
 		}
 		program->fd_in = fd;
 	}
 	program->fd_out = 1;
-	if (root->left && root->left->f_out == 1)
+	if (root->left) 
 	{
 		char	*file;
 		int	fd;
-
-		file = strdup(root->left->data);
-		if (file == NULL) return NULL;
-		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd == -1)
+		while (root->left)
 		{
-			perror("Failed to open file");
-			return (NULL);
+			file = strdup(root->left->data);
+			if (file == NULL) return NULL;
+			if (root->left->f_out == 1)
+				fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+			if (root->left->f_out == 2)
+				fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
+			if (fd == -1)
+			{
+				perror("Failed to open file");
+				return (NULL);
+			}
+			root->left = root->left->left;
 		}
 		program->fd_out = fd;
 	}
@@ -263,7 +278,7 @@ t_program	**extract_programs_pipeline(t_ast_node *root, t_program **programs , \
 	else if (root->right->type == NODE_REDIRECTION_APPEND)
 		programs[(*i)++] = extract_program_redir_out_append(root->right, 0);
 	else if (root->right->type == NODE_REDIRECTION_HEREDOC)
-		programs[(*i)++] = extract_program_heredoc(root->right);
+		programs[(*i)++] = extract_program_heredoc(root->right, 0);
 
 	if (root->left->type == NODE_PIPELINE)
 		return extract_programs_pipeline(root->left, programs,\
@@ -277,7 +292,7 @@ t_program	**extract_programs_pipeline(t_ast_node *root, t_program **programs , \
 	else if (root->left->type == NODE_REDIRECTION_APPEND)
 		programs[(*i)++] = extract_program_redir_out_append(root->left, 0);
 	else if (root->left->type == NODE_REDIRECTION_HEREDOC)
-		programs[(*i)++] = extract_program_heredoc(root->left);
+		programs[(*i)++] = extract_program_heredoc(root->left, 0);
 
 	programs[*i] = NULL;
 	return (programs);
@@ -301,6 +316,8 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 		write(1, "heredoc> ", 9);
 		while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
 		{
+			if (g_status == 130)
+				break ;
 			if (nbytes == -1 && errno == EINTR)
 				break ;
 			buff[nbytes] = 0;
@@ -313,8 +330,10 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 	write(1, "heredoc> ", 9);
 	while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
 	{
-			if (nbytes == -1 && errno == EINTR)
-				break ;
+		if (g_status == 130)
+			break ;
+		if (nbytes == -1 && errno == EINTR)
+			break ;
 		buff[nbytes] = 0;
 		if (nbytes == len_end + 1 && (memcmp(end_delim, buff, len_end) == 0) && buff[nbytes - 1] == '\n') {
 			break;
@@ -348,16 +367,18 @@ void write_file_to_stdout(int fd) {
 }
 
 
-t_program	*extract_program_heredoc(t_ast_node *root)
+t_program	*extract_program_heredoc(t_ast_node *root, int f_no_cmd)
 {
+	int		f_outfile = 0;
 	int		j;
+	int		fd;
 	char	*deli;
 	char	*deli2;
 	t_ast_node	*temp;
 	t_program	*program;
-	int		f_no_cmd;
 
 	f_no_cmd = 0;
+	f_outfile = 0;
 	if (root->left == NULL)
 		f_no_cmd = 1;
 	program = malloc(sizeof(t_program));
@@ -371,6 +392,11 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 
 	while (curr->right != NULL)
 	{
+		if (curr->right->f_out == 1)
+		{
+			f_outfile = 1;
+			break ;
+		}
 		prev = curr;
 		curr = curr->right;
 	}
@@ -379,6 +405,18 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 		deli = strdup(prev->data);
 	 if (curr != NULL)
 		deli2 = curr->data;
+	if (f_outfile == 1)
+	{
+		fd = -1;
+		while (curr->right != NULL)
+		{
+			fd = open(curr->right->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
+			if (fd == -1)
+				return (NULL);
+			curr = curr->right;
+		}
+		program->fd_out = fd;
+	}
 
 	 /*
 	 printf("deli 1: %s\n", deli);
@@ -388,7 +426,8 @@ t_program	*extract_program_heredoc(t_ast_node *root)
 
 	program->fd_in = heredoc(deli, deli2, "tmp.txt");
 	unlink("tmp.txt");
-	return NULL;
+	if (f_no_cmd)
+		return NULL;
 //	printf("%d\n", program->fd_in);
 
 //	write_file_to_stdout(program->fd_in);	
@@ -441,7 +480,7 @@ t_program	**extract_programs(t_ast_node *root, int programs_count)
 			programs[i++] = extract_program_redir_out_append(root, 0);
 	}
 	else if (root->type == NODE_REDIRECTION_HEREDOC)
-		programs[i++] = extract_program_heredoc(root);
+		programs[i++] = extract_program_heredoc(root, 0);
 	else if (root->type == NODE_PIPELINE)
 	{
 		programs = extract_programs_pipeline(root, programs, programs_count, &i);

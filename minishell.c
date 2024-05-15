@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/14 18:15:21 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 14:08:00 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,32 @@ static void	run_minishell2(t_stock *stock, char *input)
 	t_list		*list;
 
 	new_envp = NULL;
+	if (g_status != 0)
+		*(stock->status) = g_status;
+	g_status = 0;
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
+/*	if (ends_with_pipe(stock->arena, input) || !is_input_valid2(input))
+	{
+		printf("bash: syntax error near unexpected token `newline'\n");
+		return ;
+	}
+	*/
 	if (check_invalid_combinations(stock->arena, list, stock->env))
 	{
 		tree = parse(stock->arena, list);
+		if (!is_input_valid(input))
+			extract_program_heredoc(tree, 1);
 		programs = extract_programs(tree, 2 * strlen(input));	
+		//print_tree(tree);
+		//printf("\n\n");
+		//print_programs(programs);
+		//exit(0);
 		new_envp = env_list_arr(stock->arena, \
 				stock->env, env_list_size(stock->env));
 		if (programs != NULL)
 			status = run_programs(programs, new_envp, stock, input);
-		//*(stock->status) = status;
+		*(stock->status) = status;
 		if (g_status != 0)
 			*(stock->status) = g_status;
 	}
