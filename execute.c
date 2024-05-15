@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 14:07:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/15 15:45:22 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@
 
 int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 {
+	int		p = 0;
 	pid_t	pid;
 	int		i;
 	int		pipefd[2];
 	int		last_fd;
 	char	*path;
-		int		next_exists;
+	int		next_exists;
+	pid_t 	pids[256];
 
 	i = 0;
 	last_fd = STDIN_FILENO;
@@ -86,6 +88,8 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 			}
 			else if (pid < 0)
 				fork_err();
+			else
+				pids[p++] = pid;
 			if (i > 0)
 				close(last_fd);
 			if (programs[i + 1])
@@ -99,7 +103,9 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 	if (last_fd != STDIN_FILENO)
 		close(last_fd);
 	int	status = 0;
-	waitpid(pid, &status, 0);
+	for (int j = 0; j < p; j++) {
+		waitpid(pids[j], &status, 0);
+	}
 	return (WEXITSTATUS(status));
 }
 
