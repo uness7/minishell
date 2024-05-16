@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 21:25:55 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/16 13:03:45 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,8 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 
 	if (start_delim != NULL)
 		len_start = strlen(start_delim);
-	len_end = strlen(end_delim);
+	if (end_delim != NULL)
+		len_end = strlen(end_delim);
 
 	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
@@ -339,19 +340,22 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 			write(1, "heredoc> ", 9);
 		}
 	}
-	write(1, "heredoc> ", 9);
-	while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+	if (end_delim != NULL)
 	{
-		if (g_status == 130)
-			break ;
-		if (nbytes == -1 && errno == EINTR)
-			break ;
-		buff[nbytes] = 0;
-		if (nbytes == len_end + 1 && (memcmp(end_delim, buff, len_end) == 0) && buff[nbytes - 1] == '\n') {
-			break;
-		}
-		write(fd, buff, nbytes);
 		write(1, "heredoc> ", 9);
+		while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+		{
+			if (g_status == 130)
+				break ;
+			if (nbytes == -1 && errno == EINTR)
+				break ;
+			buff[nbytes] = 0;
+			if (nbytes == len_end + 1 && (memcmp(end_delim, buff, len_end) == 0) && buff[nbytes - 1] == '\n') {
+				break;
+			}
+			write(fd, buff, nbytes);
+			write(1, "heredoc> ", 9);
+		}
 	}
 	close(fd);
 	fd = open(filename, O_RDONLY);
@@ -395,6 +399,7 @@ t_program	*extract_program_heredoc(t_ast_node *root, int f_no_cmd)
 		f_no_cmd = 1;
 	program = malloc(sizeof(t_program));
 	if (program == NULL) return NULL;
+	
 	program->fd_out = 1;	
 	deli = NULL;
 	deli2 = NULL;
@@ -404,11 +409,6 @@ t_program	*extract_program_heredoc(t_ast_node *root, int f_no_cmd)
 
 	while (curr->right != NULL)
 	{
-		if (curr->right->f_out == 1)
-		{
-			f_outfile = 1;
-			break ;
-		}
 		prev = curr;
 		curr = curr->right;
 	}
@@ -416,39 +416,33 @@ t_program	*extract_program_heredoc(t_ast_node *root, int f_no_cmd)
 	if (prev != NULL) 
 		deli = strdup(prev->data);
 	 if (curr != NULL)
-		deli2 = curr->data;
-	if (f_outfile == 1)
-	{
-		fd = -1;
-		while (curr->right != NULL)
-		{
-			fd = open(curr->right->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
-			if (fd == -1)
-				return (NULL);
-			curr = curr->right;
-		}
-		program->fd_out = fd;
-	}
+		deli2 = strdup(curr->data);
 
-	 /*
-	 printf("deli 1: %s\n", deli);
-	 printf("deli 2 : %s\n", deli2);
-	 exit(0);
-	 */
+	 // getting input
+	 program->fd_in = heredoc(deli, deli2, "tmp.txt");
+	 unlink("tmp.txt");
 
-	program->fd_in = heredoc(deli, deli2, "tmp.txt");
-	unlink("tmp.txt");
-	if (f_no_cmd)
-		return NULL;
-//	printf("%d\n", program->fd_in);
+	 if (f_no_cmd == 1)
+		 return NULL;
+	 // extraction of outfiles
+	 
+	 fd = 1;
+	 temp = root->left;
+	 while (temp->left != NULL)
+	 {
+		 //printf("outfile : %s\n", temp->left->data);
+		 fd = open(temp->left->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		 if (fd == -1)
+			 return (NULL);
+		 temp = temp->left;
+	 }
+	 program->fd_out = fd;
+	 
 
-//	write_file_to_stdout(program->fd_in);	
 
-//	exit(0);
 
-	//program->fd_in = 1;
-	if (root->left->type == NODE_COMMAND)
-		program->cmd = strdup(root->left->data);	
+	if (root->left == NULL || root->left->data == NULL) return NULL;
+	program->cmd = strdup(root->left->data);	
 
 	if (program->cmd == NULL) return NULL;
 
@@ -459,7 +453,6 @@ t_program	*extract_program_heredoc(t_ast_node *root, int f_no_cmd)
 	temp = root->left->right;
 	while (temp != NULL)
 	{
-		//printf("arg : %s\n", root->left->right->data);
 		program->args[j] = strdup(temp->data);
 		if (program->args[j]  == NULL) return NULL;
 		j++;

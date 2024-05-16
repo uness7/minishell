@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:13:28 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 20:45:51 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/16 12:03:54 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,59 @@ static void	parse_command_simple(t_arena *arena, t_ast_node **root, t_node *toke
 	}
 	else if (current->type == NODE_REDIRECTION_HEREDOC)
 	{
-		if (current->left == NULL)
+		// delimiters
+		if (prev_token->type == TOKEN_REDIR_HEREDOC)
 		{
-			current->left = create_node_tree(arena, NODE_ARGUMENT, \
+			if (current->right == NULL)
+				current->right = create_node_tree(arena, NODE_ARGUMENT, token->data);
+			else
+			{
+				while (current->right != NULL)
+					current = current->right;
+				current->right = create_node_tree(arena, NODE_ARGUMENT, token->data);
+			}
+		}
+
+		// command and args
+		else if (prev_token->type == TOKEN_WORD) 
+		{
+			if (current->left == NULL)
+				current->left= create_node_tree(arena, NODE_ARGUMENT, token->data);
+			else
+			{
+				t_ast_node	*temp = current->left;
+				while (temp->right != NULL)
+					temp = temp->right;
+				temp->right = create_node_tree(arena, NODE_ARGUMENT, token->data);
+			}
+		}
+		// output files
+		else if (prev_token->type == TOKEN_REDIR_OUT)	
+		{
+			while (current->left != NULL)
+				current = current->left;
+			current->left = create_node_tree(arena, NODE_ARGUMENT, token->data);
+			current->left->f_out = 1;
+		}
+
+	
+		/*
+		if (!current->left && !current->right && \
+				prev_token->type == TOKEN_REDIR_HEREDOC)
+		{
+			current->right = create_node_tree(arena, \
+					NODE_ARGUMENT, token->data);
+		}
+		else if (!current->left && current->right && *f_flag)
+		{
+			current->left = create_node_tree(arena, NODE_COMMAND, \
 					token->data);
 		}
 		else if (prev_token->type == TOKEN_REDIR_HEREDOC)
 		{
-			while (current->right != NULL)
-				current = current->right;
-			current->right = create_node_tree(arena, NODE_ARGUMENT, \
+			while (current->left != NULL)
+				current = current->left;
+			current->left = create_node_tree(arena, NODE_ARGUMENT, \
 					token->data);
 		}
 		else if (prev_token->type == TOKEN_REDIR_OUT)
@@ -83,6 +126,7 @@ static void	parse_command_simple(t_arena *arena, t_ast_node **root, t_node *toke
 						token->data);
 			}
 		}
+		*/
 	}
 }
 

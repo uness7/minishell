@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 20:40:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/16 13:36:10 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,17 @@ static void	run_minishell2(t_stock *stock, char *input)
 		*(stock->status) = g_status;
 	g_status = 0;
 	input = expand_variables(stock, input);
-	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-/*	if (ends_with_pipe(stock->arena, input) || !is_input_valid2(input))
-	{
-		printf("bash: syntax error near unexpected token `newline'\n");
+	if (strlen(trim_space(input)) == 0)
 		return ;
-	}
-	*/
-	if (check_invalid_combinations(stock->arena, list, stock->env))
+	list = tokenize(stock->arena, trim_quotes(stock->arena, \
+				trim_space(input)));
+
+	tree = parse(stock->arena, list);
+	if (is_tree_valid(tree))
 	{
-		tree = parse(stock->arena, list);
-		if (!is_input_valid(input))
-			extract_program_heredoc(tree, 1);
+		//print_tree(tree);
+		//exit(0);
 		programs = extract_programs(tree, 2 * strlen(input));	
-		print_tree(tree);
-		printf("\n\n");
-		print_programs(programs);
-		exit(0);
 		new_envp = env_list_arr(stock->arena, \
 				stock->env, env_list_size(stock->env));
 		if (programs != NULL)
@@ -56,6 +50,8 @@ static void	run_minishell2(t_stock *stock, char *input)
 		if (g_status != 0)
 			*(stock->status) = g_status;
 	}
+	else
+		printf("Input is not valid :( \n");
 }
 
 void print_program(char **args)

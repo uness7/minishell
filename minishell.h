@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 11:53:21 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/16 13:29:43 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -401,5 +401,8 @@ t_echo_arr				**split(t_arena *arena, char *input);
 int					is_space(char c);
 char					**ft_split_2(const char *str);
 t_ast_node				*ast(t_arena *arena, t_list *list);
+
+bool					is_tree_valid(t_ast_node *tree);
+
 
 #endif
