@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/15 14:02:18 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 00:22:53 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,7 @@ static void	parse_redir_out(t_arena *arena, t_ast_node **root, char *data)
 	}
 	else if ((*root)->type == NODE_PIPELINE)
 	{
-		if ((*root)->right == NULL)
-			(*root)->right = new_node;
-		else
-		{
-			if ((*root)->right->type == NODE_COMMAND) 
-			{
-				temp = (*root)->right;
-				(*root)->right = new_node;
-				new_node->right = temp;
-			}
-		}
+		(*root)->left = new_node;
 	}
 }
 
@@ -80,6 +70,8 @@ static void	parse_redir_append(t_arena *arena, t_ast_node **root, char *data)
 	}
 	else if ((*root)->type == NODE_PIPELINE)
 	{
+		// still needs work
+		// ls -al | >>file cmd
 		temp = find_mostleft_cmd(root);
 		(*root)->left = new_node;
 		new_node->right = temp;
@@ -104,6 +96,8 @@ static void	parse_redir_in(t_arena *arena, t_ast_node **root, char *data)
 	}
 	else if ((*root)->type == NODE_PIPELINE)
 	{
+		// stil needs work
+		// ls -al | <file cmd
 		temp = find_mostleft_cmd(root);
 		(*root)->left = new_node;
 		new_node->right = temp;
@@ -120,36 +114,27 @@ static t_ast_node	*dispenser(t_arena *arena, t_list *list)
 	tree = NULL;
 	while (list->head != NULL)
 	{
+		t_list *temp = list;
 		if (prev_token != NULL && (prev_token->type == TOKEN_REDIR_OUT
 				|| prev_token->type == TOKEN_REDIR_IN
 				|| prev_token->type == TOKEN_REDIR_APPEND
 				|| prev_token->type == TOKEN_REDIR_HEREDOC)
 			&& list->head->type == TOKEN_WORD)
 			f_flag = 1;
+
 		if (list->head->type == TOKEN_WORD)
-		{
-			parse_command(arena, &tree, list->head, prev_token, f_flag, list);
-		}
+			parse_command(arena, &tree, list->head, prev_token, f_flag, temp);
 		else if (list->head->type == TOKEN_PIPE)
-		{
 			parse_pipeline(arena, &tree, list->head);
-		}
 		else if (list->head->type == TOKEN_REDIR_OUT)
-		{
 			parse_redir_out(arena, &tree, list->head->data);
-		}
 		else if (list->head->type == TOKEN_REDIR_APPEND)
-		{
 			parse_redir_append(arena, &tree, list->head->data);
-		}
 		else if (list->head->type == TOKEN_REDIR_IN)
-		{
 			parse_redir_in(arena, &tree, list->head->data);
-		}
 		else if (list->head->type == TOKEN_REDIR_HEREDOC)
-		{
 			parse_redir_heredoc(arena, &tree, list->head->data);
-		}
+
 		f_flag = 0;
 		prev_token = list->head;
 		if (list->head != NULL)

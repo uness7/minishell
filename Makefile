@@ -36,9 +36,6 @@ CFILES = lexer.c \
 	 signal.c \
 	 errors.c \
 	 errors2.c \
-	 input_validation.c \
-	 input_validation2.c \
-	 input_validation3.c \
 	 itoa.c \
 	 dodjo.c \
 	 expander.c \

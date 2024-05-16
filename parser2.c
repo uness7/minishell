@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:13:28 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/16 12:03:54 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 00:23:53 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,47 +86,6 @@ static void	parse_command_simple(t_arena *arena, t_ast_node **root, t_node *toke
 			current->left = create_node_tree(arena, NODE_ARGUMENT, token->data);
 			current->left->f_out = 1;
 		}
-
-	
-		/*
-		if (!current->left && !current->right && \
-				prev_token->type == TOKEN_REDIR_HEREDOC)
-		{
-			current->right = create_node_tree(arena, \
-					NODE_ARGUMENT, token->data);
-		}
-		else if (!current->left && current->right && *f_flag)
-		{
-			current->left = create_node_tree(arena, NODE_COMMAND, \
-					token->data);
-		}
-		else if (prev_token->type == TOKEN_REDIR_HEREDOC)
-		{
-			while (current->left != NULL)
-				current = current->left;
-			current->left = create_node_tree(arena, NODE_ARGUMENT, \
-					token->data);
-		}
-		else if (prev_token->type == TOKEN_REDIR_OUT)
-		{
-			while (current->right != NULL)
-				current = current->right;
-			current->right = create_node_tree(arena, NODE_ARGUMENT, \
-					token->data);
-			current->right->f_out = 1;
-		}
-		else
-		{
-			t_ast_node	*temp = current->left;
-			while (current->left && temp->right != NULL)
-				temp = temp->right;
-			if (temp)
-			{
-				temp->right = create_node_tree(arena, NODE_ARGUMENT, \
-						token->data);
-			}
-		}
-		*/
 	}
 }
 
@@ -140,8 +99,16 @@ static t_ast_node	*parse_command_pipeline(t_arena *arena, t_ast_node *current,
 	return subtree;
 }
 
-void	parse_command(t_arena *arena, t_ast_node **root, t_node *token, \
-		t_node *prev_token, int f_flag, t_list *list)
+void	add_node_to_front(t_list *list, t_node *new_node)
+{
+	if (list == NULL || new_node == NULL) {
+		return;
+	}
+	new_node->next = list->head;
+	list->head = new_node;
+}
+
+void	parse_command(t_arena *arena, t_ast_node **root, t_node *token, t_node *prev_token, int f_flag, t_list *list)
 {
 	t_ast_node	*temp;
 	t_ast_node	*current;
@@ -166,7 +133,9 @@ void	parse_command(t_arena *arena, t_ast_node **root, t_node *token, \
 	}
 	else if (current->type == NODE_PIPELINE)
 	{
-		subtree = parse_command_pipeline(arena,NULL,NULL, list);
+		if (prev_token->type == TOKEN_REDIR_OUT || prev_token->type == TOKEN_REDIR_IN || prev_token->type == TOKEN_REDIR_APPEND || prev_token->type == TOKEN_REDIR_HEREDOC)
+			add_node_to_front(list, prev_token);
+		subtree = parse_command_pipeline(arena, NULL, NULL, list);
 		(*root)->left = subtree;
 	}
 	else

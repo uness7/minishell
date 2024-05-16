@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/16 13:36:10 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 00:21:00 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,10 @@ static void	run_minishell2(t_stock *stock, char *input)
 	input = expand_variables(stock, input);
 	if (strlen(trim_space(input)) == 0)
 		return ;
-	list = tokenize(stock->arena, trim_quotes(stock->arena, \
-				trim_space(input)));
-
-	tree = parse(stock->arena, list);
-	if (is_tree_valid(tree))
+	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
+	if(is_input_valid(list))
 	{
-		//print_tree(tree);
-		//exit(0);
+		tree = parse(stock->arena, list);
 		programs = extract_programs(tree, 2 * strlen(input));	
 		new_envp = env_list_arr(stock->arena, \
 				stock->env, env_list_size(stock->env));
@@ -50,8 +46,6 @@ static void	run_minishell2(t_stock *stock, char *input)
 		if (g_status != 0)
 			*(stock->status) = g_status;
 	}
-	else
-		printf("Input is not valid :( \n");
 }
 
 void print_program(char **args)

@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/16 13:29:43 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/16 20:47:47 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -350,21 +350,6 @@ int						ft_isspace(int c);
 /* ft_split helper functions */
 char					**ft_split(t_arena *arena, const char *s, char delim);
 
-/* Input Validation */
-bool					is_input_valid(char *input);
-bool					has_valid_heredoc(char *s);
-bool					check_invalid_combinations(t_arena *arena, t_list *list, t_env *env);
-bool					check1(t_node *temp);
-bool					check2(t_node *temp);
-bool					check3(t_node *temp);
-bool					check4(t_node *temp);
-bool					check5(t_node *temp);
-bool					has_logical_ops(char *s);
-bool					has_double_unclosed_quotes(char *s);
-bool					has_single_unclosed_quotes(char *s);
-bool					is_input_valid(char *s);
-bool					is_input_valid2(char *s);
-
 /* itoa */
 char					*ft_itoa(t_arena *arena, int n);
 
@@ -402,7 +387,9 @@ int					is_space(char c);
 char					**ft_split_2(const char *str);
 t_ast_node				*ast(t_arena *arena, t_list *list);
 
-bool					is_tree_valid(t_ast_node *tree);
+/* Input Validation */
+bool	is_input_valid(t_list *list); 
+
 
 
 #endif
