@@ -385,7 +385,6 @@ void write_file_to_stdout(int fd) {
 
 t_program	*extract_program_heredoc(t_ast_node *root, int f_no_cmd)
 {
-	int		f_outfile = 0;
 	int		j;
 	int		fd;
 	char	*deli;
@@ -394,7 +393,6 @@ t_program	*extract_program_heredoc(t_ast_node *root, int f_no_cmd)
 	t_program	*program;
 
 	f_no_cmd = 0;
-	f_outfile = 0;
 	if (root->left == NULL)
 		f_no_cmd = 1;
 	program = malloc(sizeof(t_program));
