@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 22:44:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 23:18:01 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 23:19:19 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	heredoc_cmd(char *start_delim)
 
 	 len_start = 1;
 	 fd = open("tmp.txt", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	 unlink("tmp.txt");
+	 //unlink("tmp.txt");
 	 if (fd == -1)
 		 return -1;
 	 write(1, "heredoc> ", 9);
