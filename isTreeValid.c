@@ -5,100 +5,64 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 13:17:05 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 11:54:00 by yzioual          ###   ########.fr       */
+/*   Created: 2024/05/17 14:13:43 by yzioual           #+#    #+#             */
+/*   Updated: 2024/05/17 16:13:09 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// < | , > | , << | , >> | , 
-// |
-// >>
-// <<
-// ||
-// | echo hello |
-// echo hello | 
-
-// if token_size == 1 && token == >> or token == << or token == | or token == >
-// if list begin with an op or ends with an op
-// if two tokens are conesecutive unless it's an op followed by a pipe
-// if it's redir it must be followed by a word
-// if input is empty '' or "" 
-
-int	tokens_size(t_list *tokens)
+static bool	is_redir_valid(t_ast_node *tree)
 {
-	int		count;
-	t_node	*temp;
-
-	count = 0;
-	temp = tokens->head;
-	while (temp != NULL)
-	{
-		count++;
-		temp = temp->next;
-	}
-	return (count);
-}
-
-bool	is_op(char *s)
-{
-	if (ft_strcmp(s, ">") == 0 ||
-		ft_strcmp(s, "<") == 0 ||
-		ft_strcmp(s, "<<") == 0 ||
-		ft_strcmp(s, ">>") == 0)
-	{
-		return (true);
-	}
-	return (false);
-}
-
-bool	check_first_last_token(t_list *tokens, int size)
-{
-	t_node	*temp;
-
-	if (tokens == NULL)
-		return (false);
-	temp = tokens->head;
-	if ((ft_strcmp(temp->data, "|") == 0) || (is_op(temp->data) && size == 1))
-		return (false);
-	while (temp->next != NULL)
-		temp = temp->next;
-	if (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data)) 
+	if (tree->left == NULL || tree->right == NULL)
 		return (false);
 	return (true);
 }
 
-bool	is_input_valid(t_list *tokens)
+static bool	is_heredoc_valid(t_ast_node *tree)
 {
-	t_node	*temp;
-	char	*token;
-	int	size;	
-
-	size = tokens_size(tokens);
-	temp = tokens->head;
-	if (!check_first_last_token(tokens, size))
-	{
-		printf("Input is not valid\n");
+	if (tree->left && !tree->right)
 		return (false);
-	}
-	while (temp != NULL)
-	{
-		token = temp->data;
-		if (size == 1 && (strcmp(token, "|") == 0 \
-					|| strcmp(token, ">") == 0 || \
-					strcmp(token, "<") == 0 || strcmp(token, ">>") \
-					== 0 || strcmp(token, "<<") == 0))
-		{
-			printf("Input is not valid\n");
-			return (false);
-		}
-		else if ((is_op(temp->data) && is_op(temp->next->data)) || (ft_strcmp(temp->data, "|") == 0 && temp->next &&ft_strcmp(temp->next->data, "|") == 0))
-		{
-			printf("Input is not valid\n");
-			return (false);
-		}
-		temp = temp->next;
-	}
 	return (true);
+}
+bool is_tree_valid(t_ast_node *tree) {
+    // Base case: if the tree is NULL, it is considered invalid
+    if (tree == NULL) {
+        return false;
+    }
+
+    // Check if the current node is a redirection node
+    if (tree->type == NODE_REDIRECTION_OUT ||
+        tree->type == NODE_REDIRECTION_IN ||
+        tree->type == NODE_REDIRECTION_APPEND) {
+        // Validate the redirection node
+        if (!is_redir_valid(tree)) {
+            return false;
+        }
+    }
+    // Check if the current node is a heredoc node
+    else if (tree->type == NODE_REDIRECTION_HEREDOC) {
+        // Validate the heredoc node
+        if (!is_heredoc_valid(tree)) {
+            return false;
+        }
+    }
+    // Check if the current node is a pipeline node
+    else if (tree->type == NODE_PIPELINE) {
+        // Validate the pipeline node by ensuring both left and right children are valid
+        if (!is_tree_valid(tree->left) || !is_tree_valid(tree->right)) {
+            return false;
+        }
+    }
+
+    // Recursively check the left and right children of the current node
+    if (tree->left && !is_tree_valid(tree->left)) {
+        return false;
+    }
+    if (tree->right && !is_tree_valid(tree->right)) {
+        return false;
+    }
+
+    // If all checks pass, the tree is valid
+    return true;
 }

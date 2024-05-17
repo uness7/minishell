@@ -42,6 +42,7 @@ CFILES = lexer.c \
 	 split_echo.c \
 	 execute.c \
 	 isTreeValid.c \
+	 isListValid.c \
 
 OBJECTS = $(CFILES:.c=.o)
 

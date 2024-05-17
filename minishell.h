@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/16 20:47:47 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 14:19:59 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -389,6 +389,7 @@ t_ast_node				*ast(t_arena *arena, t_list *list);
 
 /* Input Validation */
 bool	is_input_valid(t_list *list); 
+bool	is_tree_valid(t_ast_node *tree);
 
 
 
