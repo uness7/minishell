@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 18:56:21 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 23:18:22 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,21 @@ static void	run_minishell2(t_stock *stock, char *input)
 		*(stock->status) = g_status;
 	g_status = 0;
 	input = expand_variables(stock, input);
-	if (strlen(trim_quotes(stock->arena, trim_space(input))) == 0)
+	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0)
 		return ;
+	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input))
+	{
+		int	fd;
+		fd = -1;
+		if (has_single_unclosed_quotes(input))
+			fd = heredoc_cmd("\'");
+		else
+			fd = heredoc_cmd("\"");
+		if (fd == -1)
+			return ;
+		printf("%d\n", fd);
+		exit(0);
+	}
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	if (is_input_valid(list))
 	{

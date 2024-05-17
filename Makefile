@@ -41,7 +41,7 @@ CFILES = lexer.c \
 	 expander.c \
 	 split_echo.c \
 	 execute.c \
-	 isTreeValid.c \
+	 heredoc_cmds.c \
 	 isListValid.c \
 
 OBJECTS = $(CFILES:.c=.o)
