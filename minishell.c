@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 13:32:52 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 13:55:38 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ static void	run_minishell2(t_stock *stock, char *input)
 	if(is_input_valid(list))
 	{
 		tree = parse(stock->arena, list);
-		//print_tree(tree); exit(0);
 		programs = extract_programs(tree, 2 * strlen(input));	
-		//print_programs(programs); exit(0);
 		new_envp = env_list_arr(stock->arena, \
 				stock->env, env_list_size(stock->env));
 		if (programs != NULL)

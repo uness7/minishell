@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 13:45:27 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 13:56:41 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 		}
 		if (_isbuiltin(stock->arena, programs[i]->cmd))
 		{
-			if ((i == 0) || (!programs[i + 1] && (ft_strcmp(programs[i]->cmd, "echo") == 0 || ft_strcmp(programs[i]->cmd, "pwd") == 0)))
+			if ((i == 0 && ft_strcmp(programs[i]->cmd, "echo") != 0) || (!programs[i + 1] && (ft_strcmp(programs[i]->cmd, "echo") == 0 || ft_strcmp(programs[i]->cmd, "pwd") == 0)))
 			{
 				char	*new_input = join_args(stock->arena, programs[i]->args);
 				_runbuiltins(stock, new_input);
