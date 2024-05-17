@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 16:43:49 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 19:12:21 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,39 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 		}
 		if (_isbuiltin(stock->arena, programs[i]->cmd))
 		{
+				if (i > 0)
+					dup2(last_fd, STDIN_FILENO);
+				if (programs[i + 1])
+				{
+					close(pipefd[0]);
+					dup2(pipefd[1], STDOUT_FILENO);
+				}
+				if (programs[i]->type == NODE_REDIRECTION_IN)
+				{
+					if (programs[i]->fd_out != 1)
+					{
+						dup2(programs[i]->fd_out, STDOUT_FILENO);
+						close(programs[i]->fd_out);
+					}
+					dup2(programs[i]->fd_in, STDIN_FILENO);
+					close(programs[i]->fd_in);
+				}
+				else if (programs[i]->type == NODE_REDIRECTION_OUT ||
+						programs[i]->type == NODE_REDIRECTION_APPEND)
+				{
+					dup2(programs[i]->fd_out, STDOUT_FILENO);
+					close(programs[i]->fd_out);
+				}
+				else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
+				{
+					if (programs[i]->fd_out != 1)
+					{
+						dup2(programs[i]->fd_out, STDOUT_FILENO);
+						close(programs[i]->fd_out);
+					}
+					dup2(programs[i]->fd_in, STDIN_FILENO);
+					close(programs[i]->fd_in);
+				}
 			if (programs[i - 1] && programs[i + 1] && ft_strcmp(programs[i]->cmd, "echo") == 0 && i != 0)
 			{
 				char	*new_input = join_args(stock->arena, programs[i]->args);
@@ -51,7 +84,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 			}
 		}
 		else
-	{
+		{
 			path = find_cmd(stock->arena, ft_strtok(stock->arena, \
 						find_paths(envp)), programs[i]->cmd);
 			pid = fork();
@@ -109,7 +142,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 			close(pipefd[1]);
 			last_fd = pipefd[0];
 		}
-		i++;
+		i++;	
 	}
 	if (last_fd != STDIN_FILENO)
 		close(last_fd);
@@ -212,9 +245,10 @@ t_program	*extract_program_redir_in(t_ast_node *root)
 		}
 		program->fd_out = fd;
 	}
-	program->cmd = strdup(root->right->data);
-	if (program->cmd == NULL)
-		return (NULL);
+	if (root->right)
+		program->cmd = strdup(root->right->data);
+	else
+		program->cmd = NULL;
 	program->args = malloc(sizeof(char *) * 100);
 	temp = root->right;
 	while (temp != NULL)
