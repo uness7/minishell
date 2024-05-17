@@ -6,13 +6,11 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/16 13:03:45 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 13:45:27 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// maybe i should implement extract_builtin command
 
 int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 {
@@ -33,70 +31,71 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock, char *input)
 	while (programs[i])
 	{
 		next_exists = programs[i + 1] != NULL;
-		if (_isbuiltin(stock->arena, programs[i]->cmd))
-		{
-			_runbuiltins(stock, input);
-			break ;
-		}
 		if (next_exists && pipe(pipefd) == -1)
 		{
 			perror("Pipe syscall failed: ");
 			exit(EXIT_FAILURE);
 		}
-		path = find_cmd(stock->arena, ft_strtok(stock->arena, \
-					find_paths(envp)), programs[i]->cmd);
-		pid = fork();
-		if (pid == 0)
+		if (_isbuiltin(stock->arena, programs[i]->cmd))
 		{
-			if (i > 0)
-				dup2(last_fd, STDIN_FILENO);
-			if (programs[i + 1])
+			if ((i == 0) || (!programs[i + 1] && (ft_strcmp(programs[i]->cmd, "echo") == 0 || ft_strcmp(programs[i]->cmd, "pwd") == 0)))
 			{
-				close(pipefd[0]);
-				dup2(pipefd[1], STDOUT_FILENO);
+				char	*new_input = join_args(stock->arena, programs[i]->args);
+				_runbuiltins(stock, new_input);
 			}
-			if (programs[i]->type == NODE_REDIRECTION_IN)
-			{
-				if (programs[i]->fd_out != 1)
-				{
-					dup2(programs[i]->fd_out, STDOUT_FILENO);
-					close(programs[i]->fd_out);
-				}
-				dup2(programs[i]->fd_in, STDIN_FILENO);
-				close(programs[i]->fd_in);
-			}
-			else if (programs[i]->type == NODE_REDIRECTION_OUT ||
-					programs[i]->type == NODE_REDIRECTION_APPEND)
-			{
-				dup2(programs[i]->fd_out, STDOUT_FILENO);
-				close(programs[i]->fd_out);
-			}
-			else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
-			{
-				if (programs[i]->fd_out != 1)
-				{
-					dup2(programs[i]->fd_out, STDOUT_FILENO);
-					close(programs[i]->fd_out);
-				}
-				dup2(programs[i]->fd_in, STDIN_FILENO);
-				close(programs[i]->fd_in);
-			}
-			if (strncmp(programs[i]->cmd, "./", 2) == 0 || strncmp(programs[i]->cmd, "/", 1) == 0)
-				execve(programs[i]->cmd, programs[i]->args, envp);
-			else if (_isbuiltin(stock->arena, programs[i]->cmd))
-			{
-				_runbuiltins(stock, input);
-				exit(EXIT_SUCCESS);
- 			}
-			else
-				execve(path, programs[i]->args, envp);
-			printf("Command Not Found\n");
-			exit(127);
 		}
-		else if (pid < 0)
-			fork_err();
 		else
-			pids[p++] = pid;
+	{
+			path = find_cmd(stock->arena, ft_strtok(stock->arena, \
+						find_paths(envp)), programs[i]->cmd);
+			pid = fork();
+			if (pid == 0)
+			{
+				if (i > 0)
+					dup2(last_fd, STDIN_FILENO);
+				if (programs[i + 1])
+				{
+					close(pipefd[0]);
+					dup2(pipefd[1], STDOUT_FILENO);
+				}
+				if (programs[i]->type == NODE_REDIRECTION_IN)
+				{
+					if (programs[i]->fd_out != 1)
+					{
+						dup2(programs[i]->fd_out, STDOUT_FILENO);
+						close(programs[i]->fd_out);
+					}
+					dup2(programs[i]->fd_in, STDIN_FILENO);
+					close(programs[i]->fd_in);
+				}
+				else if (programs[i]->type == NODE_REDIRECTION_OUT ||
+						programs[i]->type == NODE_REDIRECTION_APPEND)
+				{
+					dup2(programs[i]->fd_out, STDOUT_FILENO);
+					close(programs[i]->fd_out);
+				}
+				else if (programs[i]->type == NODE_REDIRECTION_HEREDOC)
+				{
+					if (programs[i]->fd_out != 1)
+					{
+						dup2(programs[i]->fd_out, STDOUT_FILENO);
+						close(programs[i]->fd_out);
+					}
+					dup2(programs[i]->fd_in, STDIN_FILENO);
+					close(programs[i]->fd_in);
+				}
+				if (strncmp(programs[i]->cmd, "./", 2) == 0 || strncmp(programs[i]->cmd, "/", 1) == 0)
+					execve(programs[i]->cmd, programs[i]->args, envp);
+				else
+					execve(path, programs[i]->args, envp);
+				printf("Command Not Found\n");
+				exit(127);
+			}
+			else if (pid < 0)
+				fork_err();
+			else
+				pids[p++] = pid;
+		}
 		if (i > 0)
 			close(last_fd);
 		if (programs[i + 1])

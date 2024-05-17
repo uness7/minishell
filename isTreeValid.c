@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:17:05 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 00:30:40 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/17 11:54:00 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ bool	is_op(char *s)
 	return (false);
 }
 
-bool	check_first_last_token(t_list *tokens)
+bool	check_first_last_token(t_list *tokens, int size)
 {
 	t_node	*temp;
 
 	if (tokens == NULL)
 		return (false);
 	temp = tokens->head;
-	if (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data))
+	if ((ft_strcmp(temp->data, "|") == 0) || (is_op(temp->data) && size == 1))
 		return (false);
 	while (temp->next != NULL)
 		temp = temp->next;
@@ -77,7 +77,7 @@ bool	is_input_valid(t_list *tokens)
 
 	size = tokens_size(tokens);
 	temp = tokens->head;
-	if (!check_first_last_token(tokens))
+	if (!check_first_last_token(tokens, size))
 	{
 		printf("Input is not valid\n");
 		return (false);
