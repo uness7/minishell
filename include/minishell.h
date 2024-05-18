@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/18 16:24:16 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/18 20:00:13 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -378,7 +378,7 @@ void					err(void);
 void					swap(char **av);
 
 /* Expander */
-char					*expand_variables(t_stock *stock, const char *input);
+char					*expand_variables(t_stock *stock, char *input);
 
 /* Tools */
 t_echo_arr				**split(t_arena *arena, char *input);
