@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 22:55:12 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/18 16:24:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -381,7 +381,6 @@ void					swap(char **av);
 char					*expand_variables(t_stock *stock, const char *input);
 
 /* Tools */
-bool    ends_with_pipe(t_arena *arena, char *s);
 t_echo_arr				**split(t_arena *arena, char *input);
 int					is_space(char c);
 char					**ft_split_2(const char *str);
@@ -392,8 +391,10 @@ bool	is_input_valid(t_list *list);
 bool	is_tree_valid(t_ast_node *tree);
 bool    has_double_unclosed_quotes(char *s);
 bool    has_single_unclosed_quotes(char *s);
-int     heredoc_cmd(char *start_delim);
+void	heredoc_cmd(char *input, const char *delim);
+void	heredoc_cmd2(char *input);
 void	write_file_to_stdout(int fd);
+bool	ends_with_pipe(char *input);
 
 
 #endif

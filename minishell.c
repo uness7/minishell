@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 23:18:22 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/18 18:13:43 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,36 @@
 
 int	g_status = 0;
 
-void	reverse_programs(t_program **programs);
-void    print_programs(t_program **programs);
-void print_program(char **args);
+static void	check_unclosed_quotes_or_pipe(char *input)
+{
+	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input) \
+			|| ends_with_pipe(input))
+	{
+		if (has_single_unclosed_quotes(input))
+			heredoc_cmd(input, "\'");
+		else if (has_double_unclosed_quotes(input))
+			heredoc_cmd(input, "\"");
+		else if (ends_with_pipe(input))
+			heredoc_cmd2(input);
+	}
+}
+
+static void	ign_cmd(t_program **programs)
+{
+	int		i;
+
+	i = 0;
+	while (programs[i] != NULL)
+	{
+		if (programs[i]->cmd == NULL)
+			programs++;
+		i++;
+	}
+}
 
 static void	run_minishell2(t_stock *stock, char *input)
 {
 	char		**new_envp;
-	int		status = 0;
 	t_program	**programs;
 	t_ast_node	*tree;
 	t_list		*list;
@@ -33,96 +55,21 @@ static void	run_minishell2(t_stock *stock, char *input)
 	input = expand_variables(stock, input);
 	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0)
 		return ;
-	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input))
-	{
-		int	fd;
-		fd = -1;
-		if (has_single_unclosed_quotes(input))
-			fd = heredoc_cmd("\'");
-		else
-			fd = heredoc_cmd("\"");
-		if (fd == -1)
-			return ;
-		printf("%d\n", fd);
-		exit(0);
-	}
+	check_unclosed_quotes_or_pipe(input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	if (is_input_valid(list))
 	{
 		tree = parse(stock->arena, list);
-		//print_tree(tree);
-		programs = extract_programs(tree, 2 * strlen(input));	
-		//print_programs(programs);
-		int	i = 0;
-		while (programs[i] != NULL)
-		{
-			if (programs[i]->cmd == NULL)
-				programs++;
-			i++;
-		}
-		new_envp = env_list_arr(stock->arena, \
-				stock->env, env_list_size(stock->env));
+		programs = extract_programs(tree, 2 * ft_strlen(input));	
+		ign_cmd(programs);
+		new_envp = env_list_arr(stock->arena, stock->env,\
+				env_list_size(stock->env));
 		if (programs != NULL)
-			status = run_programs(programs, new_envp, stock, input);
-		*(stock->status) = status;
+			*(stock->status) = run_programs(programs, new_envp, stock, input);
 		if (g_status != 0)
 			*(stock->status) = g_status;
 	}
 }
-
-void print_program(char **args)
-{
-	if (args == NULL) {
-		printf("Arguments: None\n");
-		return;
-	}
-	printf("Arguments:\n");
-	for (int i = 0; args[i] != NULL; i++) {
-		printf("  [%d]: %s\n", i, args[i]);
-	}
-}
-
-void	print_programs(t_program **programs)
-{
-	if (programs == NULL) {
-		printf("No programs to display.\n");
-		return;
-	}
-
-	int index = 0;
-	while (programs[index] != NULL) {
-		t_program *p = programs[index];
-		printf("Program %d:\n", index);
-		printf("  Command: %s\n", p->cmd ? p->cmd : "None");
-		print_program(p->args);
-		printf("  File descriptors: in=%d, out=%d\n", p->fd_in, p->fd_out);
-		printf("  Here Document Flag: %s\n", p->fd_heredoc ? "Yes" : "No");
-		printf("\n");
-		index++;
-	}
-}
-
-
-void	reverse_programs(t_program **programs)
-{
-	int	length;
-	int	i;
-
-	length = 0;
-	i = 0;
-	if (!programs)
-		return ;
-	while (programs[length])
-		length++;
-	while (i < length / 2)
-	{
-		t_program *temp = programs[i];
-		programs[i] = programs[length - i - 1];
-		programs[length - i - 1] = temp;
-		i++;
-	}
-}
-
 
 static void	run_minishell(t_stock *stock)
 {

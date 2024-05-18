@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/11 15:07:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/17 22:29:19 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/18 16:06:47 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,10 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 			if (nbytes == -1 && errno == EINTR)
 				break ;
 			buff[nbytes] = 0;
-			if (nbytes == len_start + 1 && (memcmp(start_delim, buff, len_start) == 0) && buff[nbytes - 1] == '\n') {
+			if (nbytes == len_start + 1 && \
+					(memcmp(start_delim, buff, len_start) == 0) \
+					&& buff[nbytes - 1] == '\n')
+			{
 				break;
 			}
 			write(1, "heredoc> ", 9);
