@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/18 20:00:13 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/19 14:54:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,12 @@ typedef struct s_cmd_data
 	t_node				*prev_token;
 }						t_cmd_data;
 
+typedef struct s_delims
+{
+	char	*deli;
+	char	*deli2;
+}						t_delims;
+
 ///////////////      Programs        /////////////////////
 
 typedef struct s_program
@@ -221,18 +227,22 @@ typedef struct s_program
 	char				*cmd;
 }						t_program;
 
-t_program				*extract_program_command(t_ast_node *root);
-t_program				*extract_program_heredoc(t_ast_node *root,
-							int f_no_cmd);
-t_program				*extract_program_redir_in(t_ast_node *root);
-t_program				*extract_program_redir_out_append(t_ast_node *root,
-							int a);
-t_program				**extract_programs(t_ast_node *root,
-							int programs_count);
-t_program				**extract_programs_pipeline(t_ast_node *root,
-							t_program **programs, int programs_count, int *i);
-int						run_programs(t_program **programs, char **envp,
-							t_stock *stock, char *input);
+int		run_programs(t_program **programs, char **envp,\
+		t_stock *stock, char *input);
+
+t_program	**extract_programs(t_arena *arena, t_ast_node *root, int programs_count);
+
+t_program	**extract_programs_pipeline(t_arena *arena, t_ast_node *root,\
+		t_program **programs, int programs_count, int *i);
+
+t_program	*extract_program_command(t_arena *arena, t_ast_node *root);
+
+t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root, int f_no_cmd);
+
+t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root);
+
+t_program	*extract_program_redir_out_append(t_arena *arena, t_ast_node *root\
+		, int a);
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -422,6 +432,13 @@ t_ast_node				*parse_command_pipeline(t_arena *arena,
 							t_ast_node *current, char *data, t_list *list);
 void					parse_command_simple(t_arena *arena, t_ast_node **root,
 							t_cmd_data *data, int *f_flag);
+void					_node_redir(t_arena *arena, t_ast_node **root, t_cmd_data *data,\
+		int	*f_flag);
+void					_node_heredoc(t_arena *arena, t_ast_node **current, t_cmd_data *data);
+bool					is_redirection_parser2(int type);
+
+int     heredoc(char *start_delim, char *end_delim, const char *filename);
+
 
 /*  Parser Utils File : */
 

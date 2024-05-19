@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:17:48 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/14 17:27:06 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/19 12:58:44 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,6 @@ void	handle_sig(int sig)
 		rl_redisplay();
 		g_status = 130;
 	}
-}
-
-void	handle_heredoc(int sig)
-{
-	(void)sig;
 }
 
 void	handle_sig2(int sig)

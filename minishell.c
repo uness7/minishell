@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/18 18:13:43 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/19 13:09:21 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,28 @@ static void	check_unclosed_quotes_or_pipe(char *input)
 	}
 }
 
-static void	ign_cmd(t_program **programs)
+static void	ign_cmd(t_program ***programs)
 {
-	int	i;
+	int		i;
+	int		j;
 
 	i = 0;
-	while (programs[i] != NULL)
+	while ((*programs)[i] != NULL)
 	{
-		if (programs[i]->cmd == NULL)
-			programs++;
-		i++;
+		if ((*programs)[i]->cmd == NULL)
+		{
+			j = i;
+			while ((*programs)[j] != NULL)
+			{
+				(*programs)[j] = (*programs)[j + 1];
+				j++;
+			}
+		}
+		else
+			i++;
 	}
 }
+
 
 static void	run_minishell2(t_stock *stock, char *input)
 {
@@ -64,8 +74,8 @@ static void	run_minishell2(t_stock *stock, char *input)
 	if (is_input_valid(list))
 	{
 		tree = parse(stock->arena, list);
-		programs = extract_programs(tree, 2 * ft_strlen(input));
-		ign_cmd(programs);
+		programs = extract_programs(stock->arena, tree, 2 * ft_strlen(input));
+		ign_cmd(&programs);
 		new_envp = env_list_arr(stock->arena, stock->env,
 				env_list_size(stock->env));
 		if (programs != NULL)
