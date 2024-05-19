@@ -17,7 +17,7 @@ int	is_space(char c)
 	return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int	is_quote(char c)
+static int	is_quote(char c)
 {
 	return (c == '"' || c == '\'');
 }
@@ -118,7 +118,7 @@ bool	check_env_var_rules(char *name)
 	i = 0;
 	while (name[i])
 	{
-		if (!isdigit(name[i]) && !isalnum(name[i]) && name[i] != '_')
+		if (!ft_isdigit(name[i]) && !ft_isalnum(name[i]) && name[i] != '_')
 			return (false);
 		i++;
 	}
@@ -148,7 +148,7 @@ void	custom_export(t_stock *stock, char *input)
 				if (ft_strstr(*args, "="))
 				{
 					name = ft_strtok_2(*args, "=");
-					if (isdigit(name[0]) || !check_env_var_rules(name))
+					if (ft_isdigit(name[0]) || !check_env_var_rules(name))
 					{
 						printf("bash: export: `%s': not a valid identifier\n", *args);
 						return ;

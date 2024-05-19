@@ -12,25 +12,30 @@
 
 #include "minishell.h"
 
-int	g_status = 0;
+int			g_status = 0;
+
+/*
+   if (has_single_unclosed_quotes(input))
+   heredoc_cmd(input, "\'");
+   else if (has_double_unclosed_quotes(input))
+   heredoc_cmd(input, "\"");
+   else if (ends_with_pipe(input))
+   heredoc_cmd2(input);
+   */
 
 static void	check_unclosed_quotes_or_pipe(char *input)
 {
-	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input) \
-			|| ends_with_pipe(input))
+	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input)
+		|| ends_with_pipe(input))
 	{
-		if (has_single_unclosed_quotes(input))
-			heredoc_cmd(input, "\'");
-		else if (has_double_unclosed_quotes(input))
-			heredoc_cmd(input, "\"");
-		else if (ends_with_pipe(input))
+		if (ends_with_pipe(input))
 			heredoc_cmd2(input);
 	}
 }
 
 static void	ign_cmd(t_program **programs)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (programs[i] != NULL)
@@ -48,7 +53,6 @@ static void	run_minishell2(t_stock *stock, char *input)
 	t_ast_node	*tree;
 	t_list		*list;
 
-	new_envp = NULL;
 	if (g_status != 0)
 		*(stock->status) = g_status;
 	g_status = 0;
@@ -60,9 +64,9 @@ static void	run_minishell2(t_stock *stock, char *input)
 	if (is_input_valid(list))
 	{
 		tree = parse(stock->arena, list);
-		programs = extract_programs(tree, 2 * ft_strlen(input));	
+		programs = extract_programs(tree, 2 * ft_strlen(input));
 		ign_cmd(programs);
-		new_envp = env_list_arr(stock->arena, stock->env,\
+		new_envp = env_list_arr(stock->arena, stock->env,
 				env_list_size(stock->env));
 		if (programs != NULL)
 			*(stock->status) = run_programs(programs, new_envp, stock, input);
@@ -101,8 +105,9 @@ int	main(int ac, char **argv, char **envp)
 	t_arena	arena;
 	t_env	*env;
 	char	**envp_cp;
-	int	status = 0;
+	int		status;
 
+	status = 0;
 	arena_init(&arena, ARENA_SIZE);
 	if (ac > 1)
 	{
@@ -111,14 +116,11 @@ int	main(int ac, char **argv, char **envp)
 	}
 	stock.argv = argv;
 	stock.envp = envp;
-
 	envp_cp = envp;
 	env = ft_env(&arena, envp_cp);
-
 	stock.env = env;
 	stock.arena = &arena;
 	stock.status = &status;
-
 	run_minishell(&stock);
 	return (0);
 }

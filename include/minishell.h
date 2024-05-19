@@ -23,8 +23,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
-# include <unistd.h>
 # include <termios.h>
+# include <unistd.h>
 
 # define SUCCES 1
 # define ERROR 0
@@ -36,14 +36,11 @@
 # define TARGETS 20
 # define ARGS 20
 # define BUFFER_SIZE 10
-#define BUFFERSIZE 1024
-#define READ_END 0
-#define WRITE_END 1
+# define BUFFERSIZE 1024
+# define READ_END 0
+# define WRITE_END 1
 
-extern int	g_status;
-
-
-
+extern int				g_status;
 
 typedef enum e_hd_type
 {
@@ -55,8 +52,8 @@ typedef enum e_hd_type
 
 typedef struct s_hd_arr
 {
-	t_hd_type	type;
-	char		*data;
+	t_hd_type			type;
+	char				*data;
 }						t_hd_arr;
 
 typedef enum e_echo_type
@@ -195,43 +192,49 @@ typedef enum e_node_type
 
 typedef struct s_ast_node
 {
-	int				f_in;
-	int				f_out;
+	int					f_in;
+	int					f_out;
 	t_node_type			type;
 	char				*data;
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;
 }						t_ast_node;
 
+/* FILE : src/parser/parser.c */
 
-
-
-
+typedef struct s_cmd_data
+{
+	t_list				*list;
+	t_node				*token;
+	t_node				*prev_token;
+}						t_cmd_data;
 
 ///////////////      Programs        /////////////////////
 
 typedef struct s_program
 {
-	t_node_type	type;
-	int	fd_out;
-	int	fd_in;
-	int	fd_heredoc;
-	char	**args;
-	char	*cmd;
+	t_node_type			type;
+	int					fd_out;
+	int					fd_in;
+	int					fd_heredoc;
+	char				**args;
+	char				*cmd;
 }						t_program;
 
-
-t_program       *extract_program_command(t_ast_node *root);
-t_program       *extract_program_heredoc(t_ast_node *root, int f_no_cmd);
-t_program       *extract_program_redir_in(t_ast_node *root);
-t_program       *extract_program_redir_out_append(t_ast_node *root, int a);
-t_program       **extract_programs(t_ast_node *root, int programs_count);
-t_program       **extract_programs_pipeline(t_ast_node *root, \
-		t_program **programs, int programs_count, int *i);
-int		run_programs(t_program **programs, char **envp, t_stock *stock, char *input);
+t_program				*extract_program_command(t_ast_node *root);
+t_program				*extract_program_heredoc(t_ast_node *root,
+							int f_no_cmd);
+t_program				*extract_program_redir_in(t_ast_node *root);
+t_program				*extract_program_redir_out_append(t_ast_node *root,
+							int a);
+t_program				**extract_programs(t_ast_node *root,
+							int programs_count);
+t_program				**extract_programs_pipeline(t_ast_node *root,
+							t_program **programs, int programs_count, int *i);
+int						run_programs(t_program **programs, char **envp,
+							t_stock *stock, char *input);
 
 ///////////////////////////////////////////////////////////////////////////
-
 
 // builtins
 void					ft_cd(t_arena *arena, char *path, t_env *env);
@@ -255,7 +258,7 @@ void					handle_special_chars(t_arena *arena, const char **s,
 // parser.c file
 t_ast_node				*parse(t_arena *arena, t_list *stream);
 void					parse_command(t_arena *arena, t_ast_node **root,
-							t_node *token, t_node *prev_token, int f_flag, t_list *list);
+							t_cmd_data *data, int f_flag);
 void					parse_pipeline(t_arena *arena, t_ast_node **root,
 							t_node *temp_node);
 t_ast_node				*find_mostleft_cmd(t_ast_node **root);
@@ -382,19 +385,46 @@ char					*expand_variables(t_stock *stock, char *input);
 
 /* Tools */
 t_echo_arr				**split(t_arena *arena, char *input);
-int					is_space(char c);
+int						is_space(char c);
 char					**ft_split_2(const char *str);
 t_ast_node				*ast(t_arena *arena, t_list *list);
 
 /* Input Validation */
-bool	is_input_valid(t_list *list); 
-bool	is_tree_valid(t_ast_node *tree);
-bool    has_double_unclosed_quotes(char *s);
-bool    has_single_unclosed_quotes(char *s);
-void	heredoc_cmd(char *input, const char *delim);
-void	heredoc_cmd2(char *input);
-void	write_file_to_stdout(int fd);
-bool	ends_with_pipe(char *input);
+bool					is_input_valid(t_list *list);
+bool					is_tree_valid(t_ast_node *tree);
+bool					has_double_unclosed_quotes(char *s);
+bool					has_single_unclosed_quotes(char *s);
+void					heredoc_cmd(char *input, const char *delim);
+void					heredoc_cmd2(char *input);
+void					write_file_to_stdout(int fd);
+bool					ends_with_pipe(char *input);
 
+//  tools
+int						ft_isalnum(int c);
+int						ft_isdigit(int c);
+t_ast_node				*parser_dispenser(t_arena *arena, t_list *stream);
+
+/*  Parser  */
+
+void					parse_redir_out(t_arena *arena, t_ast_node **root,
+							char *data);
+void					parse_redir_in(t_arena *arena, t_ast_node **root,
+							char *data);
+void					parse_redir_append(t_arena *arena, t_ast_node **root,
+							char *data);
+void					parse_redir_heredoc(t_arena *arena, t_ast_node **root,
+							char *data);
+void					parse_pipeline(t_arena *arena, t_ast_node **root,
+							t_node *token);
+void					parse_command(t_arena *arena, t_ast_node **root,
+							t_cmd_data *data, int f_flag);
+t_ast_node				*parse_command_pipeline(t_arena *arena,
+							t_ast_node *current, char *data, t_list *list);
+void					parse_command_simple(t_arena *arena, t_ast_node **root,
+							t_cmd_data *data, int *f_flag);
+
+/*  Parser Utils File : */
+
+void					add_node_to_front(t_list *list, t_node *new_node);
 
 #endif

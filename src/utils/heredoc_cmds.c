@@ -19,7 +19,7 @@ bool	ends_with_pipe(char *s)
 	cpy = s;
 	while (*cpy && *(cpy + 1))
 		cpy++;
-	if (*cpy == '|')	
+	if (*cpy == '|')
 		return (true);
 	return (false);
 }
@@ -51,15 +51,16 @@ bool	has_double_unclosed_quotes(char *s)
 	}
 	return (flag);
 }
-static void append_input(char *dest, const char *src, size_t size)
+
+static void	append_input(char *dest, const char *src, size_t size)
 {
 	strncat(dest, src, size - strlen(dest) - 1);
 }
 
-static ssize_t  take_input2(char *input, size_t size)
+static ssize_t	take_input2(char *input, size_t size)
 {
-	char    *newline_pos;
-	ssize_t bytes_read;
+	char	*newline_pos;
+	ssize_t	bytes_read;
 
 	newline_pos = NULL;
 	write(1, "> ", 2);
@@ -71,12 +72,12 @@ static ssize_t  take_input2(char *input, size_t size)
 		if (newline_pos)
 			*newline_pos = '\0';
 	}
-	return bytes_read;
+	return (bytes_read);
 }
 
 void	heredoc_cmd2(char *input)
 {
-	char    *temp;
+	char	*temp;
 
 	temp = malloc(BUFFER_SIZE * sizeof(char));
 	if (temp == NULL)
@@ -86,20 +87,22 @@ void	heredoc_cmd2(char *input)
 	free(temp);
 }
 
-static ssize_t take_input(char *input, size_t size, const char *delim)
+static ssize_t	take_input(char *input, size_t size, const char *delim)
 {
-	char *newline_pos;
-	ssize_t bytes_read;
-	size_t input_len = strlen(input);
+	char	*newline_pos;
+	ssize_t	bytes_read;
+	size_t	input_len;
 
+	input_len = strlen(input);
 	newline_pos = NULL;
 	write(1, "> ", 2);
-	while ((bytes_read = read(STDIN_FILENO, \
-		input + input_len, size - input_len - 1)) > 0) {
+	while ((bytes_read = read(STDIN_FILENO, input + input_len, size - input_len
+				- 1)) > 0)
+	{
 		if (g_status == 130)
-			break;
+			break ;
 		if (bytes_read == -1 && errno == EINTR)
-			break;
+			break ;
 		if (bytes_read > 0)
 		{
 			input[input_len + bytes_read] = '\0';
@@ -109,23 +112,23 @@ static ssize_t take_input(char *input, size_t size, const char *delim)
 			if (strcmp(input + input_len, delim) == 0)
 			{
 				input[input_len] = '\0';
-				return -1;
+				return (-1);
 			}
 			input_len += bytes_read;
 		}
 		write(1, "> ", 2);
 	}
-	return bytes_read;
+	return (bytes_read);
 }
 
 void	heredoc_cmd(char *input, const char *delim)
 {
 	ssize_t	bytes_read;
-	char *temp;
+	char	*temp;
 
 	temp = malloc(BUFFER_SIZE * sizeof(char));
 	if (temp == NULL)
-		return;
+		return ;
 	temp[0] = '\0';
 	while (1)
 	{

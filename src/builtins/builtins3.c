@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 bool	_isbuiltin(t_arena *arena, char *input)
 {
 	char	**args;
@@ -37,8 +36,6 @@ bool	_isbuiltin(t_arena *arena, char *input)
 
 void	_runbuiltins(t_stock *stock, char *input)
 {
-//	input = produce_input(stock->arena, input);
-//	printf("input : %s\n", input); exit(0);
 	if (ft_strncmp(trim_quotes(stock->arena, input), "pwd", 3) == 0)
 		ft_pwd(stock->arena);
 	else if (ft_strncmp("env", trim_quotes(stock->arena, input), 3) == 0)
@@ -60,7 +57,8 @@ void	_runbuiltins(t_stock *stock, char *input)
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "echo",
 			ft_strlen("echo")) == 0)
 		ft_echo(stock->arena, trim_quotes(stock->arena, input));
-	add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena, *(stock->status)));
+	add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena,
+			*(stock->status)));
 }
 
 char	*join_args(t_arena *arena, char **args)

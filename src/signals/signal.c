@@ -52,11 +52,8 @@ void	init_signal(void)
 	struct sigaction	sa_int;
 
 	sa_int.sa_handler = handle_sig;
-
 	sigemptyset(&sa_int.sa_mask);
-
 	sa_int.sa_flags = 0;
-
 	if (sigaction(SIGINT, &sa_int, NULL) == -1)
 	{
 		perror("Error setting up SIGINT handler");
