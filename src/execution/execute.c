@@ -40,8 +40,7 @@ t_program	**extract_programs(t_arena *arena, \
 	else if (root->type == NODE_REDIRECTION_HEREDOC)
 		programs[i++] = extract_program_heredoc(arena, root, 0);
 	else if (root->type == NODE_PIPELINE)
-		return (extract_programs_pipeline(arena, root, \
-					programs, programs_count, &i));
+		return (extract_programs_pipeline(arena, root, programs, &i));
 	programs[i] = NULL;
 	return (programs);
 }

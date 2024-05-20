@@ -29,15 +29,16 @@ static void	extract_programs_pipeline_helper_r(t_arena \
 		programs[(*i)++] = extract_program_heredoc(arena, root->right, 0);
 }
 
-t_program	**extract_programs_pipeline(t_arena *arena, t_ast_node *root, t_program **programs, int programs_count, int *i)
+t_program	**extract_programs_pipeline(t_arena *arena, \
+		t_ast_node *root, t_program **programs, int *i)
 {
 	if (programs == NULL)
 		programs = arena_alloc(arena, \
-				sizeof(t_program *) * (2 * programs_count + 1));
+				sizeof(t_program *) * (2 * PROGRAMS_COUNT + 1));
 	extract_programs_pipeline_helper_r(arena, root, i, programs);
 	if (root->left->type == NODE_PIPELINE)
 		return (extract_programs_pipeline(arena, \
-				root->left, programs, programs_count, i));
+				root->left, programs, i));
 	else if (root->left->type == NODE_COMMAND)
 		programs[(*i)++] = extract_program_command(arena, root->left);
 	else if (root->left->type == NODE_REDIRECTION_IN)

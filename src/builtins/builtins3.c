@@ -87,3 +87,25 @@ char	*join_args(t_arena *arena, char **args)
 	}
 	return (input);
 }
+
+void	custom_cd(t_arena *arena, char *input, t_env *env)
+{
+	char	*cmd;
+	char	*path;
+	char	**args;
+	int		i;
+
+	i = 0;
+	args = ft_split(arena, input, ' ');
+	while (args[i])
+		i++;
+	if (i > 2)
+	{
+		printf("too many arguments :( \n");
+		return ;
+	}
+	cmd = ft_strtok_2(input, " \t\n");
+	path = ft_strtok_2(NULL, " \t\n");
+	(void)cmd;
+	ft_cd(arena, path, env);
+}

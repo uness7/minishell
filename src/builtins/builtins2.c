@@ -41,8 +41,7 @@ char	**ft_split_2(const char *str)
 		{
 			inside_quotes = !inside_quotes;
 		}
-		else if (!inside_quotes && is_space(str[i]) && (i == 0
-				|| !is_quote(str[i - 1])))
+		else if (!inside_quotes && is_space(str[i]) && (i == 0 || !is_quote(str[i - 1])))
 		{
 			word_count++;
 		}
@@ -87,85 +86,4 @@ char	**ft_split_2(const char *str)
 	}
 	result[word_index] = NULL;
 	return (result);
-}
-
-void	custom_cd(t_arena *arena, char *input, t_env *env)
-{
-	char	*cmd;
-	char	*path;
-	char	**args;
-	int		i;
-
-	i = 0;
-	args = ft_split(arena, input, ' ');
-	while (args[i])
-		i++;
-	if (i > 2)
-	{
-		printf("too many arguments :( \n");
-		return ;
-	}
-	cmd = ft_strtok_2(input, " \t\n");
-	path = ft_strtok_2(NULL, " \t\n");
-	(void)cmd;
-	ft_cd(arena, path, env);
-}
-
-bool	check_env_var_rules(char *name)
-{
-	int		i;
-
-	i = 0;
-	while (name[i])
-	{
-		if (!ft_isdigit(name[i]) && !ft_isalnum(name[i]) && name[i] != '_')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-void	custom_export(t_stock *stock, char *input)
-{
-	char	*cmd;
-	char	*var;
-	char	*value;
-	char	*name;
-	char	**args;
-
-	(void)cmd;
-	cmd = ft_strtok_2(input, " \t\n");
-	var = ft_strtok_2(NULL, "\t\n");
-	if (var == NULL)
-		print_env(stock->env);
-	else
-	{
-		args = ft_split_2(var);
-		if (args != NULL)
-		{
-		while (*args)
-			{
-				if (ft_strstr(*args, "="))
-				{
-					name = ft_strtok_2(*args, "=");
-					if (ft_isdigit(name[0]) || !check_env_var_rules(name))
-					{
-						printf("bash: export: `%s': not a valid identifier\n", *args);
-						return ;
-					}
-					value = ft_strtok_2(NULL, "=");
-					if (value == NULL)
-						value = ft_strdup(stock->arena, "(null)");
-					if (ft_strncmp(value, "\"", 1) != 0 && ft_strncmp(value,
-								"\'", 1) != 0)
-						value = ft_strtok_2(value, " ");
-					else
-						++value;
-					if (value != NULL && name != NULL)
-						add_or_update_env(stock->arena, &(stock->env), name, value);
-				}
-				args++;
-			}
-		}
-	}
 }

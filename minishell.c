@@ -79,7 +79,7 @@ static void	run_minishell2(t_stock *stock, char *input)
 		new_envp = env_list_arr(stock->arena, stock->env,
 				env_list_size(stock->env));
 		if (programs != NULL)
-			*(stock->status) = run_programs(programs, new_envp, stock, input);
+			*(stock->status) = run_programs(programs, new_envp, stock);
 		if (g_status != 0)
 			*(stock->status) = g_status;
 	}

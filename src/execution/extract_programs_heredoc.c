@@ -72,7 +72,7 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 	while (temp->left != NULL)
 	{
 		file = ft_strdup(arena, temp->left->data);
-		fd = open(temp->left->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 			return (-1);
 		temp = temp->left;

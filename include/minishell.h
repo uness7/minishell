@@ -39,6 +39,7 @@
 # define BUFFERSIZE 1024
 # define READ_END 0
 # define WRITE_END 1
+# define PROGRAMS_COUNT 1024
 
 extern int				g_status;
 
@@ -211,9 +212,18 @@ typedef struct s_cmd_data
 
 typedef struct s_delims
 {
-	char	*deli;
-	char	*deli2;
+	char				*deli;
+	char				*deli2;
 }						t_delims;
+
+typedef struct s_pipe
+{
+	t_stock				*stock;
+	int					pipefd[2];
+	int					last_fd;
+	int					p;
+	pid_t				pids[256];
+}						t_pipe;
 
 ///////////////      Programs        /////////////////////
 
@@ -227,24 +237,44 @@ typedef struct s_program
 	char				*cmd;
 }						t_program;
 
-int		run_programs(t_program **programs, char **envp,\
-		t_stock *stock, char *input);
+typedef struct s_program_state
+{
+	t_program *curr;
+	t_program *next;
+	t_program *prev;
+}						t_program_state;
 
-t_program	**extract_programs(t_arena *arena, t_ast_node *root, int programs_count);
+int						run_programs(t_program **programs, char **envp,
+							t_stock *stock);
 
-t_program	**extract_programs_pipeline(t_arena *arena, t_ast_node *root,\
-		t_program **programs, int programs_count, int *i);
+t_program				**extract_programs(t_arena *arena, t_ast_node *root,
+							int programs_count);
 
-t_program	*extract_program_command(t_arena *arena, t_ast_node *root);
+t_program				**extract_programs_pipeline(t_arena *arena,
+							t_ast_node *root, t_program **programs, int *i);
 
-t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root, int f_no_cmd);
+t_program				*extract_program_command(t_arena *arena,
+							t_ast_node *root);
 
-t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root);
+t_program				*extract_program_heredoc(t_arena *arena,
+							t_ast_node *root, int f_no_cmd);
 
-t_program	*extract_program_redir_out_append(t_arena *arena, t_ast_node *root\
-		, int a);
+t_program				*extract_program_redir_in(t_arena *arena,
+							t_ast_node *root);
 
-///////////////////////////////////////////////////////////////////////////
+t_program				*extract_program_redir_out_append(t_arena *arena,
+							t_ast_node *root, int a);
+
+/* File : src/execution/run.c : */
+
+int						run_programs(t_program **programs, char **envp,
+							t_stock *stock);
+void    				handle_builtin(t_program_state *state, t_stock *stock, int i);
+void					process_programs(t_program **programs, char **envp,
+							t_stock *stock, t_pipe *pipe_data);
+pid_t					execute_program(t_program *program, char **envp,
+							t_pipe *pipe, int next_exists);
+void					redirect(t_program *program);
 
 // builtins
 void					ft_cd(t_arena *arena, char *path, t_env *env);
@@ -348,7 +378,6 @@ void					init_signal(void);
 void					pipe_err(void);
 void					free_array(char **s);
 void					fork_err(void);
-void					execve_err(t_arena *arena, t_env *env);
 void					open_err(void);
 
 /* LIBFT FUNCTIONS */
@@ -432,16 +461,16 @@ t_ast_node				*parse_command_pipeline(t_arena *arena,
 							t_ast_node *current, char *data, t_list *list);
 void					parse_command_simple(t_arena *arena, t_ast_node **root,
 							t_cmd_data *data, int *f_flag);
-void					_node_redir(t_arena *arena, t_ast_node **root, t_cmd_data *data,\
-		int	*f_flag);
-void					_node_heredoc(t_arena *arena, t_ast_node **current, t_cmd_data *data);
+void					_node_redir(t_arena *arena, t_ast_node **root,
+							t_cmd_data *data, int *f_flag);
+void					_node_heredoc(t_arena *arena, t_ast_node **current,
+							t_cmd_data *data);
 bool					is_redirection_parser2(int type);
 
-int     heredoc(char *start_delim, char *end_delim, const char *filename);
-
+int						heredoc(char *start_delim, char *end_delim,
+							const char *filename);
 
 /*  Parser Utils File : */
-
 void					add_node_to_front(t_list *list, t_node *new_node);
 
 #endif
