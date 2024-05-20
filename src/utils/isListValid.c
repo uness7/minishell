@@ -14,6 +14,8 @@
 
 static bool	check_cnd(t_node *temp)
 {
+	if (!temp || !temp->next)
+		return (false);
 	return ((is_op(temp->data) && is_op(temp->next->data))
 		|| (ft_strcmp(temp->data, "|") == 0 && temp->next
 			&& ft_strcmp(temp->next->data, "|") == 0));
@@ -25,12 +27,6 @@ static bool	check_cnd2(char *token)
 		|| ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
 }
 
-static bool	input_invalid(void)
-{
-	printf("Input is not valid\n");
-	return (false);
-}
-
 bool	is_input_valid(t_list *tokens)
 {
 	t_node	*temp;
@@ -40,14 +36,18 @@ bool	is_input_valid(t_list *tokens)
 	size = tokens_size(tokens);
 	temp = tokens->head;
 	if (!check_first_last_token(tokens, size))
-		input_invalid();
+	{
+		printf("input is not valid\n");
+		return (false);
+	}
 	while (temp != NULL)
 	{
 		token = temp->data;
-		if (size == 1 && (check_cnd2(token)))
-			input_invalid();
-		else if (check_cnd(temp))
-			input_invalid();
+		if ((size == 1 && check_cnd2(token)) || check_cnd(temp))
+		{
+			printf("input is not valid\n");
+			return (false);
+		}
 		temp = temp->next;
 	}
 	return (true);

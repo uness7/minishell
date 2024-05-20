@@ -19,7 +19,8 @@ static int	check_unclosed_quotes_or_pipe(char *input)
 	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input)
 		|| ends_with_pipe(input))
 	{
-		if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input))
+		if (has_single_unclosed_quotes(input)
+			|| has_double_unclosed_quotes(input))
 		{
 			printf("A missing single or double quote :(\n");
 			return (-1);
@@ -62,8 +63,8 @@ static void	run_minishell2(t_stock *stock, char *input)
 	if (g_status != 0)
 		*(stock->status) = g_status;
 	g_status = 0;
-	input = expand_variables(stock, input);
-	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0 || check_unclosed_quotes_or_pipe(input) == -1)
+	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0
+		|| check_unclosed_quotes_or_pipe(input) == -1)
 		return ;
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	if (!is_input_valid(list))
@@ -99,7 +100,7 @@ static void	run_minishell(t_stock *stock)
 		if (*input)
 			add_history(input);
 		if (input[0] != '\0')
-			run_minishell2(stock, input);
+			run_minishell2(stock, expand_variables(stock, input));
 		free(input);
 		g_status = 0;
 	}

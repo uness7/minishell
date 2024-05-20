@@ -517,7 +517,4 @@ void					copy_word(char *dest, char *src, int start, int end);
 
 bool					is_tree_valid(t_ast_node *root);
 
-
-
-
 #endif

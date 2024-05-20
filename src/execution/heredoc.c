@@ -14,49 +14,54 @@
 
 static void	read_first_part(char buff[], int len_start, char *start_delim)
 {
-	int		nbytes;
+	int	nbytes;
 
 	write(1, "heredoc> ", 9);
-	while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+	nbytes = read(0, buff, BUFFERSIZE);
+	while (nbytes > 0)
 	{
 		if (g_status == 130)
 			break ;
 		if (nbytes == -1 && errno == EINTR)
 			break ;
 		buff[nbytes] = 0;
-		if (nbytes == len_start + 1 && \
-				(ft_memcmp(start_delim, buff, len_start) == 0) \
-				&& buff[nbytes - 1] == '\n')
+		if (nbytes == len_start + 1 && (ft_memcmp(start_delim, buff,
+					len_start) == 0) && buff[nbytes - 1] == '\n')
 		{
-			break;
+			break ;
 		}
 		write(1, "heredoc> ", 9);
+		nbytes = read(0, buff, BUFFERSIZE);
 	}
 }
 
 static void	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 {
-	int		nbytes;
+	int	nbytes;
 
 	write(1, "heredoc> ", 9);
-	while ((nbytes = read(0, buff, BUFFERSIZE)) > 0)
+	nbytes = read(0, buff, BUFFERSIZE);
+	while (nbytes > 0)
 	{
 		if (g_status == 130)
 			break ;
 		if (nbytes == -1 && errno == EINTR)
 			break ;
 		buff[nbytes] = 0;
-		if (nbytes == len_end + 1 && (ft_memcmp(end_delim, buff, len_end) == 0) && buff[nbytes - 1] == '\n') {
-			break;
+		if (nbytes == len_end + 1 && (ft_memcmp(end_delim, buff, len_end) == 0)
+			&& buff[nbytes - 1] == '\n')
+		{
+			break ;
 		}
 		write(fd, buff, nbytes);
 		write(1, "heredoc> ", 9);
+		nbytes = read(0, buff, BUFFERSIZE);
 	}
 }
 
 static int	open_fd(const char *filename)
 {
-	int		fd;
+	int	fd;
 
 	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
