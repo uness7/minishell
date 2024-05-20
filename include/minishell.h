@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 12:50:53 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 12:53:37 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -486,6 +486,6 @@ void					add_node_to_front(t_list *list, t_node *new_node);
 
 void    	remove_last_quote(char *str);
 t_echo_arr      **get_res(t_arena *arena, char *input, t_echo_arr **res, int inside_quotes);
-void    	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res, int *inside_quotes)
+void    	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res, int *inside_quotes);
 
 #endif
