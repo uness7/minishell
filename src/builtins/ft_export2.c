@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export2.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/20 13:38:43 by yzioual           #+#    #+#             */
+/*   Updated: 2024/05/20 14:30:43 by yzioual          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 bool	check_env_var_rules(char *name)
@@ -29,7 +41,7 @@ void	custom_export(t_stock *stock, char *input)
 		print_env(stock->env);
 	else
 	{
-		args = ft_split_2(var);
+		args = ft_split_2(stock->arena, var);
 		if (args != NULL)
 		{
 			while (*args)

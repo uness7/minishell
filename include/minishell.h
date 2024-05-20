@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 13:30:07 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 14:35:53 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,18 @@ typedef struct s_echo_state
 	char				*input;
 }						t_echo_state;
 
+typedef struct s_split_2_state
+{
+	char		**result;
+	int		str_length;
+	int		inside_quotes;
+	int		word_count;
+	int		word_index;
+	int		start_index;
+	int		quoted_start;
+	int		i;
+}					t_split_2_state;
+
 ///////////////      Programs        /////////////////////
 
 typedef struct s_program
@@ -434,7 +446,7 @@ char					*expand_variables(t_stock *stock, char *input);
 /* Tools */
 t_echo_arr				**split(t_arena *arena, char *input);
 int						is_space(char c);
-char					**ft_split_2(const char *str);
+char					**ft_split_2(t_arena *arena, char *str);
 t_ast_node				*ast(t_arena *arena, t_list *list);
 
 /* Input Validation */

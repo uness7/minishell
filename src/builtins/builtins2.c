@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 19:38:00 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/10 18:58:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:02:32 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,52 +22,70 @@ static int	is_quote(char c)
 	return (c == '"' || c == '\'');
 }
 
-char	**ft_split_2(const char *str)
+
+int	count_words(char *str)
 {
 	int		inside_quotes;
 	int		word_count;
 	int		str_length;
-	char	**result;
-	int		word_index;
-	int		start_index;
-	int		quoted_start;
+	int		i;
 
 	inside_quotes = 0;
 	word_count = 0;
-	str_length = strlen(str);
-	for (int i = 0; i < str_length; i++)
+	str_length = ft_strlen(str);
+	i = 0;
+	while (i < str_length)
 	{
 		if (is_quote(str[i]))
-		{
 			inside_quotes = !inside_quotes;
-		}
-		else if (!inside_quotes && is_space(str[i]) && (i == 0 || !is_quote(str[i - 1])))
-		{
+		else if (!inside_quotes && (is_space(str[i]) || str[i] == '\0') && (i == 0 || !is_quote(str[i - 1])))
 			word_count++;
-		}
+		i++;
 	}
-	result = (char **)malloc((word_count + 1) * sizeof(char *));
+	return (word_count);
+}
+
+char	**allocate_memory(int word_count)
+{
+	char **result;
+	
+	result = malloc((word_count + 1) * sizeof(char *));
 	if (result == NULL)
+	{
+		printf("Malloc failed\n");
 		return (NULL);
-	word_index = 0;
-	start_index = 0;
-	quoted_start = -1;
-	for (int i = 0; i <= str_length; i++)
+	}
+	return (result);
+}
+
+void	copy_word(char *dest, char *src, int start, int end)
+{
+	ft_strncpy(dest, src + start, end - start);
+	dest[end - start] = '\0';
+}
+
+char	**split_string(char *str, int word_count)
+{
+	int	inside_quotes = 0;
+	int	word_index = 0;
+	int	start_index = 0;
+	int	quoted_start = -1;
+	int	str_length = strlen(str);
+	int	i = 0;
+	char	**result = allocate_memory(word_count);
+
+	while (i <= str_length)
 	{
 		if (is_quote(str[i]))
 		{
 			inside_quotes = !inside_quotes;
 			if (inside_quotes)
 				quoted_start = i;
-			else
+			else if (quoted_start != -1 && i - start_index > 1)
 			{
-				if (quoted_start != -1 && i - start_index > 1)
-				{
-					result[word_index] = malloc((i - start_index + 1) * sizeof(char));
-					strncpy(result[word_index], str + start_index, i - start_index);
-					result[word_index][i - start_index] = '\0';
-					word_index++;
-				}
+				result[word_index] = malloc((i - start_index + 1) * sizeof(char));
+				copy_word(result[word_index], str, start_index, i);
+				word_index++;
 				start_index = i + 1;
 				quoted_start = -1;
 			}
@@ -77,13 +95,22 @@ char	**ft_split_2(const char *str)
 			if (i > start_index)
 			{
 				result[word_index] = malloc((i - start_index + 1) * sizeof(char));
-				strncpy(result[word_index], str + start_index, i - start_index);
-				result[word_index][i - start_index] = '\0';
+				copy_word(result[word_index], str, start_index, i);
 				word_index++;
 			}
 			start_index = i + 1;
 		}
+		i++;
 	}
 	result[word_index] = NULL;
-	return (result);
+	return result;
+}
+
+char	**ft_split_2(t_arena *arena, char *str)
+{
+	int	word_count;
+	(void)arena;
+
+	word_count = count_words(str);
+	return (split_string(str, word_count));
 }
