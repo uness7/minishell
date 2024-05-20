@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 13:05:24 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 13:30:07 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -441,10 +441,10 @@ bool					is_input_valid(t_list *list);
 bool					is_tree_valid(t_ast_node *tree);
 bool					has_double_unclosed_quotes(char *s);
 bool					has_single_unclosed_quotes(char *s);
-void					heredoc_cmd(char *input, const char *delim);
-void					heredoc_cmd2(char *input);
 void					write_file_to_stdout(int fd);
-bool					ends_with_pipe(char *input);
+int     tokens_size(t_list *tokens);
+bool    is_op(char *s);
+bool    check_first_last_token(t_list *tokens, int size);
 
 //  tools
 int						ft_isalnum(int c);
@@ -455,10 +455,10 @@ t_ast_node				*parser_dispenser(t_arena *arena, t_list *stream);
 
 /* File : src/utils/heredoc_cmds */
 
-ssize_t  take_input(char *input, size_t size, const char *delim);
+ssize_t  take_input(char *input, size_t size, char *delim);
 bool    ends_with_pipe(char *s);
 void     append_input(char *dest, const char *src, size_t size);
-void    heredoc_cmd(char *input, const char *delim);
+void    heredoc_cmd(char *input, char *delim);
 void    heredoc_cmd2(char *input);
 ssize_t  take_input2(char *input, size_t size);
 
@@ -498,5 +498,7 @@ void					add_node_to_front(t_list *list, t_node *new_node);
 void    	remove_last_quote(char *str);
 t_echo_arr      **get_res(t_arena *arena, char *input, t_echo_arr **res, int inside_quotes);
 void    	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res, int *inside_quotes);
+
+
 
 #endif

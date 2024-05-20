@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 12:58:21 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 13:05:04 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 13:29:12 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	heredoc_cmd2(char *input)
 	free(temp);
 }
 
-void	heredoc_cmd(char *input, const char *delim)
+void	heredoc_cmd(char *input, char *delim)
 {
 	ssize_t	bytes_read;
 	char	*temp;
@@ -62,17 +62,16 @@ void	heredoc_cmd(char *input, const char *delim)
 	free(temp);
 }
 
-ssize_t	take_input(char *input, size_t size, const char *delim)
+ssize_t	take_input(char *input, size_t size, char *delim)
 {
 	char	*newline_pos;
 	ssize_t	bytes_read;
 	size_t	input_len;
 
-	input_len = strlen(input);
+	input_len = ft_strlen(input);
 	newline_pos = NULL;
 	write(1, "> ", 2);
-	while ((bytes_read = read(STDIN_FILENO, input + input_len, size - input_len
-				- 1)) > 0)
+	while ((bytes_read = read(STDIN_FILENO, input + input_len, size - input_len - 1)) > 0)
 	{
 		if (g_status == 130)
 			break ;
@@ -81,10 +80,10 @@ ssize_t	take_input(char *input, size_t size, const char *delim)
 		if (bytes_read > 0)
 		{
 			input[input_len + bytes_read] = '\0';
-			newline_pos = strchr(input + input_len, '\n');
+			newline_pos = ft_strchr(input + input_len, '\n');
 			if (newline_pos)
 				*newline_pos = '\0';
-			if (strcmp(input + input_len, delim) == 0)
+			if (ft_strcmp(input + input_len, delim) == 0)
 			{
 				input[input_len] = '\0';
 				return (-1);
