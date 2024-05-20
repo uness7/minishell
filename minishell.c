@@ -35,8 +35,8 @@ static void	check_unclosed_quotes_or_pipe(char *input)
 
 static void	ign_cmd(t_program ***programs)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while ((*programs)[i] != NULL)
@@ -54,7 +54,6 @@ static void	ign_cmd(t_program ***programs)
 			i++;
 	}
 }
-
 
 static void	run_minishell2(t_stock *stock, char *input)
 {

@@ -12,43 +12,43 @@
 
 #include "minishell.h"
 
-int     tokens_size(t_list *tokens)
+int	tokens_size(t_list *tokens)
 {
-        int             count;
-        t_node  *temp;
+	int		count;
+	t_node	*temp;
 
-        count = 0;
-        temp = tokens->head;
-        while (temp != NULL)
-        {
-                count++;
-                temp = temp->next;
-        }
-        return (count);
+	count = 0;
+	temp = tokens->head;
+	while (temp != NULL)
+	{
+		count++;
+		temp = temp->next;
+	}
+	return (count);
 }
 
-bool    is_op(char *s) 
+bool	is_op(char *s)
 {
-        if (ft_strcmp(s, ">") == 0 || ft_strcmp(s, "<") == 0 || ft_strcmp(s,
-                        "<<") == 0 || ft_strcmp(s, ">>") == 0)
-        {
-                return (true);
-        }
-        return (false);
+	if (ft_strcmp(s, ">") == 0 || ft_strcmp(s, "<") == 0 || ft_strcmp(s,
+			"<<") == 0 || ft_strcmp(s, ">>") == 0)
+	{
+		return (true);
+	}
+	return (false);
 }
 
-bool    check_first_last_token(t_list *tokens, int size)
+bool	check_first_last_token(t_list *tokens, int size)
 {
-        t_node  *temp;
+	t_node	*temp;
 
-        if (tokens == NULL)
-                return (false);
-        temp = tokens->head;
+	if (tokens == NULL)
+		return (false);
+	temp = tokens->head;
 	if (size == 1 && (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data)))
-                return (false);
-        while (temp->next != NULL)
-                temp = temp->next;
-        if (is_op(temp->data))
-                return (false);
-        return (true);
+		return (false);
+	while (temp->next != NULL)
+		temp = temp->next;
+	if (is_op(temp->data))
+		return (false);
+	return (true);
 }

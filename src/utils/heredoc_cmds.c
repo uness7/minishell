@@ -71,7 +71,8 @@ ssize_t	take_input(char *input, size_t size, char *delim)
 	input_len = ft_strlen(input);
 	newline_pos = NULL;
 	write(1, "> ", 2);
-	while ((bytes_read = read(STDIN_FILENO, input + input_len, size - input_len - 1)) > 0)
+	while ((bytes_read = read(STDIN_FILENO, \
+		input + input_len, size - input_len - 1)) > 0)
 	{
 		if (g_status == 130)
 			break ;

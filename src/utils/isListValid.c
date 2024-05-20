@@ -14,16 +14,15 @@
 
 static bool	check_cnd(t_node *temp)
 {
-	return ((is_op(temp->data) && is_op(temp->next->data)) || \
-			(ft_strcmp(temp->data, "|") == 0 && temp->next && ft_strcmp(temp->next->data, "|") == 0));
+	return ((is_op(temp->data) && is_op(temp->next->data))
+		|| (ft_strcmp(temp->data, "|") == 0 && temp->next
+			&& ft_strcmp(temp->next->data, "|") == 0));
 }
 
 static bool	check_cnd2(char *token)
 {
-	return (ft_strcmp(token, ">") == 0 || \
-		ft_strcmp(token, "<") == 0 || \
-		ft_strcmp(token, ">>") == 0 || \
-		ft_strcmp(token, "<<") == 0);
+	return (ft_strcmp(token, ">") == 0 || ft_strcmp(token, "<") == 0
+		|| ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0);
 }
 
 static bool	input_invalid(void)
