@@ -27,7 +27,7 @@ static t_echo_arr	*extract_token(t_arena *arena, char *data, int type)
 	return (res);
 }
 
-static void	get_len(int *i, char *input, int *flag)	
+static void	get_len(int *i, char *input, int *flag)
 {
 	char	temp;
 
@@ -44,7 +44,8 @@ static void	get_len(int *i, char *input, int *flag)
 	}
 }
 
-static char	*get_temp_data(t_arena *arena, char *input, int size, int start_index)
+static char	*get_temp_data(t_arena *arena, char *input, int size,
+		int start_index)
 {
 	char	*temp_data;
 
@@ -54,7 +55,8 @@ static char	*get_temp_data(t_arena *arena, char *input, int size, int start_inde
 	return (temp_data);
 }
 
-void	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res, int *inside_quotes)
+void	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res,
+		int *inside_quotes)
 {
 	if (is_quotes(state->input[state->i]))
 	{
@@ -64,7 +66,8 @@ void	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res, int *
 	else if (!(*inside_quotes) && is_space(state->input[state->i]))
 	{
 		res[(state->k)++] = extract_token(arena, "SPACE", _SPACE);
-		while (state->input[state->i] && state->input[(state->i)++] == ' ');
+		while (state->input[state->i] && state->input[(state->i)++] == ' ')
+			;
 	}
 	else
 	{
@@ -72,8 +75,9 @@ void	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res, int *
 		get_len(&(state->i), state->input, inside_quotes);
 		if (state->start_index <= (int)ft_strlen(state->input))
 		{
-			res[state->k] = extract_token(arena, get_temp_data(arena, \
-						state->input, state->i - state->start_index, state->start_index), WORD);
+			res[state->k] = extract_token(arena, get_temp_data(arena,
+						state->input, state->i - state->start_index,
+						state->start_index), WORD);
 			remove_last_quote(res[(state->k)++]->data);
 		}
 	}
