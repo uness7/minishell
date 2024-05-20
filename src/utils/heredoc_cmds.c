@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-ssize_t  take_input2(char *input, size_t size)
+ssize_t	take_input2(char *input, size_t size)
 {
-	char    *newline_pos;
-	ssize_t bytes_read;
+	char	*newline_pos;
+	ssize_t	bytes_read;
 
 	newline_pos = NULL;
 	write(1, "> ", 2);
@@ -30,9 +30,9 @@ ssize_t  take_input2(char *input, size_t size)
 	return (bytes_read);
 }
 
-void    heredoc_cmd2(char *input)
+void	heredoc_cmd2(char *input)
 {
-	char    *temp;
+	char	*temp;
 
 	temp = malloc(BUFFER_SIZE * sizeof(char));
 	if (temp == NULL)
@@ -42,10 +42,10 @@ void    heredoc_cmd2(char *input)
 	free(temp);
 }
 
-void    heredoc_cmd(char *input, const char *delim)
+void	heredoc_cmd(char *input, const char *delim)
 {
-	ssize_t bytes_read;
-	char    *temp;
+	ssize_t	bytes_read;
+	char	*temp;
 
 	temp = malloc(BUFFER_SIZE * sizeof(char));
 	if (temp == NULL)
@@ -62,16 +62,17 @@ void    heredoc_cmd(char *input, const char *delim)
 	free(temp);
 }
 
-ssize_t  take_input(char *input, size_t size, const char *delim)
+ssize_t	take_input(char *input, size_t size, const char *delim)
 {
-	char    *newline_pos;
-	ssize_t bytes_read;
-	size_t  input_len;
+	char	*newline_pos;
+	ssize_t	bytes_read;
+	size_t	input_len;
 
 	input_len = strlen(input);
 	newline_pos = NULL;
 	write(1, "> ", 2);
-	while ((bytes_read = read(STDIN_FILENO, input + input_len, size - input_len - 1)) > 0)
+	while ((bytes_read = read(STDIN_FILENO, input + input_len, size - input_len
+				- 1)) > 0)
 	{
 		if (g_status == 130)
 			break ;

@@ -29,10 +29,8 @@ int	tokens_size(t_list *tokens)
 
 bool	is_op(char *s)
 {
-	if (ft_strcmp(s, ">") == 0 ||
-		ft_strcmp(s, "<") == 0 ||
-		ft_strcmp(s, "<<") == 0 ||
-		ft_strcmp(s, ">>") == 0)
+	if (ft_strcmp(s, ">") == 0 || ft_strcmp(s, "<") == 0 || ft_strcmp(s,
+			"<<") == 0 || ft_strcmp(s, ">>") == 0)
 	{
 		return (true);
 	}
@@ -50,7 +48,7 @@ bool	check_first_last_token(t_list *tokens, int size)
 		return (false);
 	while (temp->next != NULL)
 		temp = temp->next;
-	if (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data)) 
+	if (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data))
 		return (false);
 	return (true);
 }
@@ -59,7 +57,7 @@ bool	is_input_valid(t_list *tokens)
 {
 	t_node	*temp;
 	char	*token;
-	int	size;	
+	int		size;
 
 	size = tokens_size(tokens);
 	temp = tokens->head;
@@ -71,15 +69,16 @@ bool	is_input_valid(t_list *tokens)
 	while (temp != NULL)
 	{
 		token = temp->data;
-		if (size == 1 && (strcmp(token, "|") == 0 \
-					|| strcmp(token, ">") == 0 || \
-					strcmp(token, "<") == 0 || strcmp(token, ">>") \
-					== 0 || strcmp(token, "<<") == 0))
+		if (size == 1 && (strcmp(token, "|") == 0 || strcmp(token, ">") == 0
+				|| strcmp(token, "<") == 0 || strcmp(token, ">>") == 0
+				|| strcmp(token, "<<") == 0))
 		{
 			printf("Input is not valid\n");
 			return (false);
 		}
-		else if ((is_op(temp->data) && is_op(temp->next->data)) || (ft_strcmp(temp->data, "|") == 0 && temp->next &&ft_strcmp(temp->next->data, "|") == 0))
+		else if ((is_op(temp->data) && is_op(temp->next->data))
+			|| (ft_strcmp(temp->data, "|") == 0 && temp->next
+				&& ft_strcmp(temp->next->data, "|") == 0))
 		{
 			printf("Input is not valid\n");
 			return (false);
