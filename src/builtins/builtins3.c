@@ -12,6 +12,11 @@
 
 #include "minishell.h"
 
+int	is_space(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n');
+}
+
 bool	_isbuiltin(t_arena *arena, char *input)
 {
 	char	**args;

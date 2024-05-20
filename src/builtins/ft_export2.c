@@ -26,13 +26,39 @@ bool	check_env_var_rules(char *name)
 	return (true);
 }
 
-void	custom_export(t_stock *stock, char *input)
+static int	export_helper(t_stock *stock, char **args)
 {
-	char	*cmd;
-	char	*var;
 	char	*value;
 	char	*name;
+
+	while (*args)
+	{
+		if (ft_strstr(*args, "="))
+		{
+			name = ft_strtok_2(*args, "=");
+			if (ft_isdigit(name[0]) || !check_env_var_rules(name))
+				return (-1);
+			value = ft_strtok_2(NULL, "=");
+			if (value == NULL)
+				value = ft_strdup(stock->arena, "(null)");
+			if (ft_strncmp(value, "\"", 1) != 0 && ft_strncmp(value, "\'",
+					1) != 0)
+				value = ft_strtok_2(value, " ");
+			else
+				++value;
+			if (value != NULL && name != NULL)
+				add_or_update_env(stock->arena, &(stock->env), name, value);
+		}
+		args++;
+	}
+	return (0);
+}
+
+void	custom_export(t_stock *stock, char *input)
+{
 	char	**args;
+	char	*cmd;
+	char	*var;
 
 	(void)cmd;
 	cmd = ft_strtok_2(input, " \t\n");
@@ -42,33 +68,9 @@ void	custom_export(t_stock *stock, char *input)
 	else
 	{
 		args = ft_split_2(stock->arena, var);
-		if (args != NULL)
-		{
-			while (*args)
-			{
-				if (ft_strstr(*args, "="))
-				{
-					name = ft_strtok_2(*args, "=");
-					if (ft_isdigit(name[0]) || !check_env_var_rules(name))
-					{
-						printf("bash: export: `%s': not a valid identifier\n",
-							*args);
-						return ;
-					}
-					value = ft_strtok_2(NULL, "=");
-					if (value == NULL)
-						value = ft_strdup(stock->arena, "(null)");
-					if (ft_strncmp(value, "\"", 1) != 0 && ft_strncmp(value,
-							"\'", 1) != 0)
-						value = ft_strtok_2(value, " ");
-					else
-						++value;
-					if (value != NULL && name != NULL)
-						add_or_update_env(stock->arena, &(stock->env), name,
-							value);
-				}
-				args++;
-			}
-		}
+		if (args == NULL)
+			return ;
+		if (export_helper(stock, args) == -1)
+			printf("bash: export: `%s': not a valid identifier\n", *args);
 	}
 }

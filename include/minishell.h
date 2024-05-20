@@ -235,15 +235,15 @@ typedef struct s_echo_state
 
 typedef struct s_split_2_state
 {
-	char		**result;
-	int		str_length;
-	int		inside_quotes;
-	int		word_count;
-	int		word_index;
-	int		start_index;
-	int		quoted_start;
-	int		i;
-}					t_split_2_state;
+	int					word_count;
+	int					inside_quotes;
+	int					word_index;
+	int					start_index;
+	int					quoted_start;
+	int					str_length;
+	int					i;
+	char				**result;
+}						t_split_2_state;
 
 ///////////////      Programs        /////////////////////
 
@@ -510,5 +510,8 @@ t_echo_arr				**get_res(t_arena *arena, char *input, t_echo_arr **res,
 							int inside_quotes);
 void					get_res_helper(t_echo_state *state, t_arena *arena,
 							t_echo_arr **res, int *inside_quotes);
+char					**split_string(char *str, t_split_2_state *state);
+void					split_string_helper(t_split_2_state *state, char *str);
+void					copy_word(char *dest, char *src, int start, int end);
 
 #endif
