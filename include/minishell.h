@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 12:53:37 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 13:05:24 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -450,6 +450,17 @@ bool					ends_with_pipe(char *input);
 int						ft_isalnum(int c);
 int						ft_isdigit(int c);
 t_ast_node				*parser_dispenser(t_arena *arena, t_list *stream);
+
+
+
+/* File : src/utils/heredoc_cmds */
+
+ssize_t  take_input(char *input, size_t size, const char *delim);
+bool    ends_with_pipe(char *s);
+void     append_input(char *dest, const char *src, size_t size);
+void    heredoc_cmd(char *input, const char *delim);
+void    heredoc_cmd2(char *input);
+ssize_t  take_input2(char *input, size_t size);
 
 /*  Parser  */
 
