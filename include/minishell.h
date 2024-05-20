@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 14:35:53 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 17:52:20 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -461,6 +461,7 @@ bool					check_first_last_token(t_list *tokens, int size);
 
 //  tools
 int						ft_isalnum(int c);
+int						ft_memcmp(const void *s1, const void *s2, size_t n);
 int						ft_isdigit(int c);
 t_ast_node				*parser_dispenser(t_arena *arena, t_list *stream);
 
@@ -513,5 +514,10 @@ void					get_res_helper(t_echo_state *state, t_arena *arena,
 char					**split_string(char *str, t_split_2_state *state);
 void					split_string_helper(t_split_2_state *state, char *str);
 void					copy_word(char *dest, char *src, int start, int end);
+
+bool					is_tree_valid(t_ast_node *root);
+
+
+
 
 #endif

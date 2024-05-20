@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 18:43:39 by yzioual           #+#    #+#             */
-/*   Updated: 2024/04/21 14:25:21 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 17:25:12 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,22 @@ int	is_num(char *str)
 		str++;
 	}
 	return (1);
+}
+
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
+{
+	unsigned int	i;
+	unsigned char	*source1;
+	unsigned char	*source2;
+
+	i = 0;
+	source1 = (unsigned char *)s1;
+	source2 = (unsigned char *)s2;
+	while (i < n)
+	{
+		if (source1[i] != source2[i])
+			return (source1[i] - source2[i]);
+		i++;
+	}
+	return (0);
 }

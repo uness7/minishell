@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/19 13:09:21 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/20 18:26:32 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,20 @@
 
 int			g_status = 0;
 
-/*
-   if (has_single_unclosed_quotes(input))
-   heredoc_cmd(input, "\'");
-   else if (has_double_unclosed_quotes(input))
-   heredoc_cmd(input, "\"");
-   else if (ends_with_pipe(input))
-   heredoc_cmd2(input);
-   */
-
-static void	check_unclosed_quotes_or_pipe(char *input)
+static int	check_unclosed_quotes_or_pipe(char *input)
 {
 	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input)
 		|| ends_with_pipe(input))
 	{
-		if (ends_with_pipe(input))
+		if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input))
+		{
+			printf("A missing single or double quote :(\n");
+			return (-1);
+		}
+		else if (ends_with_pipe(input))
 			heredoc_cmd2(input);
 	}
+	return (0);
 }
 
 static void	ign_cmd(t_program ***programs)
@@ -66,22 +63,22 @@ static void	run_minishell2(t_stock *stock, char *input)
 		*(stock->status) = g_status;
 	g_status = 0;
 	input = expand_variables(stock, input);
-	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0)
+	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0 || check_unclosed_quotes_or_pipe(input) == -1)
 		return ;
-	check_unclosed_quotes_or_pipe(input);
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-	if (is_input_valid(list))
-	{
-		tree = parse(stock->arena, list);
-		programs = extract_programs(stock->arena, tree, 2 * ft_strlen(input));
-		ign_cmd(&programs);
-		new_envp = env_list_arr(stock->arena, stock->env,
-				env_list_size(stock->env));
-		if (programs != NULL)
-			*(stock->status) = run_programs(programs, new_envp, stock);
-		if (g_status != 0)
-			*(stock->status) = g_status;
-	}
+	if (!is_input_valid(list))
+		return ;
+	tree = parse(stock->arena, list);
+	if (!is_tree_valid(tree))
+		return ;
+	programs = extract_programs(stock->arena, tree, 2 * ft_strlen(input));
+	ign_cmd(&programs);
+	new_envp = env_list_arr(stock->arena, stock->env,
+			env_list_size(stock->env));
+	if (programs != NULL)
+		*(stock->status) = run_programs(programs, new_envp, stock);
+	if (g_status != 0)
+		*(stock->status) = g_status;
 }
 
 static void	run_minishell(t_stock *stock)
