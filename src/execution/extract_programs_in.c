@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:48:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 15:49:52 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/19 11:44:32 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 			if (root->left->f_out == 2)
 				fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
+			{
+				perror("Failed to open file");
 				return (-1);
+			}
 			root->left = root->left->left;
 		}
 		fd_out = fd;
@@ -56,7 +59,10 @@ static int	get_fd_in(t_arena *arena, t_ast_node *root)
 			filename = ft_strdup(arena, root->left->data);
 			fd = open(filename, O_RDONLY);
 			if (fd == -1)
+			{
+				perror("Failed to open file");
 				return (-1);
+			}
 			root->left = root->left->left;
 		}
 		fd_in = fd;
@@ -102,11 +108,6 @@ t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root)
 	program->fd_in = get_fd_in(arena, root);
 	program->fd_out = 1;
 	program->fd_out = get_fd_out(arena, root);
-	if (program->fd_in == -1 || program->fd_out == -1)
-	{
-		perror("Failed to open file");
-		return (NULL);
-	}
 	program->cmd = get_cmd(arena, root);
 	program->args = get_args(arena, root);
 	program->fd_heredoc = 0;
