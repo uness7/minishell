@@ -25,6 +25,8 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root, int f_out)
 		while (root->left != NULL)
 		{
 			filename = ft_strdup(arena, root->left->data);
+			filename = trim_single_quotes(arena, filename);
+			filename = trim_quotes(arena, filename);
 			if (f_out == 1)
 				fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			else
@@ -75,6 +77,8 @@ t_program	*extract_program_redir_out_append(t_stock *stock, \
 	program = arena_alloc(stock->arena, sizeof(t_program));
 	program->fd_in = 0;
 	program->fd_out = get_fd_out(stock->arena, root, f_out);
+	if (program->fd_out == -1)
+		return (NULL);
 	program->cmd = get_cmd(stock->arena, root);
 	if (program->cmd == NULL)
 		return (NULL);

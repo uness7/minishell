@@ -29,18 +29,21 @@ t_program	**extract_programs(t_stock *stock, \
 	if (root->type == NODE_COMMAND)
 		programs[i++] = extract_program_command(stock->arena, root);
 	else if (root->type == NODE_REDIRECTION_IN)
-		programs[i++] = extract_program_redir_in(stock->arena, root);
+	{
+		programs[i] = extract_program_redir_in(stock->arena, root);
+		if (programs[i] == NULL)
+			return (NULL);
+		i++;
+	}
 	else if (is_redir_out_append(root->type))
 	{
 		if (root->type == NODE_REDIRECTION_OUT)
-		{
 			programs[i] = extract_program_redir_out_append(stock, root, 1);
-			if (programs[i] == NULL)
-				return NULL;
-			i++;
-		}
 		else
-			programs[i++] = extract_program_redir_out_append(stock, root, 0);
+			programs[i] = extract_program_redir_out_append(stock, root, 0);
+		if (programs[i] == NULL)
+			return NULL;
+		i++;
 	}
 	else if (root->type == NODE_REDIRECTION_HEREDOC)
 		programs[i++] = extract_program_heredoc(stock->arena, root, 0);
