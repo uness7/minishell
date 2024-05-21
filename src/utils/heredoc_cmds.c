@@ -19,7 +19,7 @@ ssize_t	take_input2(char *input, size_t size)
 
 	newline_pos = NULL;
 	write(1, "> ", 2);
-	signal(SIGINT, handle_sig);
+	signal(SIGINT, handle_sig2);
 	bytes_read = read(STDIN_FILENO, input, size - 1);
 	if (bytes_read > 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:17:48 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/19 12:58:44 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 10:44:11 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,12 @@
 
 void	handle_sig(int sig)
 {
-	if (sig == SIGINT)
-	{
-		rl_replace_line("", 0);
-		printf("\n");
-		rl_on_new_line();
-		rl_redisplay();
-		g_status = 130;
-	}
+	(void)sig;
+	rl_replace_line("", 0);
+	printf("\n");
+	rl_on_new_line();
+	rl_redisplay();
+	g_status = 130;
 }
 
 void	handle_sig2(int sig)

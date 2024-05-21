@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/19 17:54:49 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 11:30:36 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock)
 	pipe.p = 0;
 	pipe.last_fd = STDIN_FILENO;
 	signal(SIGQUIT, handle_quit);
-	signal(SIGINT, handle_sig);
+	signal(SIGINT, handle_sig2);
 	process_programs(programs, envp, stock, &pipe);
 	if (pipe.last_fd != STDIN_FILENO)
 		close(pipe.last_fd);
