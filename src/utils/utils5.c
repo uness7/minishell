@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 18:11:16 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 17:57:30 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:07:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ char	*trim_quotes(t_arena *arena, char *str)
 
 int	ft_isspace(int c)
 {
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
-		|| c == '\r')
-		return (1);
-	return (0);
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' \
+			|| c == '\f' || c == '\r');
 }

@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:48:52 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/19 12:55:49 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:55:44 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,23 @@ static char	**get_args(t_arena *arena, t_ast_node *root)
 
 static char	*get_cmd(t_arena *arena, t_ast_node *root)
 {
+	if (root->right == NULL)
+		return (NULL);
 	return (ft_strdup(arena, root->right->data));
 }
 
-t_program	*extract_program_redir_out_append(t_arena *arena, \
+t_program	*extract_program_redir_out_append(t_stock *stock, \
 		t_ast_node *root, int f_out)
 {
 	t_program	*program;
 
-	program = arena_alloc(arena, sizeof(t_program));
+	program = arena_alloc(stock->arena, sizeof(t_program));
 	program->fd_in = 0;
-	program->fd_out = get_fd_out(arena, root, f_out);
-	program->cmd = get_cmd(arena, root);
-	program->args = get_args(arena, root);
+	program->fd_out = get_fd_out(stock->arena, root, f_out);
+	program->cmd = get_cmd(stock->arena, root);
+	if (program->cmd == NULL)
+		return (NULL);
+	program->args = get_args(stock->arena, root);
 	program->fd_heredoc = 0;
 	program->type = NODE_REDIRECTION_OUT;
 	return (program);

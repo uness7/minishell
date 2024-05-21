@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 17:22:54 by yzioual           #+#    #+#             */
-/*   Updated: 2024/04/25 15:51:55 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:07:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,12 @@ char	*trim_space(char *str)
 
 	if (str == NULL)
 		return (NULL);
-	while (ft_isspace(*str))
+	while (*str == ' ')
 		str++;
 	if (*str == '\0')
 		return (str);
 	end = str + ft_strlen(str) - 1;
-	while (end > str && ft_isspace(*end))
+	while (end > str && *end == ' ')
 		end--;
 	*(end + 1) = '\0';
 	return (str);

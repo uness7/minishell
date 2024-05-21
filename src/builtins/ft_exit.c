@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:36:08 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/03 18:02:03 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:56:48 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_exit(t_arena *arena, char *input, int *status)
 		if (!is_num(temp))
 		{
 			printf("exit : %s: numeric argument required\n", args[1]);
-			*status = 255;
+			*status = 2;
 			free_arena(arena);
 			close_exit();
 			exit((*status));

@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 10:52:53 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:54:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,32 @@ static void	ign_cmd(t_program ***programs)
 	}
 }
 
+int	special_strlen(char *input)
+{
+	int	i;
+
+	i = 0;
+	while (input[i])
+		i++;
+	return (i);
+}
+
+size_t	list_size(t_list *list)
+{
+	size_t	size;
+	t_node *current;
+	
+	size = 0;
+	current = list->head;
+
+	while (current != NULL)
+	{
+		size++;
+		current = current->next;
+	}
+	return (size);
+}
+
 static void	run_minishell2(t_stock *stock, char *input)
 {
 	char		**new_envp;
@@ -63,27 +89,45 @@ static void	run_minishell2(t_stock *stock, char *input)
 		*(stock->status) = g_status;
 	g_status = 0;
 	input = expand_variables(stock, input);
-	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0 \
-			|| check_unclosed_quotes_or_pipe(stock->arena, input) == -1)
-		return ;
-	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
-	if (is_input_valid(list))
+	if (check_unclosed_quotes_or_pipe(stock->arena, input) == -1)
 	{
-		tree = parse(stock->arena, list);
-		if (!is_tree_valid(tree))
-		{
-			printf("Input is not valid\n");
-			return ;
-		}
-		programs = extract_programs(stock->arena, tree, 2 * ft_strlen(input));
-		ign_cmd(&programs);
-		new_envp = env_list_arr(stock->arena, stock->env,
-				env_list_size(stock->env));
-		if (programs != NULL)
-			*(stock->status) = run_programs(programs, new_envp, stock);
-		if (g_status != 0)
-			*(stock->status) = g_status;
+		*(stock->status) = 1;
+		return ;
 	}
+	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
+	if (list_size(list) == 0)
+	{
+		printf("Command not found\n");
+		*(stock->status) = 127;
+		return ;
+	}
+	if (!is_input_valid(list))
+	{
+		printf("Input is not valid\n");
+		*(stock->status) = 1;
+		return ;
+	}
+	tree = parse(stock->arena, list);
+	if (!is_tree_valid(tree))
+	{
+		printf("Input is not valid\n");
+		*(stock->status) = 1;
+		return ;
+	}
+	programs = extract_programs(stock, tree, 2 * ft_strlen(input));
+	if (programs == NULL)
+	{
+		printf("Input is not valid\n");
+		*(stock->status) = 1;
+		return ;
+	}
+	ign_cmd(&programs);
+	new_envp = env_list_arr(stock->arena, stock->env,
+			env_list_size(stock->env));
+	if (programs != NULL)
+		*(stock->status) = run_programs(programs, new_envp, stock);
+	if (g_status != 0)
+		*(stock->status) = g_status;
 }
 
 static void	run_minishell(t_stock *stock)

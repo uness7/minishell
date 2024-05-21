@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 21:42:27 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/04 16:13:45 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:44:42 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static bool	check_str_for_n_char(char *str)
 	int	i;
 
 	i = 1;
+	if (str[0] != '-' || str[1] == '\0')
+		return (false);
 	while (str[i])
 	{
 		if (str[i] != 'n')
@@ -48,7 +50,7 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 	while (echo_args[i] != NULL)
 	{
 		if (ft_strncmp(echo_args[i]->data, "-", 1) == 0
-			&& check_str_for_n_char(echo_args[i]->data))
+			&& check_str_for_n_char(echo_args[i]->data) && echo_args[i + 1] != NULL)
 		{
 			i++;
 			*flag = 1;

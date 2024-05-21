@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:39:43 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/18 20:05:32 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:51:50 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,9 @@ static void	process(const char **current, char **out_ptr, t_stock *stock)
 		var_name[var_len++] = *(*current)++;
 	var_name[var_len] = '\0';
 	env = find_env_var(&(stock->env), var_name);
-	if (env != NULL)
-		var_value = env->value;
-	else
-		var_value = var_name;
+	if (env == NULL)
+		return ;
+	var_value = env->value;
 	if (var_value)
 	{
 		ft_strcpy(*out_ptr, var_value);

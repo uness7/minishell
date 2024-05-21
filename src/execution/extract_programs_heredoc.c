@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:50:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 11:35:02 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 13:15:13 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ t_program	*extract_program_heredoc(t_arena *arena, \
 		f_no_cmd = 1;
 	program = arena_alloc(arena, sizeof(t_program));
 	delims = get_delims(arena, root);
-	program->fd_in = heredoc(delims->deli, delims->deli2, "tmp.txt");
+	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena, delims->deli)), trim_single_quotes(arena, trim_quotes(arena, delims->deli2)), "tmp.txt");
 	unlink("tmp.txt");
 	if (f_no_cmd == 1)
 		return (NULL);

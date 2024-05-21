@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:17:05 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 13:20:06 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:48:05 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,12 @@ bool	is_input_valid(t_list *tokens)
 	size = tokens_size(tokens);
 	temp = tokens->head;
 	if (!check_first_last_token(tokens, size))
-	{
-		printf("input is not valid\n");
 		return (false);
-	}
 	while (temp != NULL)
 	{
 		token = temp->data;
 		if ((size == 1 && check_cnd2(token)) || check_cnd(temp))
-		{
-			printf("input is not valid\n");
 			return (false);
-		}
 		temp = temp->next;
 	}
 	return (true);

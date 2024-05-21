@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 18:09:18 by yzioual           #+#    #+#             */
-/*   Updated: 2024/04/30 00:42:04 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 13:53:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,7 @@ void	unset(t_env **list, char *name)
 		temp = temp->next;
 	}
 	if (temp == NULL)
-	{
-		printf("env var %s is not found\n", name);
 		return ;
-	}
 	if (prev == NULL)
 		*list = temp->next;
 	else

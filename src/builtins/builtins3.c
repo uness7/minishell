@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:43 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/12 17:54:16 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 13:41:50 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,17 @@ void	_runbuiltins(t_stock *stock, char *input)
 	{
 		if (ft_strncmp(input, "cd..", 4) == 0)
 			return ;
-		custom_cd(stock->arena, trim_quotes(stock->arena, input), stock->env);
+		 custom_cd(stock->arena, trim_quotes(stock->arena, input), stock->env);
 	}
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "export",
 			ft_strlen("export")) == 0)
-		custom_export(stock, input);
+		*(stock->status) = custom_export(stock, input);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "unset",
 			ft_strlen("unset")) == 0)
-		custom_unset(trim_quotes(stock->arena, input), stock->env);
+		custom_unset(stock, trim_quotes(stock->arena, input), stock->env);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "echo",
 			ft_strlen("echo")) == 0)
 		ft_echo(stock->arena, trim_quotes(stock->arena, input));
-	add_or_update_env(stock->arena, &(stock->env), "?", ft_itoa(stock->arena,
-			*(stock->status)));
 }
 
 char	*join_args(t_arena *arena, char **args)

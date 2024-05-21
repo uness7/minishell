@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 13:53:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 17:41:17 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 13:11:24 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static void	read_first_part(char buff[], int len_start, char *start_delim)
 		if (nbytes == -1 && errno == EINTR)
 			break ;
 		buff[nbytes] = 0;
-		if (nbytes == len_start + 1 && (ft_memcmp(start_delim, buff,
-					len_start) == 0) && buff[nbytes - 1] == '\n')
+		if (start_delim[0] == '\0' || (nbytes == len_start + 1 && (ft_memcmp(start_delim, buff,
+					len_start) == 0) && buff[nbytes - 1] == '\n'))
 		{
 			break ;
 		}
@@ -48,8 +48,8 @@ static void	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 		if (nbytes == -1 && errno == EINTR)
 			break ;
 		buff[nbytes] = 0;
-		if (nbytes == len_end + 1 && (ft_memcmp(end_delim, buff, len_end) == 0)
-			&& buff[nbytes - 1] == '\n')
+		if ((end_delim[0] == '\0') || (nbytes == len_end + 1 && (ft_memcmp(end_delim, buff, len_end) == 0)
+			&& buff[nbytes - 1] == '\n'))
 		{
 			break ;
 		}

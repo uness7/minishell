@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 12:45:29 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 12:47:26 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:32:20 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	remove_last_quote(char *str)
 	bool	escaped;
 	int		i;
 
-	len = strlen(str);
+	len = ft_strlen(str);
 	if (len == 0)
 		return ;
 	if (str[len - 1] == '"' || str[len - 1] == '\'')

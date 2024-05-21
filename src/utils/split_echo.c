@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:31:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 12:51:38 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:32:58 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	get_res_helper(t_echo_state *state, t_arena *arena, t_echo_arr **res,
 	else if (!(*inside_quotes) && is_space(state->input[state->i]))
 	{
 		res[(state->k)++] = extract_token(arena, "SPACE", _SPACE);
-		while (state->input[state->i] && state->input[(state->i)++] == ' ')
-			;
+		while (state->input[state->i] && state->input[state->i] == ' ')
+			state->i++;
 	}
 	else
 	{

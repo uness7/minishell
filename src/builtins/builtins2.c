@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 19:38:00 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 15:02:32 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:02:32 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	split_string_helper(t_split_2_state *state, char *str)
 	{
 		state->result[state->word_index] = arena_alloc(state->arena,
 				(state->i - state->start_index + 1) * sizeof(char));
-		copy_word(state->result[(state->word_index)++], str, state->start_index,
-			state->i);
+		copy_word(state->result[state->word_index], str, state->start_index, state->i);
+		state->word_index++;
 	}
 }

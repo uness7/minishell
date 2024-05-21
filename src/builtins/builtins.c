@@ -6,27 +6,11 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:29:59 by yzioual           #+#    #+#             */
-/*   Updated: 2024/04/27 14:28:18 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 13:51:12 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	custom_unset(char *input, t_env *env)
-{
-	char	*cmd;
-	char	*var_name;
-
-	(void)cmd;
-	cmd = ft_strtok_2(input, " \t\n");
-	var_name = ft_strtok_2(NULL, " \t\n");
-	if (var_name == NULL)
-	{
-		printf("you have to specify which env variable to unset :)\n");
-		return ;
-	}
-	unset(&env, var_name);
-}
 
 int	array_size(char **arr)
 {
@@ -37,6 +21,23 @@ int	array_size(char **arr)
 		size++;
 	return (size);
 }
+
+void	custom_unset(t_stock *stock, char *input, t_env *env)
+{
+	char	**args;
+
+	input += 5;
+	args = ft_split(stock->arena, input, ' ');
+	if (array_size(args) != 0)
+	{
+		while (*args != NULL)
+		{
+			unset(&env, *args);
+			args++;
+		}
+	}
+}
+
 
 int	env_list_size(t_env *list)
 {

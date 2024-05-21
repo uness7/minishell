@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 17:52:20 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 13:42:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,10 +269,10 @@ typedef struct s_program_state
 int						run_programs(t_program **programs, char **envp,
 							t_stock *stock);
 
-t_program				**extract_programs(t_arena *arena, t_ast_node *root,
+t_program				**extract_programs(t_stock *stock, t_ast_node *root,
 							int programs_count);
 
-t_program				**extract_programs_pipeline(t_arena *arena,
+t_program				**extract_programs_pipeline(t_stock *stock,
 							t_ast_node *root, t_program **programs, int *i);
 
 t_program				*extract_program_command(t_arena *arena,
@@ -284,7 +284,7 @@ t_program				*extract_program_heredoc(t_arena *arena,
 t_program				*extract_program_redir_in(t_arena *arena,
 							t_ast_node *root);
 
-t_program				*extract_program_redir_out_append(t_arena *arena,
+t_program				*extract_program_redir_out_append(t_stock *stock,
 							t_ast_node *root, int a);
 
 /* File : src/execution/run.c : */
@@ -379,8 +379,8 @@ void					unset(t_env **list, char *value);
 char					**custom_split(char *input_string, char delimiter);
 char					**ft_str_copy(t_arena *arena, char **envp);
 void					custom_echo(t_arena *arena, char *input, t_env *envp);
-void					custom_unset(char *input, t_env *env);
-void					custom_export(t_stock *stock, char *input);
+void					custom_unset(t_stock *s, char *input, t_env *env);
+int					custom_export(t_stock *stock, char *input);
 void					custom_cd(t_arena *arena, char *input, t_env *env);
 void					custom_exit(char *input, int *status);
 void					search_value(char **envp_cp, char **arg);
