@@ -30,7 +30,7 @@
 # define ERROR 0
 # define PATH_MAX 1024
 # define MAX_INT 2147483647
-# define ARENA_SIZE 1048576
+# define ARENA_SIZE 1073741824
 # define HEREDOC_SIZE 100
 # define ECHO_SIZE 100
 # define TARGETS 20
@@ -235,6 +235,7 @@ typedef struct s_echo_state
 
 typedef struct s_split_2_state
 {
+	t_arena				*arena;
 	int					word_count;
 	int					inside_quotes;
 	int					word_index;
@@ -259,6 +260,7 @@ typedef struct s_program
 
 typedef struct s_program_state
 {
+	t_stock				*stock;
 	t_program			*curr;
 	t_program			*next;
 	t_program			*prev;
@@ -471,7 +473,7 @@ ssize_t					take_input(char *input, size_t size, char *delim);
 bool					ends_with_pipe(char *s);
 void					append_input(char *dest, const char *src, size_t size);
 void					heredoc_cmd(char *input, char *delim);
-void					heredoc_cmd2(char *input);
+void					heredoc_cmd2(t_arena *arena, char *input);
 ssize_t					take_input2(char *input, size_t size);
 
 /*  Parser  */

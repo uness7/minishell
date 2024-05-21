@@ -49,12 +49,7 @@ void	redirect(t_program *program)
 static t_program_state	*init(t_program_state *state, t_program *curr,
 		t_program *prev, t_program *next)
 {
-	state = malloc(sizeof(t_program_state *));
-	if (state == NULL)
-	{
-		printf("Malloc Failed\n");
-		return (NULL);
-	}
+	state = arena_alloc(state->stock->arena, sizeof(t_program_state *));
 	state->curr = curr;
 	state->prev = prev;
 	state->next = next;
@@ -69,6 +64,7 @@ void	process_programs(t_program **programs, char **envp, t_stock *stock,
 	int				i;
 	t_program_state	state;
 
+	state.stock = stock;
 	i = -1;
 	while (programs[++i])
 	{

@@ -31,13 +31,11 @@ ssize_t	take_input2(char *input, size_t size)
 	return (bytes_read);
 }
 
-void	heredoc_cmd2(char *input)
+void	heredoc_cmd2(t_arena *arena, char *input)
 {
 	char	*temp;
 
-	temp = malloc(BUFFER_SIZE * sizeof(char));
-	if (temp == NULL)
-		return ;
+	temp = arena_alloc(arena, BUFFER_SIZE * sizeof(char));
 	if (take_input2(temp, BUFFER_SIZE) > 0)
 		append_input(input, temp, BUFFER_SIZE);
 	free(temp);

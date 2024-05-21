@@ -28,14 +28,16 @@ bool	check_env_var_rules(char *name)
 
 static int	export_helper(t_stock *stock, char **args)
 {
+	int		i;
 	char	*value;
 	char	*name;
 
-	while (*args)
+	i = -1;
+	while (args[++i])
 	{
-		if (ft_strstr(*args, "="))
+		if (ft_strstr(args[i], "="))
 		{
-			name = ft_strtok_2(*args, "=");
+			name = ft_strtok_2(args[i], "=");
 			if (ft_isdigit(name[0]) || !check_env_var_rules(name))
 				return (-1);
 			value = ft_strtok_2(NULL, "=");
@@ -49,7 +51,6 @@ static int	export_helper(t_stock *stock, char **args)
 			if (value != NULL && name != NULL)
 				add_or_update_env(stock->arena, &(stock->env), name, value);
 		}
-		args++;
 	}
 	return (0);
 }

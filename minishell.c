@@ -14,7 +14,7 @@
 
 int			g_status = 0;
 
-static int	check_unclosed_quotes_or_pipe(char *input)
+static int	check_unclosed_quotes_or_pipe(t_arena *arena, char *input)
 {
 	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input)
 		|| ends_with_pipe(input))
@@ -26,7 +26,7 @@ static int	check_unclosed_quotes_or_pipe(char *input)
 			return (-1);
 		}
 		else if (ends_with_pipe(input))
-			heredoc_cmd2(input);
+			heredoc_cmd2(arena, input);
 	}
 	return (0);
 }
@@ -64,7 +64,7 @@ static void	run_minishell2(t_stock *stock, char *input)
 		*(stock->status) = g_status;
 	g_status = 0;
 	if (ft_strlen(trim_quotes(stock->arena, trim_space(input))) == 0
-		|| check_unclosed_quotes_or_pipe(input) == -1)
+		|| check_unclosed_quotes_or_pipe(stock->arena, input) == -1)
 		return ;
 	list = tokenize(stock->arena, trim_quotes(stock->arena, trim_space(input)));
 	if (!is_input_valid(list))

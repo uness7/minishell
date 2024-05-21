@@ -17,19 +17,6 @@ static int	is_quote(char c)
 	return (c == '"' || c == '\'');
 }
 
-char	**allocate_memory(int word_count)
-{
-	char	**result;
-
-	result = malloc((word_count + 1) * sizeof(char *));
-	if (result == NULL)
-	{
-		printf("Malloc failed\n");
-		return (NULL);
-	}
-	return (result);
-}
-
 int	count_words(char *str)
 {
 	int	inside_quotes;
@@ -57,7 +44,7 @@ char	**ft_split_2(t_arena *arena, char *str)
 {
 	t_split_2_state	state;
 
-	(void)arena;
+	state.arena = arena;
 	state.inside_quotes = 0;
 	state.word_index = 0;
 	state.start_index = 0;
@@ -65,7 +52,7 @@ char	**ft_split_2(t_arena *arena, char *str)
 	state.str_length = strlen(str);
 	state.i = -1;
 	state.word_count = count_words(str);
-	state.result = allocate_memory(state.word_count);
+	state.result = malloc((state.word_count + 1) * sizeof(char *));
 	state.result = split_string(str, &state);
 	state.result[state.word_index] = NULL;
 	return (state.result);
@@ -83,8 +70,8 @@ char	**split_string(char *str, t_split_2_state *state)
 			else if (state->quoted_start != -1 && state->i
 				- state->start_index > 1)
 			{
-				state->result[state->word_index] = malloc((state->i
-							- state->start_index + 1) * sizeof(char));
+				state->result[state->word_index] = arena_alloc(state->arena,
+						(state->i - state->start_index + 1) * sizeof(char));
 				copy_word(state->result[(state->word_index)++], str,
 					state->start_index, state->i);
 				state->start_index = state->i + 1;
