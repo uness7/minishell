@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 12:54:51 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 15:53:21 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ static void	run_minishell2(t_stock *stock, char *input)
 	programs = extract_programs(stock, tree, 2 * ft_strlen(input));
 	if (programs == NULL)
 	{
-		printf("Input is not valid\n");
 		*(stock->status) = 1;
 		return ;
 	}
