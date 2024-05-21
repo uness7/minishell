@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 13:53:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 13:11:24 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/21 17:49:11 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@ static int	read_first_part(char buff[], int len_start, char *start_delim)
 {
 	int	nbytes;
 
-	signal(SIGINT, handle_sig);
 	write(1, "heredoc> ", 9);
+	nbytes = read(0, buff, BUFFERSIZE);
 	if (g_status == 130)
 		return -1;
-	nbytes = read(0, buff, BUFFERSIZE);
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
@@ -35,8 +34,6 @@ static int	read_first_part(char buff[], int len_start, char *start_delim)
 		}
 		write(1, "heredoc> ", 9);
 		nbytes = read(0, buff, BUFFERSIZE);
-		if (g_status == 130)
-			return -1;
 	}
 	return 0;
 }
@@ -45,11 +42,10 @@ static int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 {
 	int	nbytes;
 
-	signal(SIGINT, handle_sig);
 	write(1, "heredoc> ", 9);
+	nbytes = read(0, buff, BUFFERSIZE);
 	if (g_status == 130)
 		return -1;
-	nbytes = read(0, buff, BUFFERSIZE);
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
@@ -81,6 +77,13 @@ static int	open_fd(const char *filename)
 	return (fd);
 }
 
+void	heredoc_handler(int sig)
+{
+	(void)sig;
+	g_status = 130;
+	write(1, "\n", 1);
+}
+
 int	heredoc(char *start_delim, char *end_delim, const char *filename)
 {
 	int		len_start;
@@ -88,6 +91,16 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 	char	buff[BUFFERSIZE + 1];
 	int		fd;
 	int	stat = 0;
+
+	struct sigaction	sa_int;
+	sa_int.sa_handler = heredoc_handler;
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	if (sigaction(SIGINT, &sa_int, NULL) == -1)
+	{
+		perror("Error setting up SIGINT handler");
+		exit(EXIT_FAILURE);
+	}
 
 	if (start_delim != NULL)
 		len_start = ft_strlen(start_delim);
