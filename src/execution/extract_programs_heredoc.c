@@ -92,7 +92,11 @@ t_program	*extract_program_heredoc(t_arena *arena, \
 		f_no_cmd = 1;
 	program = arena_alloc(arena, sizeof(t_program));
 	delims = get_delims(arena, root);
-	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena, delims->deli)), trim_single_quotes(arena, trim_quotes(arena, delims->deli2)), "tmp.txt");
+	program->fd_in = heredoc(trim_single_quotes(arena, \
+	trim_quotes(arena, delims->deli)), trim_single_quotes(arena, \
+	trim_quotes(arena, delims->deli2)), "tmp.txt");
+	if (program->fd_in == -1)
+		return NULL;
 	unlink("tmp.txt");
 	if (f_no_cmd == 1)
 		return (NULL);

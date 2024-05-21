@@ -12,18 +12,21 @@
 
 #include "minishell.h"
 
-static void	read_first_part(char buff[], int len_start, char *start_delim)
+static int	read_first_part(char buff[], int len_start, char *start_delim)
 {
 	int	nbytes;
 
+	signal(SIGINT, handle_sig);
 	write(1, "heredoc> ", 9);
+	if (g_status == 130)
+		return -1;
 	nbytes = read(0, buff, BUFFERSIZE);
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
-			break ;
+			return -1;
 		if (nbytes == -1 && errno == EINTR)
-			break ;
+			return -1;
 		buff[nbytes] = 0;
 		if (start_delim[0] == '\0' || (nbytes == len_start + 1 && (ft_memcmp(start_delim, buff,
 					len_start) == 0) && buff[nbytes - 1] == '\n'))
@@ -32,21 +35,27 @@ static void	read_first_part(char buff[], int len_start, char *start_delim)
 		}
 		write(1, "heredoc> ", 9);
 		nbytes = read(0, buff, BUFFERSIZE);
+		if (g_status == 130)
+			return -1;
 	}
+	return 0;
 }
 
-static void	read_second_part(char buff[], int len_end, int fd, char *end_delim)
+static int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 {
 	int	nbytes;
 
+	signal(SIGINT, handle_sig);
 	write(1, "heredoc> ", 9);
+	if (g_status == 130)
+		return -1;
 	nbytes = read(0, buff, BUFFERSIZE);
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
-			break ;
+			return -1;
 		if (nbytes == -1 && errno == EINTR)
-			break ;
+			return -1;
 		buff[nbytes] = 0;
 		if ((end_delim[0] == '\0') || (nbytes == len_end + 1 && (ft_memcmp(end_delim, buff, len_end) == 0)
 			&& buff[nbytes - 1] == '\n'))
@@ -56,7 +65,10 @@ static void	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 		write(fd, buff, nbytes);
 		write(1, "heredoc> ", 9);
 		nbytes = read(0, buff, BUFFERSIZE);
+		if (g_status == 130)
+			return -1;
 	}
+	return 0;
 }
 
 static int	open_fd(const char *filename)
@@ -75,6 +87,7 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 	int		len_end;
 	char	buff[BUFFERSIZE + 1];
 	int		fd;
+	int	stat = 0;
 
 	if (start_delim != NULL)
 		len_start = ft_strlen(start_delim);
@@ -82,10 +95,12 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 		len_end = ft_strlen(end_delim);
 	fd = open_fd(filename);
 	if (start_delim != NULL)
-		read_first_part(buff, len_start, start_delim);
+		stat = read_first_part(buff, len_start, start_delim);
 	if (end_delim != NULL)
-		read_second_part(buff, len_end, fd, end_delim);
+		stat = read_second_part(buff, len_end, fd, end_delim);
 	close(fd);
+	if (stat == -1)
+		return (-1);
 	fd = open(filename, O_RDONLY);
 	return (fd);
 }
