@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:37:54 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 13:37:55 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 22:11:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ void	process_programs(t_program **programs, char **envp, t_stock *stock,
 		if (next_exists && pipe(pipe_data->pipefd) == -1)
 			pipe_err();
 		if (_isbuiltin(stock->arena, programs[i]->cmd))
-			handle_builtin(init(&state, programs[i], programs[i - 1], programs[i
-					+ 1]), stock, i);
+			handle_builtin(init(&state, programs[i], programs[i - 1], \
+						programs[i + 1]), stock, i);
 		else
 			pipe_data->pids[pipe_data->p++] = execute_program(programs[i], envp,
 					pipe_data, next_exists);

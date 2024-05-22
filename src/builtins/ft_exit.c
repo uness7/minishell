@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:36:08 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/22 14:59:04 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 21:37:33 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_exit(t_arena *arena, char *input, int *status)
 	check_number_args(arena, i, status);
 	if (args[1] != NULL)
 	{
-		temp = trim_space(args[1]);
+		temp = trim_quotes(arena, trim_space(args[1]));
 		if (!is_num(temp))
 		{
 			printf("exit : %s: numeric argument required\n", args[1]);

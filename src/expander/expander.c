@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 18:39:43 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 14:51:50 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 21:40:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ static void	traverse_and_process(const char *current, int inside_single_quotes,
 			inside_single_quotes = !inside_single_quotes;
 			*out_ptr++ = *current++;
 		}
-		else if (*current == '$' && !inside_single_quotes)
+		else if (*current == '$' && *(current + 1) != '\0' \
+				&& *(current + 1) != '"' && !inside_single_quotes)
 		{
 			current++;
 			if (*current == '?')

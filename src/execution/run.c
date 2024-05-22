@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 11:30:36 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 22:11:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock)
 	j = -1;
 	while (++j < pipe.p)
 		waitpid(pipe.pids[j], &status, 0);
+	if (*(stock->status) != 0)
+		return (*(stock->status));
 	return (WEXITSTATUS(status));
 }

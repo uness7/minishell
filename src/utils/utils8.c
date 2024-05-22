@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_cmds.c                                     :+:      :+:    :+:   */
+/*   utils8.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/17 22:44:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 13:03:08 by yzioual          ###   ########.fr       */
+/*   Created: 2024/05/22 21:09:16 by yzioual           #+#    #+#             */
+/*   Updated: 2024/05/22 21:09:29 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,4 @@ bool	has_double_unclosed_quotes(char *s)
 		s++;
 	}
 	return (flag);
-}
-
-void	append_input(char *dest, const char *src, size_t size)
-{
-	strncat(dest, src, size - strlen(dest) - 1);
 }
