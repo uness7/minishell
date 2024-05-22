@@ -235,16 +235,15 @@ typedef struct s_echo_state
 
 typedef struct s_state
 {
-	int inside_quotes;
-	int word_count;
-	int str_length;
-	char **result;
-	int word_index;
-	int start_index;
-	int quoted_start;
-	int i;
+	int					inside_quotes;
+	int					word_count;
+	int					str_length;
+	char				**result;
+	int					word_index;
+	int					start_index;
+	int					quoted_start;
+	int					i;
 }						t_state;
-
 
 ///////////////      Programs        /////////////////////
 
@@ -508,7 +507,7 @@ void					add_node_to_front(t_list *list, t_node *new_node);
 
 /* Echo Split Function File : src/utils/split_echo */
 
-bool    				is_quotes(char c);
+bool					is_quotes(char c);
 void					remove_last_quote(char *str);
 t_echo_arr				**get_res(t_arena *arena, char *input, t_echo_arr **res,
 							int inside_quotes);
@@ -517,5 +516,6 @@ void					get_res_helper(t_echo_state *state, t_arena *arena,
 void					copy_word(char *dest, char *src, int start, int end);
 
 bool					is_tree_valid(t_ast_node *root);
+void					init_heredoc_handler(void);
 
 #endif

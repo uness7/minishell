@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-bool    is_quotes(char c)
+bool	is_quotes(char c)
 {
-    if (c == '\'' || c == '"')
-        return (true);
-    return (false);
+	if (c == '\'' || c == '"')
+		return (true);
+	return (false);
 }

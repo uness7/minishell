@@ -15,18 +15,15 @@
 static int	get_fd_out(t_arena *arena, t_ast_node *root, int f_out)
 {
 	char	*filename;
-	int		fd_out;
 	int		fd;
 
 	fd = -1;
-	fd_out = 0;
 	if (root->left != NULL && root->left->data != NULL)
 	{
 		while (root->left != NULL)
 		{
 			filename = ft_strdup(arena, root->left->data);
-			filename = trim_single_quotes(arena, filename);
-			filename = trim_quotes(arena, filename);
+			filename = trim_quotes(arena, trim_single_quotes(arena, filename));
 			if (f_out == 1)
 				fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			else
@@ -38,9 +35,9 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root, int f_out)
 			}
 			root->left = root->left->left;
 		}
-		fd_out = fd;
+		return (fd);
 	}
-	return (fd_out);
+	return (-1);
 }
 
 static char	**get_args(t_arena *arena, t_ast_node *root)
@@ -69,8 +66,8 @@ static char	*get_cmd(t_arena *arena, t_ast_node *root)
 	return (ft_strdup(arena, root->right->data));
 }
 
-t_program	*extract_program_redir_out_append(t_stock *stock, \
-		t_ast_node *root, int f_out)
+t_program	*extract_program_redir_out_append(t_stock *stock, t_ast_node *root,
+		int f_out)
 {
 	t_program	*program;
 
