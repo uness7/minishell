@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 11:48:16 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 14:43:51 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -517,5 +517,19 @@ void					copy_word(char *dest, char *src, int start, int end);
 
 bool					is_tree_valid(t_ast_node *root);
 void					init_heredoc_handler(void);
+
+
+int      check_unclosed_quotes_or_pipe(t_arena *arena, char *input);
+void     ign_cmd(t_program ***programs);
+size_t  list_size(t_list *list);
+void    update_status(t_stock *stock);
+void    err_message(t_stock *stock, int code);
+
+
+
+
+
+
+
 
 #endif

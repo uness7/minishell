@@ -43,8 +43,6 @@ OBJECTS += $(patsubst $(LEXER)/%.c, $(BUILD)/lexer_%.o, $(wildcard $(LEXER)/*.c)
 OBJECTS += $(patsubst $(PARSER)/%.c, $(BUILD)/parser_%.o, $(wildcard $(PARSER)/*.c))
 OBJECTS += $(patsubst $(SIGNALS)/%.c, $(BUILD)/signals_%.o, $(wildcard $(SIGNALS)/*.c))
 
-# Rules
-all: $(NAME)
 
 banner:
 	@echo "\n"
@@ -59,6 +57,9 @@ banner:
 	@echo "88888888  Y88888P  d88P     888 8888888P  8888888 888    Y888  Y8888P88"
 	@echo "\n"
 	@sleep 1
+
+# Rules
+all: banner $(NAME)
 
 run: $(NAME)
 	@echo "🏃 Running Minishell..."

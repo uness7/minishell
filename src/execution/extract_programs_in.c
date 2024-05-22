@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:48:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/19 11:44:32 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 14:49:53 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,7 @@ t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root)
 	program->fd_out = 1;
 	program->fd_out = get_fd_out(arena, root);
 	if (program->fd_in == -1 || program->fd_out == -1)
-	{
-		perror("Failed to open ");
 		return (NULL);
-	}
 	program->cmd = get_cmd(arena, root);
 	program->args = get_args(arena, root);
 	program->fd_heredoc = 0;
