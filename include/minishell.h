@@ -518,18 +518,11 @@ void					copy_word(char *dest, char *src, int start, int end);
 bool					is_tree_valid(t_ast_node *root);
 void					init_heredoc_handler(void);
 
-
-int      check_unclosed_quotes_or_pipe(t_arena *arena, char *input);
-void     ign_cmd(t_program ***programs);
-size_t  list_size(t_list *list);
-void    update_status(t_stock *stock);
-void    err_message(t_stock *stock, int code);
-
-
-
-
-
-
-
+int						check_unclosed_quotes_or_pipe(t_arena *arena,
+							char *input);
+void					ign_cmd(t_program ***programs);
+size_t					list_size(t_list *list);
+void					update_status(t_stock *stock);
+void					err_message(t_stock *stock, int code);
 
 #endif

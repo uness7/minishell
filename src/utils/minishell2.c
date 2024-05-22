@@ -21,7 +21,6 @@ int	check_unclosed_quotes_or_pipe(t_arena *arena, char *input)
 		if (has_single_unclosed_quotes(input)
 			|| has_double_unclosed_quotes(input))
 		{
-			printf("A missing single or double quote :(\n");
 			return (-1);
 		}
 	}

@@ -44,9 +44,10 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 static void	run_minishell(t_stock *stock)
 {
 	char	*input;
-	char		**new_envp;
+	char	**new_envp;
 
-	new_envp = env_list_arr(stock->arena, stock->env, env_list_size(stock->env));
+	new_envp = env_list_arr(stock->arena, stock->env,
+			env_list_size(stock->env));
 	while (1)
 	{
 		init_signal();
