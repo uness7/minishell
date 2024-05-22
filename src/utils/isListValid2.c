@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:13:14 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 11:41:29 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 16:40:40 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,11 @@ bool	check_first_last_token(t_list *tokens, int size)
 {
 	t_node	*temp;
 
+	(void)size;
 	if (tokens == NULL)
 		return (false);
 	temp = tokens->head;
-	if (size == 1 && (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data)))
+	if (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data))
 		return (false);
 	while (temp->next != NULL)
 		temp = temp->next;

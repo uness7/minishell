@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 14:56:17 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 16:47:22 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ static void	run_minishell(t_stock *stock)
 		}
 		if (*input)
 			add_history(input);
-		if (input[0] != '\0' || ft_strlen(trim_space(input)) == 0)
+		if (input[0] != '\0' && ft_strlen(trim_quotes(stock->arena, \
+						trim_space(input))))
 			run_minishell2(stock, input, new_envp);
 		free(input);
 		g_status = 0;
