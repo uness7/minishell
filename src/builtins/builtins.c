@@ -38,7 +38,6 @@ void	custom_unset(t_stock *stock, char *input, t_env *env)
 	}
 }
 
-
 int	env_list_size(t_env *list)
 {
 	t_env	*temp;

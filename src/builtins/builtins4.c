@@ -17,10 +17,8 @@ static int	is_quote(char c)
 	return (c == '"' || c == '\'');
 }
 
-
 char	**ft_split_2(t_arena *arena, char *str)
 {
-	(void)arena;
 	int		inside_quotes;
 	int		word_count;
 	int		str_length;
@@ -29,6 +27,7 @@ char	**ft_split_2(t_arena *arena, char *str)
 	int		start_index;
 	int		quoted_start;
 
+	(void)arena;
 	inside_quotes = 0;
 	word_count = 0;
 	str_length = strlen(str);
@@ -61,8 +60,10 @@ char	**ft_split_2(t_arena *arena, char *str)
 			{
 				if (quoted_start != -1 && i - start_index > 1)
 				{
-					result[word_index] = malloc((i - start_index + 1) * sizeof(char));
-					strncpy(result[word_index], str + start_index, i - start_index);
+					result[word_index] = malloc((i - start_index + 1)
+							* sizeof(char));
+					strncpy(result[word_index], str + start_index, i
+						- start_index);
 					result[word_index][i - start_index] = '\0';
 					word_index++;
 				}
@@ -74,7 +75,8 @@ char	**ft_split_2(t_arena *arena, char *str)
 		{
 			if (i > start_index)
 			{
-				result[word_index] = malloc((i - start_index + 1) * sizeof(char));
+				result[word_index] = malloc((i - start_index + 1)
+						* sizeof(char));
 				strncpy(result[word_index], str + start_index, i - start_index);
 				result[word_index][i - start_index] = '\0';
 				word_index++;
@@ -139,8 +141,10 @@ char	**split_string(char *str, t_split_2_state *state)
 			else if (state->quoted_start != -1 && state->i
 				- state->start_index > 1)
 			{
-				state->result[state->word_index] = arena_alloc(state->arena, (state->i - state->start_index + 1) * sizeof(char));
-				copy_word(state->result[state->word_index], str, state->start_index, state->i);
+				state->result[state->word_index] = arena_alloc(state->arena,
+						(state->i - state->start_index + 1) * sizeof(char));
+				copy_word(state->result[state->word_index], str,
+					state->start_index, state->i);
 				state->word_index++;
 				state->start_index = state->i + 1;
 				state->quoted_start = -1;

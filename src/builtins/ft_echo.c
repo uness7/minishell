@@ -50,7 +50,8 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 	while (echo_args[i] != NULL)
 	{
 		if (ft_strncmp(echo_args[i]->data, "-", 1) == 0
-			&& check_str_for_n_char(echo_args[i]->data) && echo_args[i + 1] != NULL)
+			&& check_str_for_n_char(echo_args[i]->data) && echo_args[i
+				+ 1] != NULL)
 		{
 			i++;
 			*flag = 1;
@@ -59,9 +60,10 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 			printf("%s", echo_args[i]->data);
 		else if (echo_args[i] && echo_args[i - 1] && echo_args[i + 1]
 			&& echo_args[i - 1]->type == WORD && echo_args[i + 1]->type == WORD
-			&& echo_args[i]->type == _SPACE && \
-			!(ft_strncmp(echo_args[i - 1]->data, "-", 1) == 0 \
-				&& check_str_for_n_char(echo_args[i - 1]->data)))
+			&& echo_args[i]->type == _SPACE && !(ft_strncmp(echo_args[i
+						- 1]->data, "-", 1) == 0 && \
+				check_str_for_n_char(echo_args[i
+						- 1]->data)))
 		{
 			printf(" ");
 		}

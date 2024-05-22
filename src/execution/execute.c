@@ -17,15 +17,15 @@ static bool	is_redir_out_append(int type)
 	return (type == NODE_REDIRECTION_OUT || type == NODE_REDIRECTION_APPEND);
 }
 
-t_program	**extract_programs(t_stock *stock, \
-		t_ast_node *root, int programs_count)
+t_program	**extract_programs(t_stock *stock, t_ast_node *root,
+		int programs_count)
 {
 	t_program	**programs;
 	int			i;
 
 	i = 0;
-	programs = arena_alloc(stock->arena, sizeof(t_program *) \
-			* (2 * programs_count + 1));
+	programs = arena_alloc(stock->arena, sizeof(t_program *) * (2
+				* programs_count + 1));
 	if (root->type == NODE_COMMAND)
 		programs[i++] = extract_program_command(stock->arena, root);
 	else if (root->type == NODE_REDIRECTION_IN)
@@ -42,7 +42,7 @@ t_program	**extract_programs(t_stock *stock, \
 		else
 			programs[i] = extract_program_redir_out_append(stock, root, 0);
 		if (programs[i] == NULL)
-			return NULL;
+			return (NULL);
 		i++;
 	}
 	else if (root->type == NODE_REDIRECTION_HEREDOC)

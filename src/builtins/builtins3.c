@@ -51,7 +51,7 @@ void	_runbuiltins(t_stock *stock, char *input)
 	{
 		if (ft_strncmp(input, "cd..", 4) == 0)
 			return ;
-		 custom_cd(stock->arena, trim_quotes(stock->arena, input), stock->env);
+		custom_cd(stock->arena, trim_quotes(stock->arena, input), stock->env);
 	}
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "export",
 			ft_strlen("export")) == 0)

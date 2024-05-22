@@ -81,8 +81,8 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 	return (fd_out);
 }
 
-t_program	*extract_program_heredoc(t_arena *arena, \
-		t_ast_node *root, int f_no_cmd)
+t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
+		int f_no_cmd)
 {
 	t_program	*program;
 	t_delims	*delims;
@@ -92,11 +92,11 @@ t_program	*extract_program_heredoc(t_arena *arena, \
 		f_no_cmd = 1;
 	program = arena_alloc(arena, sizeof(t_program));
 	delims = get_delims(arena, root);
-	program->fd_in = heredoc(trim_single_quotes(arena, \
-	trim_quotes(arena, delims->deli)), trim_single_quotes(arena, \
-	trim_quotes(arena, delims->deli2)), "tmp.txt");
+	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena,
+					delims->deli)), trim_single_quotes(arena, trim_quotes(arena,
+					delims->deli2)), "tmp.txt");
 	if (program->fd_in == -1)
-		return NULL;
+		return (NULL);
 	unlink("tmp.txt");
 	if (f_no_cmd == 1)
 		return (NULL);

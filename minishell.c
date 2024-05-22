@@ -52,24 +52,13 @@ static void	ign_cmd(t_program ***programs)
 	}
 }
 
-int	special_strlen(char *input)
-{
-	int	i;
-
-	i = 0;
-	while (input[i])
-		i++;
-	return (i);
-}
-
 size_t	list_size(t_list *list)
 {
 	size_t	size;
-	t_node *current;
-	
+	t_node	*current;
+
 	size = 0;
 	current = list->head;
-
 	while (current != NULL)
 	{
 		size++;

@@ -19,23 +19,24 @@ static int	read_first_part(char buff[], int len_start, char *start_delim)
 	write(1, "heredoc> ", 9);
 	nbytes = read(0, buff, BUFFERSIZE);
 	if (g_status == 130)
-		return -1;
+		return (-1);
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
-			return -1;
+			return (-1);
 		if (nbytes == -1 && errno == EINTR)
-			return -1;
+			return (-1);
 		buff[nbytes] = 0;
-		if (start_delim[0] == '\0' || (nbytes == len_start + 1 && (ft_memcmp(start_delim, buff,
-					len_start) == 0) && buff[nbytes - 1] == '\n'))
+		if (start_delim[0] == '\0' || (nbytes == len_start + 1
+				&& (ft_memcmp(start_delim, buff, len_start) == 0) && buff[nbytes
+				- 1] == '\n'))
 		{
 			break ;
 		}
 		write(1, "heredoc> ", 9);
 		nbytes = read(0, buff, BUFFERSIZE);
 	}
-	return 0;
+	return (0);
 }
 
 static int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
@@ -45,16 +46,17 @@ static int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 	write(1, "heredoc> ", 9);
 	nbytes = read(0, buff, BUFFERSIZE);
 	if (g_status == 130)
-		return -1;
+		return (-1);
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
-			return -1;
+			return (-1);
 		if (nbytes == -1 && errno == EINTR)
-			return -1;
+			return (-1);
 		buff[nbytes] = 0;
-		if ((end_delim[0] == '\0') || (nbytes == len_end + 1 && (ft_memcmp(end_delim, buff, len_end) == 0)
-			&& buff[nbytes - 1] == '\n'))
+		if ((end_delim[0] == '\0') || (nbytes == len_end + 1
+				&& (ft_memcmp(end_delim, buff, len_end) == 0) && buff[nbytes
+				- 1] == '\n'))
 		{
 			break ;
 		}
@@ -62,9 +64,9 @@ static int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 		write(1, "heredoc> ", 9);
 		nbytes = read(0, buff, BUFFERSIZE);
 		if (g_status == 130)
-			return -1;
+			return (-1);
 	}
-	return 0;
+	return (0);
 }
 
 static int	open_fd(const char *filename)
@@ -86,13 +88,14 @@ void	heredoc_handler(int sig)
 
 int	heredoc(char *start_delim, char *end_delim, const char *filename)
 {
-	int		len_start;
-	int		len_end;
-	char	buff[BUFFERSIZE + 1];
-	int		fd;
-	int	stat = 0;
-
+	int					len_start;
+	int					len_end;
+	char				buff[BUFFERSIZE + 1];
+	int					fd;
+	int					stat;
 	struct sigaction	sa_int;
+
+	stat = 0;
 	sa_int.sa_handler = heredoc_handler;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
@@ -101,7 +104,6 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 		perror("Error setting up SIGINT handler");
 		exit(EXIT_FAILURE);
 	}
-
 	if (start_delim != NULL)
 		len_start = ft_strlen(start_delim);
 	if (end_delim != NULL)

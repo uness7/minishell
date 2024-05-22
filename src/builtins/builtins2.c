@@ -22,9 +22,10 @@ void	split_string_helper(t_split_2_state *state, char *str)
 {
 	if (state->i > state->start_index)
 	{
-		state->result[state->word_index] = arena_alloc(state->arena,
-				(state->i - state->start_index + 1) * sizeof(char));
-		copy_word(state->result[state->word_index], str, state->start_index, state->i);
+		state->result[state->word_index] = arena_alloc(state->arena, (state->i
+					- state->start_index + 1) * sizeof(char));
+		copy_word(state->result[state->word_index], str, state->start_index,
+			state->i);
 		state->word_index++;
 	}
 }
