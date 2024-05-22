@@ -51,7 +51,8 @@ void	_runbuiltins(t_stock *stock, char *input)
 	{
 		if (ft_strncmp(input, "cd..", 4) == 0)
 			return ;
-		custom_cd(stock->arena, trim_quotes(stock->arena, input), stock->env);
+		*(stock->status) = custom_cd(stock->arena, trim_quotes(stock->arena,
+					input), stock->env);
 	}
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "export",
 			ft_strlen("export")) == 0)
@@ -91,7 +92,7 @@ char	*join_args(t_arena *arena, char **args)
 	return (input);
 }
 
-void	custom_cd(t_arena *arena, char *input, t_env *env)
+int	custom_cd(t_arena *arena, char *input, t_env *env)
 {
 	char	*cmd;
 	char	*path;
@@ -105,10 +106,11 @@ void	custom_cd(t_arena *arena, char *input, t_env *env)
 	if (i > 2)
 	{
 		printf("too many arguments :( \n");
-		return ;
+		return (1);
 	}
 	cmd = ft_strtok_2(input, " \t\n");
 	path = ft_strtok_2(NULL, " \t\n");
 	(void)cmd;
 	ft_cd(arena, path, env);
+	return (0);
 }

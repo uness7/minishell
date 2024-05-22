@@ -25,7 +25,7 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 	input = expand_variables(stock, input);
 	if (check_unclosed_quotes_or_pipe(stock->arena, input) == -1)
 		return (err_message(stock, 1));
-	list = tokenize(stock->arena, trim_space(input));
+	list = tokenize(stock->arena, input);
 	if (list_size(list) == 0)
 		return (err_message(stock, 127));
 	if (!is_input_valid(list))
@@ -61,7 +61,7 @@ static void	run_minishell(t_stock *stock)
 		}
 		if (*input)
 			add_history(input);
-		if (input[0] != '\0')
+		if (input[0] != '\0' || ft_strlen(trim_space(input)) == 0)
 			run_minishell2(stock, input, new_envp);
 		free(input);
 		g_status = 0;

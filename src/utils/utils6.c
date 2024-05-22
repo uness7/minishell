@@ -47,12 +47,12 @@ char	*ft_strtok_2(char *str, char *delim)
 		save_ptr = str;
 	else if (save_ptr == NULL)
 		return (NULL);
-	while (*save_ptr && strchr(delim, *save_ptr))
+	while (*save_ptr && ft_strchr(delim, *save_ptr))
 		save_ptr++;
 	if (*save_ptr == '\0')
 		return (NULL);
 	start = save_ptr;
-	while (*save_ptr && !strchr(delim, *save_ptr))
+	while (*save_ptr && !ft_strchr(delim, *save_ptr))
 		save_ptr++;
 	if (*save_ptr == '\0')
 		save_ptr = NULL;

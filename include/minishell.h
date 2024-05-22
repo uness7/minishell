@@ -380,7 +380,7 @@ char					**ft_str_copy(t_arena *arena, char **envp);
 void					custom_echo(t_arena *arena, char *input, t_env *envp);
 void					custom_unset(t_stock *s, char *input, t_env *env);
 int						custom_export(t_stock *stock, char *input);
-void					custom_cd(t_arena *arena, char *input, t_env *env);
+int						custom_cd(t_arena *arena, char *input, t_env *env);
 void					custom_exit(char *input, int *status);
 void					search_value(char **envp_cp, char **arg);
 void					check_n_arg(int *n_flag, char **args);
