@@ -6,16 +6,11 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:31:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 14:32:58 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 11:41:42 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	is_quotes(char c)
-{
-	return (c == '"' || c == '\'');
-}
 
 static t_echo_arr	*extract_token(t_arena *arena, char *data, int type)
 {

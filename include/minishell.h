@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 13:42:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 11:48:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,18 +233,18 @@ typedef struct s_echo_state
 	char				*input;
 }						t_echo_state;
 
-typedef struct s_split_2_state
+typedef struct s_state
 {
-	t_arena				*arena;
-	int					word_count;
-	int					inside_quotes;
-	int					word_index;
-	int					start_index;
-	int					quoted_start;
-	int					str_length;
-	int					i;
-	char				**result;
-}						t_split_2_state;
+	int inside_quotes;
+	int word_count;
+	int str_length;
+	char **result;
+	int word_index;
+	int start_index;
+	int quoted_start;
+	int i;
+}						t_state;
+
 
 ///////////////      Programs        /////////////////////
 
@@ -448,7 +448,7 @@ char					*expand_variables(t_stock *stock, char *input);
 /* Tools */
 t_echo_arr				**split(t_arena *arena, char *input);
 int						is_space(char c);
-char					**ft_split_2(t_arena *arena, char *str);
+char					**ft_split_2(char *str);
 t_ast_node				*ast(t_arena *arena, t_list *list);
 
 /* Input Validation */
@@ -508,13 +508,12 @@ void					add_node_to_front(t_list *list, t_node *new_node);
 
 /* Echo Split Function File : src/utils/split_echo */
 
+bool    				is_quotes(char c);
 void					remove_last_quote(char *str);
 t_echo_arr				**get_res(t_arena *arena, char *input, t_echo_arr **res,
 							int inside_quotes);
 void					get_res_helper(t_echo_state *state, t_arena *arena,
 							t_echo_arr **res, int *inside_quotes);
-char					**split_string(char *str, t_split_2_state *state);
-void					split_string_helper(t_split_2_state *state, char *str);
 void					copy_word(char *dest, char *src, int start, int end);
 
 bool					is_tree_valid(t_ast_node *root);

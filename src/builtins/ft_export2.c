@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:38:43 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 13:56:02 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/22 11:45:54 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,12 @@ bool	check_env_var_rules(char *name)
 	return (true);
 }
 
-static int	export_helper(t_stock *stock, char **args)
+static int	export_helper(t_stock *stock, char **args, int i)
 {
-	int		i;
 	char	*value;
 	char	*name;
 
-	i = 0;
-	while (args[i])
+	while (args[++i])
 	{
 		if (ft_strstr(args[i], "="))
 		{
@@ -53,17 +51,18 @@ static int	export_helper(t_stock *stock, char **args)
 			if (value != NULL && name != NULL)
 				add_or_update_env(stock->arena, &(stock->env), name, value);
 		}
-		i++;
 	}
 	return (0);
 }
 
 int	custom_export(t_stock *stock, char *input)
 {
+	int		i;
 	char	**args;
 	char	*cmd;
 	char	*var;
 
+	i = -1;
 	(void)cmd;
 	cmd = ft_strtok_2(input, " \t\n");
 	var = ft_strtok_2(NULL, "\t\n");
@@ -71,10 +70,10 @@ int	custom_export(t_stock *stock, char *input)
 		print_env(stock->env);
 	else
 	{
-		args = ft_split_2(stock->arena, var);
+		args = ft_split_2(var);
 		if (args == NULL)
-			return 0;
-		if (export_helper(stock, args) == 1)
+			return (0);
+		if (export_helper(stock, args, i) == 1)
 		{
 			printf("bash: export: `%s': not a valid identifier\n", *args);
 			return (1);
