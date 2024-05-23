@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:38:03 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 22:03:30 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 19:49:05 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,12 @@ static bool	should_run_builtin(t_program *prev, t_program *next,
 	return (false);
 }
 
-/* t_triple_programs {curr, next, prev} */
 void	handle_builtin(t_program_state *state, t_stock *stock, int i)
 {
 	char	*new_input;
 	int		saved_stdout;
-	int		saved_stderr;
 
 	saved_stdout = dup(STDOUT_FILENO);
-	saved_stderr = dup(STDERR_FILENO);
 	if (state->curr->fd_out != STDOUT_FILENO)
 	{
 		dup2(state->curr->fd_out, STDOUT_FILENO);
@@ -49,7 +46,5 @@ void	handle_builtin(t_program_state *state, t_stock *stock, int i)
 		_runbuiltins(stock, new_input);
 	}
 	dup2(saved_stdout, STDOUT_FILENO);
-	dup2(saved_stderr, STDERR_FILENO);
 	close(saved_stdout);
-	close(saved_stderr);
 }

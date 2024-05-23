@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 21:42:27 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/21 14:44:42 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 19:57:06 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static bool	check_str_for_n_char(char *str)
 	int	i;
 
 	i = 1;
-	if (str[0] != '-' || str[1] == '\0')
+	if (str[0] != '-' || str[1] == '\0' || str[1] != 'n')
 		return (false);
 	while (str[i])
 	{
@@ -44,9 +44,11 @@ static void	jump_spaces(t_echo_arr ***arr)
 
 void	echo_helper(t_echo_arr **echo_args, int *flag)
 {
+	int	first_word;
 	int	i;
 
 	i = 0;
+	first_word= 1;
 	while (echo_args[i] != NULL)
 	{
 		if (ft_strncmp(echo_args[i]->data, "-", 1) == 0
@@ -56,16 +58,11 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 			i++;
 			*flag = 1;
 		}
-		if (echo_args[i] && echo_args[i]->type == WORD)
+		if (echo_args[i] && echo_args[i]->type == WORD) {
+			if (!first_word)
+				printf(" ");
 			printf("%s", echo_args[i]->data);
-		else if (echo_args[i] && echo_args[i - 1] && echo_args[i + 1]
-			&& echo_args[i - 1]->type == WORD && echo_args[i + 1]->type == WORD
-			&& echo_args[i]->type == _SPACE && !(ft_strncmp(echo_args[i
-						- 1]->data, "-", 1) == 0 && \
-				check_str_for_n_char(echo_args[i
-						- 1]->data)))
-		{
-			printf(" ");
+			first_word = 0;
 		}
 		i++;
 	}

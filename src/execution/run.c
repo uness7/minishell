@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 22:11:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 18:19:27 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 		{
 			close(pipe->pipefd[0]);
 			dup2(pipe->pipefd[1], STDOUT_FILENO);
+			close(pipe->pipefd[1]);
 		}
+		if (pipe->p != 0)
+			close(pipe->last_fd);
 		redirect(program);
 		if (check_cnd(program->cmd))
 			execve(program->cmd, program->args, envp);
@@ -71,7 +74,7 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock)
 	j = -1;
 	while (++j < pipe.p)
 		waitpid(pipe.pids[j], &status, 0);
-	if (*(stock->status) != 0)
-		return (*(stock->status));
+//	if (*(stock->status) != 0)
+//		return (*(stock->status));
 	return (WEXITSTATUS(status));
 }

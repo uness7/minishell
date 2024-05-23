@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 18:43:39 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/20 17:25:12 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 13:11:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,30 +64,36 @@ char	*ft_strtok_2(char *str, char *delim)
 	return (start);
 }
 
-long int	ft_atol(char *str)
+long long ft_atol(char *str)
 {
-	long	result;
-	int		sign;
-	int		i;
+	long long	result = 0;
+	int sign = 1;
 
-	result = 0;
-	sign = 1;
-	i = 0;
-	while (str[i] == ' ')
-		i++;
-	if (str[i] == '-')
+	while (isspace((unsigned char)*str))
+		str++;
+	if (*str == '-')
 	{
 		sign = -1;
-		i++;
+		str++;
 	}
-	else if (str[i] == '+')
-		i++;
-	while (str[i] >= '0' && str[i] <= '9')
+	else if (*str == '+')
+		str++;
+	while (isdigit((unsigned char)*str))
 	{
-		result = result * 10 + (str[i] - '0');
-		i++;
+		int digit = *str - '0';
+		if (result > (LLONG_MAX - digit) / 10) {
+			if (sign == 1) {
+				return LLONG_MAX;
+			} else {
+				return LLONG_MIN;
+			}
+		}
+
+		result = result * 10 + digit;
+		str++;
 	}
-	return (sign * result);
+
+	return sign * result;
 }
 
 int	is_num(char *str)

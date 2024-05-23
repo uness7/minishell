@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 22:06:53 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 16:15:41 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define SUCCES 1
 # define ERROR 0
-# define PATH_MAX 1024
+//# define PATH_MAX 1024
 # define MAX_INT 2147483647
 # define ARENA_SIZE 1073741824
 # define HEREDOC_SIZE 100
@@ -103,10 +104,12 @@ typedef struct s_stock_split
 
 typedef struct s_stock
 {
+	int				last_fd;
 	int					*status;
 	char				**argv;
 	char				**envp;
 	t_arena				*arena;
+	t_arena				*env_arena;
 	t_env				*env;
 }						t_stock;
 
@@ -342,7 +345,7 @@ int						ft_strncmp(char *s1, char *s2, unsigned int n);
 size_t					ft_strlen(char *str);
 char					*ft_strchr(char *str, int c);
 int						ft_atoi(const char *str);
-long int				ft_atol(char *str);
+long long 				ft_atol(char *str);
 int						is_num(char *str);
 
 void					malloc_err(void);
@@ -362,7 +365,7 @@ void					_runbuiltins(t_stock *stock, char *input);
 
 char					*trim_space(char *str);
 char					*trim_quotes(t_arena *arena, char *str);
-void					ft_exit(t_arena *arena, char *argv, int *status);
+void					ft_exit(t_stock *stock, char *argv, int *status);
 int						ft_echo(t_arena *arena, char *argv);
 void					append_env_node(t_arena *arena, t_env **head,
 							char *name, char *value);
@@ -447,7 +450,7 @@ char					*expand_variables(t_stock *stock, char *input);
 /* Tools */
 t_echo_arr				**split(t_arena *arena, char *input);
 int						is_space(char c);
-char					**ft_split_2(char *str);
+char					**ft_split_2(t_arena *arena, char *str);
 t_ast_node				*ast(t_arena *arena, t_list *list);
 
 /* Input Validation */
@@ -524,5 +527,6 @@ void					ign_cmd(t_program ***programs);
 size_t					list_size(t_list *list);
 void					update_status(t_stock *stock);
 void					err_message(t_stock *stock, int code);
+long					ft_strtol(char *str, char **endptr, int base);
 
 #endif

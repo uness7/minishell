@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:43 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 22:08:52 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 18:29:59 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,17 @@ void	_runbuiltins(t_stock *stock, char *input)
 	else if (ft_strncmp("env", trim_quotes(stock->arena, input), 3) == 0)
 		print_env(stock->env);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "exit", 4) == 0)
-		ft_exit(stock->arena, input, stock->status);
+		ft_exit(stock, input, stock->status);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "cd", 2) == 0)
 	{
 		if (ft_strncmp(input, "cd..", 4) == 0)
 			return ;
-		*(stock->status) = custom_cd(stock->arena, trim_quotes(stock->arena,
+		g_status = custom_cd(stock->arena, trim_quotes(stock->arena,
 					input), stock->env);
 	}
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "export",
 			ft_strlen("export")) == 0)
-		*(stock->status) = custom_export(stock, input);
+		g_status = custom_export(stock, input);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "unset",
 			ft_strlen("unset")) == 0)
 		custom_unset(stock, trim_quotes(stock->arena, input), stock->env);

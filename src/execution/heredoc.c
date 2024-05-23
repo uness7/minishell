@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 13:53:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 17:49:11 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 19:34:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,32 @@ static int	open_fd(const char *filename)
 	return (fd);
 }
 
+void init_terminal_settings(struct termios *old_termios) {
+    if (isatty(STDIN_FILENO)) {
+        struct termios new_termios;
+        if (tcgetattr(STDIN_FILENO, old_termios) == -1) {
+            perror("tcgetattr");
+            exit(EXIT_FAILURE);
+        }
+        new_termios = *old_termios;
+        new_termios.c_lflag &= ~(ECHOCTL); // Disable ECHO, canonical mode, and signals
+        if (tcsetattr(STDIN_FILENO, TCSANOW, &new_termios) == -1) {
+            perror("tcsetattr");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+// Function to restore terminal settings after heredoc
+void restore_terminal_settings(const struct termios *old_termios) {
+    if (isatty(STDIN_FILENO)) {
+        if (tcsetattr(STDIN_FILENO, TCSANOW, old_termios) == -1) {
+            perror("tcsetattr");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
 int	heredoc(char *start_delim, char *end_delim, const char *filename)
 {
 	int					len_start;
@@ -84,6 +110,9 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 	char				buff[BUFFERSIZE + 1];
 	int					fd;
 	int					stat;
+
+	struct termios old_termios;
+    	init_terminal_settings(&old_termios);
 
 	stat = 0;
 	init_heredoc_handler();
@@ -97,6 +126,7 @@ int	heredoc(char *start_delim, char *end_delim, const char *filename)
 	if (end_delim != NULL)
 		stat = read_second_part(buff, len_end, fd, end_delim);
 	close(fd);
+	restore_terminal_settings(&old_termios);
 	if (stat == -1)
 		return (-1);
 	fd = open(filename, O_RDONLY);
