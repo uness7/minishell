@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:48:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 14:49:53 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/23 20:07:46 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 	int		fd_out;
 	char	*file;
 
-	fd = -1;
+	fd = 1;
 	fd_out = fd;
 	if (root->left)
 	{
@@ -102,6 +102,8 @@ t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root)
 	program->fd_in = get_fd_in(arena, root);
 	program->fd_out = 1;
 	program->fd_out = get_fd_out(arena, root);
+	printf("%d\n", program->fd_in);
+	printf("%d\n", program->fd_out);
 	if (program->fd_in == -1 || program->fd_out == -1)
 		return (NULL);
 	program->cmd = get_cmd(arena, root);
