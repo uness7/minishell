@@ -46,6 +46,7 @@ static int	get_fd_in(t_arena *arena, t_ast_node *root)
 
 	fd = -1;
 	fd_in = fd;
+	filename = NULL;
 	if (root->left != NULL && root->left->data != NULL)
 	{
 		fd = -1;
@@ -102,8 +103,6 @@ t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root)
 	program->fd_in = get_fd_in(arena, root);
 	program->fd_out = 1;
 	program->fd_out = get_fd_out(arena, root);
-	printf("%d\n", program->fd_in);
-	printf("%d\n", program->fd_out);
 	if (program->fd_in == -1 || program->fd_out == -1)
 		return (NULL);
 	program->cmd = get_cmd(arena, root);

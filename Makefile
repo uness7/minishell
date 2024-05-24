@@ -43,23 +43,7 @@ OBJECTS += $(patsubst $(LEXER)/%.c, $(BUILD)/lexer_%.o, $(wildcard $(LEXER)/*.c)
 OBJECTS += $(patsubst $(PARSER)/%.c, $(BUILD)/parser_%.o, $(wildcard $(PARSER)/*.c))
 OBJECTS += $(patsubst $(SIGNALS)/%.c, $(BUILD)/signals_%.o, $(wildcard $(SIGNALS)/*.c))
 
-
-banner:
-	@echo "\n"
-	@echo "⏳ Files are being compiled. ⏳  \n"
-	@echo "888      .d88888b.        d8888 8888888b. 8888888 888b    888  .d8888b."
-	@echo "888     d88P   Y88b      d88888 888   Y88b  888   8888b   888 d88P  Y88b"
-	@echo "888     888     888     d88P888 888    888  888   88888b  888 888    888"
-	@echo "888     888     888    d88P 888 888    888  888   888Y88b 888 888"
-	@echo "888     888     888   d88P  888 888    888  888   888 Y88b888 888  88888"
-	@echo "888     888     888  d88P   888 888    888  888   888  Y88888 888    888"
-	@echo "888     Y88b. .d88P d8888888888 888  .d88P  888   888   Y8888 Y88b  d88P"
-	@echo "88888888  Y88888P  d88P     888 8888888P  8888888 888    Y888  Y8888P88"
-	@echo "\n"
-	@sleep 1
-
-# Rules
-all: banner $(NAME)
+all: $(NAME)
 
 run: $(NAME)
 	@echo "🏃 Running Minishell..."
@@ -84,35 +68,35 @@ $(NAME): $(OBJECTS)
 	@echo "🥷  Enjoy NinjaShell  🥷 \n"
 
 $(BUILD)/%.o: %.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/utils_%.o: $(UTILS)/%.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/execution_%.o: $(EXECUTION)/%.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/builtins_%.o: $(BUILTINS)/%.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/expander_%.o: $(EXPANDER)/%.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/lexer_%.o: $(LEXER)/%.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/parser_%.o: $(PARSER)/%.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/signals_%.o: $(SIGNALS)/%.c
-	@mkdir -p $(BUILD)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
@@ -127,4 +111,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all banner run help clean fclean re
+.PHONY: all run help clean fclean re

@@ -25,8 +25,8 @@ static int	ft_word_count(char *str)
 	{
 		if (is_quotes(str[i]))
 			inside_quotes = !inside_quotes;
-		else if (!inside_quotes && !is_space(str[i]) &&
-				(i == 0 || is_space(str[i - 1]) || is_quotes(str[i - 1])))
+		else if (!inside_quotes && !is_space(str[i]) && (i == 0
+				|| is_space(str[i - 1]) || is_quotes(str[i - 1])))
 			word_count++;
 		i++;
 	}
@@ -37,7 +37,8 @@ void	action1(t_state *state, char *str, t_arena *arena)
 {
 	if (state->quoted_start != -1 && state->i - state->start_index > 1)
 	{
-		state->result[state->word_index] = ft_strndup(arena, str + state->start_index, state->i - state->start_index);
+		state->result[state->word_index] = ft_strndup(arena, str
+				+ state->start_index, state->i - state->start_index);
 		state->word_index++;
 	}
 	state->start_index = state->i + 1;
@@ -48,7 +49,8 @@ void	action2(t_state *state, char *str, t_arena *arena)
 {
 	if (state->i > state->start_index)
 	{
-		state->result[state->word_index] = ft_strndup(arena, str + state->start_index, state->i - state->start_index);
+		state->result[state->word_index] = ft_strndup(arena, str
+				+ state->start_index, state->i - state->start_index);
 		state->word_index++;
 	}
 	state->start_index = state->i + 1;
@@ -59,7 +61,8 @@ static void	init(t_state *state, char *str, t_arena *arena)
 	state->inside_quotes = 0;
 	state->str_length = ft_strlen(str);
 	state->word_count = ft_word_count(str);
-	state->result = arena_alloc(arena, (state->word_count + 1) * sizeof(char *));
+	state->result = arena_alloc(arena, (state->word_count + 1)
+			* sizeof(char *));
 	state->word_index = 0;
 	state->start_index = 0;
 	state->quoted_start = -1;

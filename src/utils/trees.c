@@ -32,6 +32,7 @@ t_ast_node	*create_node_tree(t_arena *arena, t_node_type type, char *data)
 	}
 	new_node->left = NULL;
 	new_node->right = NULL;
+	new_node->f_out = 0;
 	return (new_node);
 }
 

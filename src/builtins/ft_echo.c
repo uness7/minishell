@@ -48,7 +48,7 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 	int	i;
 
 	i = 0;
-	first_word= 1;
+	first_word = 1;
 	while (echo_args[i] != NULL)
 	{
 		if (ft_strncmp(echo_args[i]->data, "-", 1) == 0
@@ -58,7 +58,8 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 			i++;
 			*flag = 1;
 		}
-		if (echo_args[i] && echo_args[i]->type == WORD) {
+		if (echo_args[i] && echo_args[i]->type == WORD)
+		{
 			if (!first_word)
 				printf(" ");
 			printf("%s", echo_args[i]->data);

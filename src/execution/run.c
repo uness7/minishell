@@ -42,8 +42,10 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 			dup2(pipe->pipefd[1], STDOUT_FILENO);
 			close(pipe->pipefd[1]);
 		}
+		/*
 		if (pipe->p != 0)
 			close(pipe->last_fd);
+			*/
 		redirect(program);
 		if (check_cnd(program->cmd))
 			execve(program->cmd, program->args, envp);

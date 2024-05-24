@@ -31,12 +31,17 @@ void	bubble_sort_arr(char **env)
 	n = 0;
 	while (env[n])
 		n++;
-	for (i = 0; i < n - 1; i++) {
-		for (j = 0; j < n - i - 1; j++) {
-			if (ft_strcmp(env[j], env[j + 1]) > 0) {
+	i = 0;
+	j = 0;
+	while (i < n - 1)
+	{
+		while (j < n - i - 1)
+		{
+			if (ft_strcmp(env[j], env[j + 1]) > 0)
 				swap_env(&env[j], &env[j + 1]);
-			}
+			j++;
 		}
+		i++;
 	}
 }
 
@@ -97,7 +102,8 @@ int	custom_export(t_stock *stock, char *input)
 	var = ft_strtok_2(NULL, "\t\n");
 	if (var == NULL)
 	{
-		env = env_list_arr(stock->env_arena, stock->env, env_list_size(stock->env));
+		env = env_list_arr(stock->env_arena, stock->env,
+				env_list_size(stock->env));
 		bubble_sort_arr(env);
 		while (*env)
 			printf("%s\n", *env++);

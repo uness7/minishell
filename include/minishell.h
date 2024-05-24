@@ -15,6 +15,7 @@
 
 # include <errno.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -25,7 +26,6 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
-# include <limits.h>
 
 # define SUCCES 1
 # define ERROR 0
@@ -104,7 +104,7 @@ typedef struct s_stock_split
 
 typedef struct s_stock
 {
-	int				last_fd;
+	int					last_fd;
 	int					*status;
 	char				**argv;
 	char				**envp;
@@ -345,7 +345,7 @@ int						ft_strncmp(char *s1, char *s2, unsigned int n);
 size_t					ft_strlen(char *str);
 char					*ft_strchr(char *str, int c);
 int						ft_atoi(const char *str);
-long long 				ft_atol(char *str);
+long long				ft_atol(char *str);
 int						is_num(char *str);
 
 void					malloc_err(void);
