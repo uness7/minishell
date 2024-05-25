@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 16:15:41 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 13:07:46 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,7 +303,7 @@ pid_t					execute_program(t_program *program, char **envp,
 void					redirect(t_program *program);
 
 // builtins
-void					ft_cd(t_arena *arena, char *path, t_env *env);
+int					ft_cd(t_arena *arena, char *path, t_env *env);
 char					*get_dir(t_arena *arena);
 void					ft_pwd(t_arena *arena);
 
@@ -536,5 +536,6 @@ void					restore_terminal_settings(const struct termios *old_termios);
 void					bubble_sort_arr(char **env);
 int						export_helper(t_stock *stock, char **args, int i);
 void					close_fds(t_stock *stock);
+bool					has_unclosed_quotes(char *str);
 
 #endif

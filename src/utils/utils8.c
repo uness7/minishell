@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 21:09:16 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 15:39:17 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 12:29:37 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,22 @@ bool	ends_with_pipe(char *s)
 	return (false);
 }
 
-bool	has_single_unclosed_quotes(char *s)
+bool    has_unclosed_quotes(char *str)
 {
-	bool	flag;
+        int             i;
+        bool    inside_single_quote;
+        bool    inside_double_quote;
 
-	flag = false;
-	while (*s)
-	{
-		if (*s == '\'')
-			flag = !flag;
-		s++;
-	}
-	return (flag);
-}
-
-bool	has_double_unclosed_quotes(char *s)
-{
-	bool	flag;
-
-	flag = false;
-	while (*s)
-	{
-		if (*s == '\"')
-			flag = !flag;
-		s++;
-	}
-	return (flag);
+        i = 0;
+        inside_single_quote = false;
+        inside_double_quote = false;
+        while (str[i])
+        {
+                if (str[i] == '\'' && !inside_double_quote)
+                        inside_single_quote = !inside_single_quote;
+                else if (str[i] == '"' && !inside_single_quote)
+                        inside_double_quote = !inside_double_quote;
+                i++;
+        }
+        return (inside_single_quote || inside_double_quote);
 }

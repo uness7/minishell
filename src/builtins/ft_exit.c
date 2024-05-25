@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:36:08 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/23 17:58:34 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 12:12:12 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	check_number_args(t_stock *stock, int i, int *status)
 {
 	if (i > 2)
 	{
-		printf("Too many arguments \n");
+		dprintf(2, " too many arguments\n");
 		*status = 1;
 		rl_clear_history();
 		close_fds(stock);
@@ -60,7 +60,7 @@ int	ft_exit(t_stock *stock, char *input, int *status)
 		num = ft_strtol(temp, &endptr, 10);
 		if ((*endptr != '\0' || errno != 0) || num > INT_MAX || num < INT_MIN)
 		{
-			printf("exit: %s: numeric argument required\n", args[1]);
+			dprintf(2, " numeric argument required\n");
 			*status = 2;
 		}
 		else

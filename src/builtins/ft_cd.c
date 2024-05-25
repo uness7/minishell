@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 15:00:32 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/04 14:18:29 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 13:07:10 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	update_pwd_old_pwd(t_arena *arena, char *cur, t_env **env)
 	free(path);
 }
 
-void	ft_cd(t_arena *arena, char *path, t_env *env)
+int	ft_cd(t_arena *arena, char *path, t_env *env)
 {
 	static char	*old;
 	char		*home;
@@ -67,15 +67,17 @@ void	ft_cd(t_arena *arena, char *path, t_env *env)
 		if (old == NULL)
 		{
 			perror("old not set");
-			return ;
+			return (1);
 		}
 		path = old;
 		printf("%s\n", path);
 	}
 	if (current == NULL)
-		return ;
-	change_dir(path);
+		return (1);
+	if (change_dir(path) == -1)
+		return (1);
 	update_pwd_old_pwd(arena, current, &env);
 	free(old);
 	old = current;
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:38:43 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 15:06:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 13:03:38 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,13 @@ static int	export_helper_2(t_stock *stock, char *word)
 	err_flag = 0;
 	name = ft_strtok_2(word, "=");
 	if (name == NULL)
+	{
+		dprintf(2, " not a valid identifier\n");
 		return (1);
+	}
 	if (ft_isdigit(name[0]) || !check_env_var_rules(name))
 	{
-		printf("bash: export: `%s': not a valid identifier\n", word);
+		dprintf(2, " not a valid identifier\n");
 		err_flag = 1;
 	}
 	else
@@ -104,7 +107,7 @@ int	export_helper(t_stock *stock, char **args, int i)
 			name = args[i];
 			if (ft_isdigit(name[0]) || !check_env_var_rules(name))
 			{
-				printf("bash: export: `%s': not a valid identifier\n", *args);
+				dprintf(2, " not a valid identifier\n");
 				err_flag = 1;
 			}
 			else

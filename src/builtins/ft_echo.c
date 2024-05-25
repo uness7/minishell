@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 21:42:27 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/23 19:57:06 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 13:00:43 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,9 @@ static void	jump_spaces(t_echo_arr ***arr)
 
 void	echo_helper(t_echo_arr **echo_args, int *flag)
 {
-	int	first_word;
 	int	i;
 
 	i = 0;
-	first_word = 1;
 	while (echo_args[i] != NULL)
 	{
 		if (ft_strncmp(echo_args[i]->data, "-", 1) == 0
@@ -59,12 +57,9 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 			*flag = 1;
 		}
 		if (echo_args[i] && echo_args[i]->type == WORD)
-		{
-			if (!first_word)
-				printf(" ");
 			printf("%s", echo_args[i]->data);
-			first_word = 0;
-		}
+		else if (echo_args[i] && echo_args[i]->type == _SPACE)
+			printf(" ");
 		i++;
 	}
 }

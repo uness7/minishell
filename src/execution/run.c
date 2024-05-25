@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 18:19:27 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 13:48:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static bool	check_cnd(char *cmd)
 
 static bool	execve_err(void)
 {
-	printf("Command not found\n");
+	dprintf(2, " command not found\n");
 	exit(127);
 }
 
@@ -27,10 +27,11 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 		int next_exists)
 {
 	char	*path;
+	char	*new_input;
 	pid_t	pid;
-
+	
 	path = find_cmd(pipe->stock->arena, ft_strtok(pipe->stock->arena,
-				find_paths(envp)), program->cmd);
+			find_paths(envp)), program->cmd);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -43,9 +44,8 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 			close(pipe->pipefd[1]);
 		}
 		redirect(program);
-		if (_isbuiltin(pipe->stock->arena, program->cmd))
+		if (_isbuiltin(pipe->stock->arena, program->cmd) && !next_exists)
 		{
-			char	*new_input;
 			new_input = join_args(pipe->stock->arena, program->args);
 			exit(_runbuiltins(pipe->stock, new_input));
 		}

@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:35:07 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/22 14:50:54 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 14:00:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,8 @@
 int	check_unclosed_quotes_or_pipe(t_arena *arena, char *input)
 {
 	(void)arena;
-	if (has_single_unclosed_quotes(input) || has_double_unclosed_quotes(input)
-		|| ends_with_pipe(input))
-	{
-		if (has_single_unclosed_quotes(input)
-			|| has_double_unclosed_quotes(input))
-		{
-			return (-1);
-		}
-	}
+	if (has_unclosed_quotes(input))
+		return (-1);
 	return (0);
 }
 
@@ -74,12 +67,9 @@ void	err_message(t_stock *stock, int code)
 {
 	if (code == 127)
 	{
-		printf("Command not found\n");
+		dprintf(2, "  command not found");
 		*(stock->status) = 127;
 	}
 	else if (code == 1)
-	{
-		printf("Something is wrong 😱 \n");
 		*(stock->status) = 1;
-	}
 }
