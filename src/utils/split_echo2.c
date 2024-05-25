@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 12:45:29 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/21 14:32:20 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 15:34:09 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_echo_arr	**split(t_arena *arena, char *input)
 	return (get_res(arena, input, res, inside_quotes));
 }
 
+/*
 void	remove_last_quote(char *str)
 {
 	int		len;
@@ -59,3 +60,29 @@ void	remove_last_quote(char *str)
 			str[len - 1] = '\0';
 	}
 }
+*/
+
+void remove_last_quote(char *str)
+{
+    int len = ft_strlen(str);
+    if (len == 0)
+        return;
+
+    if (str[len - 1] == '"' || str[len - 1] == '\'')
+    {
+        int i = len - 2;
+        int backslash_count = 0;
+
+        // Count consecutive backslashes before the last quote
+        while (i >= 0 && str[i] == '\\')
+        {
+            backslash_count++;
+            i--;
+        }
+
+        // If the number of backslashes is even, the quote is not escaped
+        if (backslash_count % 2 == 0)
+            str[len - 1] = '\0';
+    }
+}
+
