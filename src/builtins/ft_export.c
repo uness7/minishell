@@ -79,3 +79,33 @@ void	unset(t_env **list, char *name)
 	else
 		prev->next = temp->next;
 }
+
+int	custom_export(t_stock *stock, char *input)
+{
+	int		i;
+	char	**args;
+	char	*cmd;
+	char	*var;
+	char	**env;
+
+	i = 0;
+	(void)cmd;
+	cmd = ft_strtok_2(input, " \t\n");
+	var = ft_strtok_2(NULL, "\t\n");
+	if (var == NULL)
+	{
+		env = env_list_arr(stock->env_arena, stock->env,
+				env_list_size(stock->env));
+		bubble_sort_arr(env);
+		while (*env)
+			printf("declare -x %s\n", *env++);
+	}
+	else
+	{
+		args = ft_split_2(stock->arena, var);
+		if (args == NULL)
+			return (0);
+		return (export_helper(stock, args, i));
+	}
+	return (0);
+}

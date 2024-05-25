@@ -47,15 +47,16 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 	if (check_unclosed_quotes_or_pipe(stock->arena, input) == -1)
 		return (err_message(stock, 1));
 	input = expand_variables(stock, input);
-	input = ign_quotes(stock->arena, input);
 	list = tokenize(stock->arena, input);
+	ign_redir(&list);
+//	print_list(list); exit(0);
 	if (list_size(list) == 0)
 		return (err_message(stock, 127));
-	//if (!is_input_valid(list))
-	//	return (err_message(stock, 1));
+	if (!is_input_valid(list))
+		return (err_message(stock, 1));
 	tree = parse(stock->arena, list);
-	//	if (!is_tree_valid(tree))
-	//		return (err_message(stock, 1));
+	if (!is_tree_valid(tree))
+		return (err_message(stock, 1));
 	programs = extract_programs(stock, tree, 2 * ft_strlen(input));
 	if (programs == NULL)
 		return (err_message(stock, 1));

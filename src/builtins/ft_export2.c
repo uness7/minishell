@@ -32,9 +32,9 @@ void	bubble_sort_arr(char **env)
 	while (env[n])
 		n++;
 	i = 0;
-	j = 0;
 	while (i < n - 1)
 	{
+		j = 0;
 		while (j < n - i - 1)
 		{
 			if (ft_strcmp(env[j], env[j + 1]) > 0)
@@ -59,65 +59,60 @@ bool	check_env_var_rules(char *name)
 	return (true);
 }
 
-static int	export_helper(t_stock *stock, char **args, int i)
+static int	export_helper_2(t_stock *stock, char *word)
 {
-	char	*value;
 	char	*name;
+	char	*value;
+	int		err_flag;
 
-	while (args[++i])
+	value = NULL;
+	err_flag = 0;
+	name = ft_strtok_2(word, "=");
+	if (name == NULL)
+		return (1);
+	if (ft_isdigit(name[0]) || !check_env_var_rules(name))
 	{
-		if (ft_strstr(args[i], "="))
-		{
-			name = ft_strtok_2(args[i], "=");
-			if (name == NULL)
-				return (1);
-			if (ft_isdigit(name[0]) || !check_env_var_rules(name))
-				return (1);
-			value = ft_strtok_2(NULL, "=");
-			if (value == NULL)
-				value = ft_strdup(stock->arena, "(null)");
-			if (ft_strncmp(value, "\"", 1) != 0 && ft_strncmp(value, "\'",
-					1) != 0)
-				value = ft_strtok_2(value, " ");
-			else
-				++value;
-			if (value != NULL && name != NULL)
-				add_or_update_env(stock->env_arena, &(stock->env), name, value);
-		}
-	}
-	return (0);
-}
-
-int	custom_export(t_stock *stock, char *input)
-{
-	int		i;
-	char	**args;
-	char	*cmd;
-	char	*var;
-	char	**env;
-
-	i = -1;
-	(void)cmd;
-	cmd = ft_strtok_2(input, " \t\n");
-	var = ft_strtok_2(NULL, "\t\n");
-	if (var == NULL)
-	{
-		env = env_list_arr(stock->env_arena, stock->env,
-				env_list_size(stock->env));
-		bubble_sort_arr(env);
-		while (*env)
-			printf("%s\n", *env++);
+		printf("bash: export: `%s': not a valid identifier\n", word);
+		err_flag = 1;
 	}
 	else
 	{
-		args = ft_split_2(stock->arena, var);
-		if (args == NULL)
-			return (0);
-		if (export_helper(stock, args, i) == 1)
-		{
-			printf("bash: export: `%s': not a valid identifier\n", *args);
-			return (1);
-		}
+		value = ft_strtok_2(NULL, "=");
+		if (value == NULL)
+			value = ft_strdup(stock->arena, "");
+		if (ft_strncmp(value, "\"", 1) != 0 && ft_strncmp(value, "\'", 1) != 0)
+			value = ft_strtok_2(value, " ");
+		else
+			++value;
+		if (value != NULL && name != NULL)
+			add_or_update_env(stock->env_arena, &(stock->env), name, value);
+		err_flag = 0;
 	}
-	return (0);
+	return (err_flag);
+}
+
+int	export_helper(t_stock *stock, char **args, int i)
+{
+	int		err_flag;
+	char	*name;
+
+	err_flag = 0;
+	while (args[i])
+	{
+		if (!ft_strstr(args[i], "="))
+		{
+			name = args[i];
+			if (ft_isdigit(name[0]) || !check_env_var_rules(name))
+			{
+				printf("bash: export: `%s': not a valid identifier\n", *args);
+				err_flag = 1;
+			}
+			else
+				add_or_update_env(stock->env_arena, &(stock->env), name, "");
+		}
+		else
+			err_flag = export_helper_2(stock, args[i]);
+		i++;
+	}
+	return (err_flag);
 }

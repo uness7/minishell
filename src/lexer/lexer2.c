@@ -38,3 +38,26 @@ void	handle_special_chars(t_arena *arena, const char **s, t_list **list)
 		append(arena, *list, ft_strdup(arena, "|"), TOKEN_PIPE);
 	(*s)++;
 }
+
+void	ign_redir(t_list **list)
+{
+	t_node	*temp;
+	t_node	*next;
+
+	temp = (*list)->head;
+	while (temp != NULL)
+	{
+		next = temp->next;
+		if (temp->data && ft_strstr(temp->data, "echo"))
+		{
+			if (next && next->data && (ft_strcmp(next->data, "<") == 0 || ft_strcmp(next->data, "<<") == 0))
+			{
+				next = next->next;
+				if (next)
+					next = next->next;
+				temp->next = next;
+			}
+		}
+		temp = temp->next;
+	}
+}

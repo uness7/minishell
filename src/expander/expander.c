@@ -64,8 +64,8 @@ static void	traverse_and_process(const char *current, int inside_single_quotes,
 			inside_single_quotes = !inside_single_quotes;
 			*out_ptr++ = *current++;
 		}
-		else if (*current == '$' && *(current + 1) != '\0' \
-				&& *(current + 1) != '"' && !inside_single_quotes)
+		else if (*current == '$' && *(current + 1) != '\0' && \
+			*(current + 1) != '"' && !inside_single_quotes)
 		{
 			current++;
 			if (*current == '?')

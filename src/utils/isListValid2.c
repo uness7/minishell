@@ -41,11 +41,10 @@ bool	check_first_last_token(t_list *tokens, int size)
 {
 	t_node	*temp;
 
-	(void)size;
 	if (tokens == NULL)
 		return (false);
 	temp = tokens->head;
-	if (ft_strcmp(temp->data, "|") == 0 || is_op(temp->data))
+	if (ft_strcmp(temp->data, "|") == 0 || (size == 1 && is_op(temp->data)))
 		return (false);
 	while (temp->next != NULL)
 		temp = temp->next;

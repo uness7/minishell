@@ -36,22 +36,29 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 	{
 		if (pipe->last_fd != STDIN_FILENO)
 			dup2(pipe->last_fd, STDIN_FILENO);
-		if (next_exists)
+		if (next_exists && !_isbuiltin(pipe->stock->arena, program->cmd))
 		{
 			close(pipe->pipefd[0]);
 			dup2(pipe->pipefd[1], STDOUT_FILENO);
 			close(pipe->pipefd[1]);
 		}
-		/*
-		if (pipe->p != 0)
-			close(pipe->last_fd);
-			*/
 		redirect(program);
-		if (check_cnd(program->cmd))
+		if (_isbuiltin(pipe->stock->arena, program->cmd))
+		{
+			char	*new_input;
+			new_input = join_args(pipe->stock->arena, program->args);
+			exit(_runbuiltins(pipe->stock, new_input));
+		}
+		else if (check_cnd(program->cmd))
+		{
 			execve(program->cmd, program->args, envp);
+			execve_err();
+		}
 		else
+		{
 			execve(path, program->args, envp);
-		execve_err();
+			execve_err();
+		}
 	}
 	else if (pid < 0)
 		fork_err();
@@ -76,7 +83,8 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock)
 	j = -1;
 	while (++j < pipe.p)
 		waitpid(pipe.pids[j], &status, 0);
-//	if (*(stock->status) != 0)
-//		return (*(stock->status));
+	close_fds(stock);
+	if (pipe.p == 0)
+		return (pipe.stock->last_status);
 	return (WEXITSTATUS(status));
 }

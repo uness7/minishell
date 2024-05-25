@@ -21,8 +21,9 @@ int	ft_atoi(const char *str)
 	i = 0;
 	result = 0;
 	sign = 1;
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\v'
-		|| str[i] == '\f' || str[i] == '\r')
+	while (str[i] == ' ' || str[i] == '\t' || \
+		str[i] == '\n' || str[i] == '\v' || \
+		str[i] == '\f' || str[i] == '\r')
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{
@@ -62,39 +63,6 @@ char	*ft_strtok_2(char *str, char *delim)
 		save_ptr++;
 	}
 	return (start);
-}
-
-long long	ft_atol(char *str)
-{
-	long long	result;
-	int			sign;
-	int			digit;
-
-	result = 0;
-	sign = 1;
-	while (ft_isspace((unsigned char)*str))
-		str++;
-	if (*str == '-')
-	{
-		sign = -1;
-		str++;
-	}
-	else if (*str == '+')
-		str++;
-	while (ft_isdigit((unsigned char)*str))
-	{
-		digit = *str - '0';
-		if (result > (LLONG_MAX - digit) / 10)
-		{
-			if (sign == 1)
-				return (LLONG_MAX);
-			else
-				return (LLONG_MIN);
-		}
-		result = result * 10 + digit;
-		str++;
-	}
-	return (sign * result);
 }
 
 int	is_num(char *str)

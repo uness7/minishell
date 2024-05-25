@@ -24,11 +24,13 @@ static bool	should_run_builtin(t_program *prev, t_program *next,
 	return (false);
 }
 
-void	handle_builtin(t_program_state *state, t_stock *stock, int i)
+int	handle_builtin(t_program_state *state, t_stock *stock, int i)
 {
 	char	*new_input;
 	int		saved_stdout;
+	int		status;
 
+	status = 0;
 	saved_stdout = dup(STDOUT_FILENO);
 	if (state->curr->fd_out != STDOUT_FILENO)
 	{
@@ -43,8 +45,9 @@ void	handle_builtin(t_program_state *state, t_stock *stock, int i)
 	if (should_run_builtin(state->prev, state->next, state->curr, i))
 	{
 		new_input = join_args(stock->arena, state->curr->args);
-		_runbuiltins(stock, new_input);
+		status = _runbuiltins(stock, new_input);
 	}
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdout);
+	return (status);
 }

@@ -39,30 +39,31 @@ bool	_isbuiltin(t_arena *arena, char *input)
 	return (is_builtin);
 }
 
-void	_runbuiltins(t_stock *stock, char *input)
+int	_runbuiltins(t_stock *stock, char *input)
 {
 	if (ft_strncmp(trim_quotes(stock->arena, input), "pwd", 3) == 0)
 		ft_pwd(stock->arena);
 	else if (ft_strncmp("env", trim_quotes(stock->arena, input), 3) == 0)
 		print_env(stock->env);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "exit", 4) == 0)
-		ft_exit(stock, input, stock->status);
+		return (ft_exit(stock, input, stock->status));
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "cd", 2) == 0)
 	{
 		if (ft_strncmp(input, "cd..", 4) == 0)
-			return ;
-		g_status = custom_cd(stock->arena, trim_quotes(stock->arena,
-					input), stock->env);
+			return (1);
+		return (custom_cd(stock->arena, trim_quotes(stock->arena,
+					input), stock->env));
 	}
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "export",
 			ft_strlen("export")) == 0)
-		g_status = custom_export(stock, input);
+		return (custom_export(stock, input));
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "unset",
 			ft_strlen("unset")) == 0)
 		custom_unset(stock, trim_quotes(stock->arena, input), stock->env);
 	else if (ft_strncmp(trim_quotes(stock->arena, input), "echo",
 			ft_strlen("echo")) == 0)
 		ft_echo(stock->arena, trim_quotes(stock->arena, input));
+	return (0);
 }
 
 char	*join_args(t_arena *arena, char **args)

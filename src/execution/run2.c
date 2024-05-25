@@ -58,25 +58,29 @@ static t_program_state	*init(t_program_state *state, t_program *curr,
 
 void	process_programs(t_program **programs, char **envp, t_stock *stock,
 		t_pipe *pipe_data)
-
 {
 	int				next_exists;
 	int				i;
 	t_program_state	state;
 
 	state.stock = stock;
+	stock->last_status = 0;
 	i = -1;
 	while (programs[++i])
 	{
 		next_exists = programs[i + 1] != NULL;
 		if (next_exists && pipe(pipe_data->pipefd) == -1)
 			pipe_err();
-		if (_isbuiltin(stock->arena, programs[i]->cmd))
-			handle_builtin(init(&state, programs[i], programs[i - 1], \
+		if (i == 0 && !next_exists && _isbuiltin(stock->arena, programs[i]->cmd))
+		{
+			stock->last_status = handle_builtin(init(&state, programs[i], programs[i - 1], \
 						programs[i + 1]), stock, i);
+		}
 		else
+		{
 			pipe_data->pids[pipe_data->p++] = execute_program(programs[i], envp,
 					pipe_data, next_exists);
+		}
 		if (pipe_data->last_fd != STDIN_FILENO)
 			close(pipe_data->last_fd);
 		if (next_exists)

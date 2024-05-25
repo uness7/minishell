@@ -31,6 +31,56 @@ static int	ft_chartoi(char c)
 	return (0);
 }
 
+/*
+long	ft_convert_str_to_long(char *str, int base, int sign)
+{
+	long	result;
+
+	result = 0;
+	while (ft_isbase(*str, base))
+	{
+		if (result > (LONG_MAX - ft_chartoi(*str)) / base)
+		{
+			errno = ERANGE;
+			if (sign == 1)
+				return (LONG_MAX);
+			else
+				return (LONG_MIN);
+		}
+		result = result * base + ft_chartoi(*str++);
+	}
+	return (result * sign);
+}
+
+long	ft_strtol(char *str, char **endptr, int base)
+{
+	long	result;
+	int		sign;
+
+	result = 0;
+	sign = 1;
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	if ((base == 0) && (*str == '0' && (*(str + 1) == 'x' || *(str
+					+ 1) == 'X')))
+		base = 16;
+	else
+		base = 10;
+	if (base == 16 && *str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X'))
+		str += 2;
+	result = ft_convert_str_to_long(str, base, sign);
+	if (endptr)
+		*endptr = (char *)str;
+	return (result);
+}
+*/
+
 long	ft_strtol(char *str, char **endptr, int base)
 {
 	long	result;

@@ -12,27 +12,36 @@
 
 #include "minishell.h"
 
-void	close_exit(void)
+void	close_fds(t_stock *stock)
 {
-	close(0);
-	close(1);
-	close(2);
+	int	i;
+
+	if (stock->last_fd < 3)
+		return ;
+	i = 3;
+	while (i <= stock->last_fd)
+	{
+		if (close(i) == -1)
+			i++;
+		i++;
+	}
+	stock->last_fd = -1;
 }
 
-static void	check_number_args(t_arena *arena, int i, int *status)
+static int	check_number_args(t_stock *stock, int i, int *status)
 {
-	(void)arena;
 	if (i > 2)
 	{
 		printf("Too many arguments \n");
 		*status = 1;
 		rl_clear_history();
-		close_exit();
-		exit(WEXITSTATUS(*status));
+		close_fds(stock);
+		exit(*status);
 	}
+	return (0);
 }
 
-void	ft_exit(t_stock *stock, char *input, int *status)
+int	ft_exit(t_stock *stock, char *input, int *status)
 {
 	int		i;
 	char	**args;
@@ -43,7 +52,7 @@ void	ft_exit(t_stock *stock, char *input, int *status)
 	i = 0;
 	args = convert_list_array(stock->arena, tokenize(stock->arena, input));
 	i = array_size(args);
-	check_number_args(stock->arena, i, status);
+	check_number_args(stock, i, status);
 	if (args[1] != NULL)
 	{
 		temp = trim_quotes(stock->arena, trim_space(args[1]));
@@ -60,6 +69,7 @@ void	ft_exit(t_stock *stock, char *input, int *status)
 	free_arena(stock->arena);
 	free_arena(stock->env_arena);
 	rl_clear_history();
-	close_exit();
+	close_fds(stock);
 	exit(*status);
+	return (0);
 }
