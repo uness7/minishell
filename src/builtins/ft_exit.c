@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:36:08 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/25 12:12:12 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 20:07:54 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	ft_exit(t_stock *stock, char *input, int *status)
 	{
 		temp = trim_quotes(stock->arena, trim_space(args[1]));
 		errno = 0;
-		num = ft_strtol(temp, &endptr, 10);
+		num = strtol(temp, &endptr, 10);
 		if ((*endptr != '\0' || errno != 0) || num > INT_MAX || num < INT_MIN)
 		{
 			dprintf(2, " numeric argument required\n");

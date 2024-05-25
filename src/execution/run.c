@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 17:09:48 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 20:16:46 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 	{
 		run_child(pipe, next_exists);
 		redirect(program);
-		if (_isbuiltin(pipe->stock->arena, program->cmd) && !next_exists)
+		if (_isbuiltin(pipe->stock->arena, program->cmd))
 		{
 			new_input = join_args(pipe->stock->arena, program->args);
 			exit(_runbuiltins(pipe->stock, new_input));

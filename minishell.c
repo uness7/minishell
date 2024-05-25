@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 19:51:49 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 20:04:15 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 		return (err_message(stock, 1));
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, input);
-	ign_redir(&list);
+//	ign_redir(&list);
 	if (list_size(list) == 0)
 		return (err_message(stock, 127));
 	if (!is_input_valid(list))
