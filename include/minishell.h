@@ -303,7 +303,7 @@ pid_t					execute_program(t_program *program, char **envp,
 void					redirect(t_program *program);
 
 // builtins
-int					ft_cd(t_arena *arena, char *path, t_env *env);
+int						ft_cd(t_arena *arena, char *path, t_env *env);
 char					*get_dir(t_arena *arena);
 void					ft_pwd(t_arena *arena);
 
@@ -532,14 +532,18 @@ long					ft_strtol(char *str, char **endptr, int base);
 char					*ign_quotes(t_arena *arena, char *s);
 void					ign_redir(t_list **list);
 void					init_terminal_settings(struct termios *old_termios);
-void					restore_terminal_settings(const struct termios *old_termios);
+void					restore_terminal_settings(const struct \
+		termios *old_termios);
 void					bubble_sort_arr(char **env);
 int						export_helper(t_stock *stock, char **args, int i);
 void					close_fds(t_stock *stock);
 bool					has_unclosed_quotes(char *str);
-int					read_second_part(char buff[], \
-		int len_end, int fd, char *end_delim);
-int					read_first_part(char buff[], \
-		int len_start, char *start_delim);
+int						read_second_part(char buff[], int len_end, int fd,
+							char *end_delim);
+int						read_first_part(char buff[], int len_start,
+							char *start_delim);
+int						export_helper_2(t_stock *stock, char *word, char *name,
+							char *value);
+bool					check_env_var_rules(char *name);
 
 #endif

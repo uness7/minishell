@@ -59,46 +59,13 @@ bool	check_env_var_rules(char *name)
 	return (true);
 }
 
-static int	export_helper_2(t_stock *stock, char *word)
-{
-	char	*name;
-	char	*value;
-	int		err_flag;
-
-	value = NULL;
-	err_flag = 0;
-	name = ft_strtok_2(word, "=");
-	if (name == NULL)
-	{
-		dprintf(2, " not a valid identifier\n");
-		return (1);
-	}
-	if (ft_isdigit(name[0]) || !check_env_var_rules(name))
-	{
-		dprintf(2, " not a valid identifier\n");
-		err_flag = 1;
-	}
-	else
-	{
-		value = ft_strtok_2(NULL, "=");
-		if (value == NULL)
-			value = ft_strdup(stock->arena, "");
-		if (ft_strncmp(value, "\"", 1) != 0 && ft_strncmp(value, "\'", 1) != 0)
-			value = ft_strtok_2(value, " ");
-		else
-			++value;
-		if (value != NULL && name != NULL)
-			add_or_update_env(stock->env_arena, &(stock->env), name, value);
-		err_flag = 0;
-	}
-	return (err_flag);
-}
-
 int	export_helper(t_stock *stock, char **args, int i)
 {
 	int		err_flag;
 	char	*name;
+	char	*value;
 
+	value = NULL;
 	err_flag = 0;
 	while (args[i])
 	{
@@ -114,7 +81,7 @@ int	export_helper(t_stock *stock, char **args, int i)
 				add_or_update_env(stock->env_arena, &(stock->env), name, "");
 		}
 		else
-			err_flag = export_helper_2(stock, args[i]);
+			err_flag = export_helper_2(stock, args[i], name, value);
 		i++;
 	}
 	return (err_flag);

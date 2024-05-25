@@ -72,9 +72,7 @@ int	ft_cd(t_arena *arena, char *path, t_env *env)
 		path = old;
 		printf("%s\n", path);
 	}
-	if (current == NULL)
-		return (1);
-	if (change_dir(path) == -1)
+	if (current == NULL || change_dir(path) == -1)
 		return (1);
 	update_pwd_old_pwd(arena, current, &env);
 	free(old);

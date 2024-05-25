@@ -31,22 +31,36 @@ static int	ft_chartoi(char c)
 	return (0);
 }
 
-long	ft_strtol(char *str, char **endptr, int base)
+void	initialize_conversion(char **str, int *sign, int *base)
+{
+	*sign = 1;
+	while (ft_isspace(**str))
+		(*str)++;
+	if (**str == '-' || **str == '+')
+	{
+		if (**str == '-')
+			*sign = -1;
+		else
+			*sign = 1;
+		(*str)++;
+	}
+	if (*base == 0)
+	{
+		if (**str == '0' && (*(*str + 1) == 'x' || *(*str + 1) == 'X'))
+			*base = 16;
+		else
+			*base = 10;
+	}
+	if (*base == 16 && **str == '0' && (*(*str + 1) == 'x' || *(*str
+				+ 1) == 'X'))
+		*str += 2;
+}
+
+long	perform_conversion(char *str, int base, int sign)
 {
 	long	result;
-	int		sign;
 
 	result = 0;
-	sign = 1;
-	while (ft_isspace(*str))
-		str++;
-	if (*str == '-' || *str == '+')
-		sign = (*str++ == '-') ? -1 : 1;
-	if (base == 0)
-		base = (*str == '0' && (*(str + 1) == 'x' || *(str
-						+ 1) == 'X')) ? 16 : 10;
-	if (base == 16 && *str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X'))
-		str += 2;
 	while (ft_isbase(*str, base))
 	{
 		if (result > (LONG_MAX - ft_chartoi(*str)) / base)
@@ -59,7 +73,18 @@ long	ft_strtol(char *str, char **endptr, int base)
 		}
 		result = result * base + ft_chartoi(*str++);
 	}
+	return (result * sign);
+}
+
+long	ft_strtol(char *str, char **endptr, int base)
+{
+	int		sign;
+	long	result;
+
+	sign = 1;
+	initialize_conversion(&str, &sign, &base);
+	result = perform_conversion(str, base, sign);
 	if (endptr)
 		*endptr = (char *)str;
-	return (result * sign);
+	return (result);
 }

@@ -103,8 +103,6 @@ int	custom_export(t_stock *stock, char *input)
 	else
 	{
 		args = ft_split_2(stock->arena, var);
-		if (args == NULL)
-			return (0);
 		return (export_helper(stock, args, i));
 	}
 	return (0);

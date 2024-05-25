@@ -41,13 +41,22 @@ static int	check_number_args(t_stock *stock, int i, int *status)
 	return (0);
 }
 
+void	cleanup(t_stock *stock, int *status)
+{
+	free_arena(stock->arena);
+	free_arena(stock->env_arena);
+	rl_clear_history();
+	close_fds(stock);
+	exit(*status);
+}
+
 int	ft_exit(t_stock *stock, char *input, int *status)
 {
 	int		i;
 	char	**args;
 	char	*endptr;
 	char	*temp;
-	long	num;   
+	long	num;
 
 	i = 0;
 	args = convert_list_array(stock->arena, tokenize(stock->arena, input));
@@ -66,10 +75,6 @@ int	ft_exit(t_stock *stock, char *input, int *status)
 		else
 			*status = (int)num;
 	}
-	free_arena(stock->arena);
-	free_arena(stock->env_arena);
-	rl_clear_history();
-	close_fds(stock);
-	exit(*status);
+	cleanup(stock, status);
 	return (0);
 }
