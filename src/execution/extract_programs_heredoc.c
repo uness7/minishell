@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:50:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 18:54:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 19:53:57 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 	t_delims		*delims;
 
 	f_no_cmd = 0;
+	tcgetattr(STDIN_FILENO, &old_termios);
 	if (root->left == NULL)
 		f_no_cmd = 1;
 	program = arena_alloc(arena, sizeof(t_program));
