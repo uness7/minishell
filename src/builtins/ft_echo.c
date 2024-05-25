@@ -28,20 +28,6 @@ static bool	check_str_for_n_char(char *str)
 	return (true);
 }
 
-static void	jump_spaces(t_echo_arr ***arr)
-{
-	int	i;
-
-	i = 0;
-	while ((*arr)[i] != NULL)
-	{
-		if ((*arr)[i]->type != _SPACE)
-			break ;
-		(*arr)++;
-		i++;
-	}
-}
-
 void	echo_helper(t_echo_arr **echo_args, int *flag)
 {
 	int	i;
@@ -71,7 +57,6 @@ int	ft_echo(t_arena *arena, char *input)
 
 	flag = 0;
 	echo_args = split(arena, input);
-	jump_spaces(&echo_args);
 	echo_helper(echo_args, &flag);
 	if (flag == 0)
 		printf("\n");

@@ -37,7 +37,8 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 	{
 		if (pipe->last_fd != STDIN_FILENO)
 			dup2(pipe->last_fd, STDIN_FILENO);
-		if (next_exists && !_isbuiltin(pipe->stock->arena, program->cmd))
+		//if (next_exists && !_isbuiltin(pipe->stock->arena, program->cmd))
+		if (next_exists) 
 		{
 			close(pipe->pipefd[0]);
 			dup2(pipe->pipefd[1], STDOUT_FILENO);

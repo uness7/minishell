@@ -56,32 +56,15 @@ static t_program_state	*init(t_program_state *state, t_program *curr,
 	return (state);
 }
 
-static int	ft_programs_count(t_program **programs)
-{
-	int		i;
-	int		count;
-
-	i = 0;
-	count = 0;
-	while (programs[i])
-	{
-		count++;
-		i++;
-	}
-	return (count);
-}
-
 void	process_programs(t_program **programs, char **envp, t_stock *stock,
 		t_pipe *pipe_data)
 {
 	int				next_exists;
 	int				i;
-	int				programs_count;
 	t_program_state	state;
 
 	state.stock = stock;
 	stock->last_status = 0;
-	programs_count = ft_programs_count(programs);
 	i = -1;
 	while (programs[++i])
 	{
@@ -95,10 +78,8 @@ void	process_programs(t_program **programs, char **envp, t_stock *stock,
 		}
 		else
 		{
-			if (!(_isbuiltin(stock->arena, programs[i]->cmd) && programs[i + 1]))
-			{
-				pipe_data->pids[pipe_data->p++] = execute_program(programs[i], envp, pipe_data, next_exists);
-			}
+			pipe_data->pids[pipe_data->p++] = execute_program(programs[i], \
+					envp, pipe_data, next_exists);
 		}
 		if (pipe_data->last_fd != STDIN_FILENO)
 			close(pipe_data->last_fd);
