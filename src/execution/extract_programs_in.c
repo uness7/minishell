@@ -101,6 +101,8 @@ t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root)
 	program = arena_alloc(arena, sizeof(t_program));
 	program->fd_in = 0;
 	program->fd_in = get_fd_in(arena, root);
+	if (ft_strcmp(program->cmd, "echo") == 0)
+		program->fd_in = 0;
 	program->fd_out = 1;
 	program->fd_out = get_fd_out(arena, root);
 	if (program->fd_in == -1 || program->fd_out == -1)
