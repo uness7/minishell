@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 13:53:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 19:34:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 16:02:07 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,17 @@ static int	read_first_part(char buff[], int len_start, char *start_delim)
 	write(1, "heredoc> ", 9);
 	nbytes = read(0, buff, BUFFERSIZE);
 	if (g_status == 130)
+	{
+		printf("\n");
 		return (-1);
+	}
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
+		{
+			printf("\n");
 			return (-1);
+		}
 		if (nbytes == -1 && errno == EINTR)
 			return (-1);
 		buff[nbytes] = 0;
@@ -35,6 +41,11 @@ static int	read_first_part(char buff[], int len_start, char *start_delim)
 		}
 		write(1, "heredoc> ", 9);
 		nbytes = read(0, buff, BUFFERSIZE);
+		if (g_status == 130)
+		{
+			printf("\n");
+			return (-1);
+		}
 	}
 	return (0);
 }
@@ -46,11 +57,17 @@ static int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 	write(1, "heredoc> ", 9);
 	nbytes = read(0, buff, BUFFERSIZE);
 	if (g_status == 130)
+	{
+		printf("\n");
 		return (-1);
+	}
 	while (nbytes > 0)
 	{
 		if (g_status == 130)
+		{
+			printf("\n");
 			return (-1);
+		}
 		if (nbytes == -1 && errno == EINTR)
 			return (-1);
 		buff[nbytes] = 0;
@@ -62,7 +79,10 @@ static int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 		write(1, "heredoc> ", 9);
 		nbytes = read(0, buff, BUFFERSIZE);
 		if (g_status == 130)
+		{
+			printf("\n");
 			return (-1);
+		}
 	}
 	return (0);
 }
@@ -129,7 +149,7 @@ int	heredoc(char *start_delim, char *end_delim, char *filename)
 	fd = open_fd(filename);
 	if (start_delim != NULL)
 		stat = read_first_part(buff, len_start, start_delim);
-	if (end_delim != NULL)
+	if (end_delim != NULL && stat != -1)
 		stat = read_second_part(buff, len_end, fd, end_delim);
 	close(fd);
 	restore_terminal_settings(&old_termios);
