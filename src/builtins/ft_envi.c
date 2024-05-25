@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:09:52 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/14 17:26:26 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 16:16:33 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,68 +62,29 @@ char	**ft_str_copy(t_arena *arena, char **envp)
 	return (env_copy);
 }
 
-/*
 t_env	*ft_env(t_arena *arena, char **env)
 {
 	t_env	*env_list;
-	int		i;
 	char	**env_copy;
+	int		i;
 	char	*name;
 	char	*value;
 
-	i = 0;
-	while (env[i])
-		i++;
-	env_copy = arena_alloc(arena, sizeof(char *) * (i + 1));
-	if (env_copy == NULL)
-		return (NULL);
+	env_list = NULL;
+	env_copy = arena_alloc(arena, sizeof(char *) * (array_size(env) + 1));
 	i = -1;
 	while (env[++i])
 		env_copy[i] = ft_strdup(arena, env[i]);
 	env_copy[i] = NULL;
 	i = -1;
-	env_list = NULL;
 	while (env_copy[++i])
 	{
-		name = ft_strtok_2(env_copy[i], "=");
-		value = ft_strtok_2(NULL, "=");
-		append_env_node(arena, &env_list, name, value);
-	}
-	return (env_list);
-}
-*/
-
-t_env	*ft_env(t_arena *arena, char **env)
-{
-	t_env	*env_list;
-	char	**env_copy;
-	int		i;
-	char	*name;
-	char	*value;
-
-	env_list = NULL;
-	i = 0;
-	while (env[i])
-		i++;
-	env_copy = arena_alloc(arena, sizeof(char *) * (i + 1));
-	if (!env_copy)
-		return (NULL);
-	for (i = 0; env[i]; i++)
-	{
-		env_copy[i] = ft_strdup(arena, env[i]);
-	}
-	env_copy[i] = NULL;
-	for (i = 0; env_copy[i]; i++)
-	{
 		name = env_copy[i];
-		value = strchr(env_copy[i], '=');
+		value = ft_strchr(env_copy[i], '=');
 		if (value)
-		{
-			*value = '\0';
-			value++;
-		}
+			*value++ = '\0';
 		else
-			value = ""; // No '=' found, value is empty string
+			value = "";
 		append_env_node(arena, &env_list, name, value);
 	}
 	return (env_list);
