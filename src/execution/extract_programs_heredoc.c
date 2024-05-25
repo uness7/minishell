@@ -97,6 +97,8 @@ t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena,
 					delims->deli)), trim_single_quotes(arena, trim_quotes(arena,
 					delims->deli2)), "tmp.txt", old_termios);
+	if (ft_strcmp(program->cmd, "echo") == 0)
+		program->fd_in = 0;
 	if (program->fd_in == -1)
 		return (NULL);
 	unlink("tmp.txt");
