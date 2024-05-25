@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 17:58:17 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 17:00:50 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 19:59:04 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	ign_redir(t_list **list)
 			current = temp->next;
 			while (current != NULL)
 			{
-				if (ft_strcmp(current->data, "<") == 0 || ft_strcmp(current->data, "<<") == 0)
+				if (ft_strcmp(current->data, "<") == 0 || \
+						ft_strcmp(current->data, "<<") == 0)
 				{
 					current = current->next;
 					if (current != NULL)
