@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:50:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 18:36:21 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 18:54:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 		int f_no_cmd)
 {
+	struct termios	old_termios;
 	t_program	*program;
 	t_delims	*delims;
 
@@ -94,7 +95,7 @@ t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 	delims = get_delims(arena, root);
 	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena,
 					delims->deli)), trim_single_quotes(arena, trim_quotes(arena,
-					delims->deli2)), "tmp.txt");
+					delims->deli2)), "tmp.txt", &old_termios);
 	if (program->fd_in == -1)
 		return (NULL);
 	unlink("tmp.txt");

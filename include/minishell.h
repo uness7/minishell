@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 17:32:13 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 18:52:17 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -504,7 +504,7 @@ void					_node_heredoc(t_arena *arena, t_ast_node **current,
 bool					is_redirection_parser2(int type);
 
 int						heredoc(char *start_delim, char *end_delim,
-							char *filename);
+							char *filename, struct termios *old_termios);
 
 /*  Parser Utils File : */
 void					add_node_to_front(t_list *list, t_node *new_node);

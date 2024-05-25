@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 13:53:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 17:31:15 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 18:51:46 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,8 @@ void	restore_terminal_settings(const struct termios *old_termios)
 	}
 }
 
-int	heredoc(char *start_delim, char *end_delim, char *filename)
+int	heredoc(char *start_delim, char *end_delim, char *filename, struct termios *old_termios)
 {
-	struct termios	old_termios;
 	int				len_start;
 	int				len_end;
 	char			buff[BUFFERSIZE + 1];
