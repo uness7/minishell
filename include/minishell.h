@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 13:07:46 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 17:32:13 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -537,5 +537,9 @@ void					bubble_sort_arr(char **env);
 int						export_helper(t_stock *stock, char **args, int i);
 void					close_fds(t_stock *stock);
 bool					has_unclosed_quotes(char *str);
+int					read_second_part(char buff[], \
+		int len_end, int fd, char *end_delim);
+int					read_first_part(char buff[], \
+		int len_start, char *start_delim);
 
 #endif

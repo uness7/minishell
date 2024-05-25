@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:17:48 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/21 10:44:11 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 16:53:22 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,5 @@ void	init_signal(void)
 		perror("Error setting up SIGINT handler");
 		exit(EXIT_FAILURE);
 	}
+	signal(SIGQUIT, SIG_IGN);
 }

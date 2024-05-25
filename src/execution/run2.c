@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:37:54 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 13:55:06 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 17:27:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,19 @@ static t_program_state	*init(t_program_state *state, t_program *curr,
 	return (state);
 }
 
-void	process_programs(t_program **programs, char **envp, t_stock *stock,
-		t_pipe *pipe_data)
+static void	_redir(t_pipe *pipe_data, int next_exists)
+{
+	if (pipe_data->last_fd != STDIN_FILENO)
+		close(pipe_data->last_fd);
+	if (next_exists)
+	{
+		close(pipe_data->pipefd[1]);
+		pipe_data->last_fd = pipe_data->pipefd[0];
+	}
+}
+
+void	process_programs(t_program **programs, char **envp, \
+		t_stock *stock, t_pipe *pipe_data)
 {
 	int				next_exists;
 	int				i;
@@ -71,22 +82,13 @@ void	process_programs(t_program **programs, char **envp, t_stock *stock,
 		next_exists = programs[i + 1] != NULL;
 		if (next_exists && pipe(pipe_data->pipefd) == -1)
 			pipe_err();
-		if (i == 0  && !next_exists  && _isbuiltin(stock->arena, programs[i]->cmd))
-		{
-			stock->last_status = handle_builtin(init(&state, programs[i], programs[i - 1], \
-						programs[i + 1]), stock, i);
-		}
+		if (i == 0 && !next_exists && _isbuiltin(stock->arena, \
+					programs[i]->cmd))
+			stock->last_status = handle_builtin(init(&state, \
+					programs[i], programs[i - 1], programs[i + 1]), stock, i);
 		else
-		{
 			pipe_data->pids[pipe_data->p++] = execute_program(programs[i], \
 					envp, pipe_data, next_exists);
-		}
-		if (pipe_data->last_fd != STDIN_FILENO)
-			close(pipe_data->last_fd);
-		if (next_exists)
-		{
-			close(pipe_data->pipefd[1]);
-			pipe_data->last_fd = pipe_data->pipefd[0];
-		}
+		_redir(pipe_data, next_exists);
 	}
 }

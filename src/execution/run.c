@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 13:48:31 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 17:09:48 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,27 +23,31 @@ static bool	execve_err(void)
 	exit(127);
 }
 
+static void	run_child(t_pipe *pipe, int next_exists)
+{
+	if (pipe->last_fd != STDIN_FILENO)
+		dup2(pipe->last_fd, STDIN_FILENO);
+	if (next_exists)
+	{
+		close(pipe->pipefd[0]);
+		dup2(pipe->pipefd[1], STDOUT_FILENO);
+		close(pipe->pipefd[1]);
+	}
+}
+
 pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 		int next_exists)
 {
 	char	*path;
 	char	*new_input;
 	pid_t	pid;
-	
+
 	path = find_cmd(pipe->stock->arena, ft_strtok(pipe->stock->arena,
-			find_paths(envp)), program->cmd);
+				find_paths(envp)), program->cmd);
 	pid = fork();
 	if (pid == 0)
 	{
-		if (pipe->last_fd != STDIN_FILENO)
-			dup2(pipe->last_fd, STDIN_FILENO);
-		//if (next_exists && !_isbuiltin(pipe->stock->arena, program->cmd))
-		if (next_exists) 
-		{
-			close(pipe->pipefd[0]);
-			dup2(pipe->pipefd[1], STDOUT_FILENO);
-			close(pipe->pipefd[1]);
-		}
+		run_child(pipe, next_exists);
 		redirect(program);
 		if (_isbuiltin(pipe->stock->arena, program->cmd) && !next_exists)
 		{
@@ -51,15 +55,10 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 			exit(_runbuiltins(pipe->stock, new_input));
 		}
 		else if (check_cnd(program->cmd))
-		{
 			execve(program->cmd, program->args, envp);
-			execve_err();
-		}
 		else
-		{
 			execve(path, program->args, envp);
-			execve_err();
-		}
+		execve_err();
 	}
 	else if (pid < 0)
 		fork_err();

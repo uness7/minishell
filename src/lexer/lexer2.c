@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 17:58:17 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/02 17:58:18 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/25 17:00:50 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void	ign_redir(t_list **list)
 		next = temp->next;
 		if (temp->data && ft_strstr(temp->data, "echo"))
 		{
-			if (next && next->data && (ft_strcmp(next->data, "<") == 0 || ft_strcmp(next->data, "<<") == 0))
+			if (next && next->data && (ft_strcmp(next->data, \
+				"<") == 0 || ft_strcmp(next->data, "<<") == 0))
 			{
 				next = next->next;
 				if (next)
