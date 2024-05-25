@@ -48,7 +48,10 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 		return (err_message(stock, 1));
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, input);
+	print_list(list);
 	ign_redir(&list);
+	print_list(list);
+	exit(0);
 	if (list_size(list) == 0)
 		return (err_message(stock, 127));
 	if (!is_input_valid(list))

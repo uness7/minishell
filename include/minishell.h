@@ -504,7 +504,7 @@ void					_node_heredoc(t_arena *arena, t_ast_node **current,
 bool					is_redirection_parser2(int type);
 
 int						heredoc(char *start_delim, char *end_delim,
-							char *filename, struct termios *old_termios);
+							char *filename, struct termios old_termios);
 
 /*  Parser Utils File : */
 void					add_node_to_front(t_list *list, t_node *new_node);

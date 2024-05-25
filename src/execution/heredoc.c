@@ -55,13 +55,14 @@ void	restore_terminal_settings(const struct termios *old_termios)
 	}
 }
 
-int	heredoc(char *start_delim, char *end_delim, char *filename, struct termios *old_termios)
+int	heredoc(char *start_delim, char *end_delim, char *filename,
+		struct termios old_termios)
 {
-	int				len_start;
-	int				len_end;
-	char			buff[BUFFERSIZE + 1];
-	int				fd;
-	int				stat;
+	int		len_start;
+	int		len_end;
+	char	buff[BUFFERSIZE + 1];
+	int		fd;
+	int		stat;
 
 	init_terminal_settings(&old_termios);
 	stat = 0;

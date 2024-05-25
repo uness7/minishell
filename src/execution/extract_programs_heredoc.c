@@ -85,8 +85,8 @@ t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 		int f_no_cmd)
 {
 	struct termios	old_termios;
-	t_program	*program;
-	t_delims	*delims;
+	t_program		*program;
+	t_delims		*delims;
 
 	f_no_cmd = 0;
 	if (root->left == NULL)
@@ -95,7 +95,7 @@ t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 	delims = get_delims(arena, root);
 	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena,
 					delims->deli)), trim_single_quotes(arena, trim_quotes(arena,
-					delims->deli2)), "tmp.txt", &old_termios);
+					delims->deli2)), "tmp.txt", old_termios);
 	if (program->fd_in == -1)
 		return (NULL);
 	unlink("tmp.txt");

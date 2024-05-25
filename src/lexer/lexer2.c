@@ -42,22 +42,24 @@ void	handle_special_chars(t_arena *arena, const char **s, t_list **list)
 void	ign_redir(t_list **list)
 {
 	t_node	*temp;
-	t_node	*next;
+	t_node	*current;
 
 	temp = (*list)->head;
 	while (temp != NULL)
 	{
-		next = temp->next;
-		if (temp->data && ft_strstr(temp->data, "echo"))
+		if (ft_strstr(temp->data, "echo"))
 		{
-			if (next && next->data && (ft_strcmp(next->data, \
-				"<") == 0 || ft_strcmp(next->data, "<<") == 0))
+			current = temp->next;
+			while (current != NULL)
 			{
-				next = next->next;
-				if (next)
-					next = next->next;
-				temp->next = next;
+				if (ft_strcmp(current->data, "<") == 0 || ft_strcmp(current->data, "<<") == 0)
+				{
+					current = current->next;
+					if (current != NULL)
+						current = current->next;
+				}
 			}
+			temp->next = current;
 		}
 		temp = temp->next;
 	}
