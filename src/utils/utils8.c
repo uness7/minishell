@@ -24,22 +24,22 @@ bool	ends_with_pipe(char *s)
 	return (false);
 }
 
-bool    has_unclosed_quotes(char *str)
+bool	has_unclosed_quotes(char *str)
 {
-        int             i;
-        bool    inside_single_quote;
-        bool    inside_double_quote;
+	int		i;
+	bool	inside_single_quote;
+	bool	inside_double_quote;
 
-        i = 0;
-        inside_single_quote = false;
-        inside_double_quote = false;
-        while (str[i])
-        {
-                if (str[i] == '\'' && !inside_double_quote)
-                        inside_single_quote = !inside_single_quote;
-                else if (str[i] == '"' && !inside_single_quote)
-                        inside_double_quote = !inside_double_quote;
-                i++;
-        }
-        return (inside_single_quote || inside_double_quote);
+	i = 0;
+	inside_single_quote = false;
+	inside_double_quote = false;
+	while (str[i])
+	{
+		if (str[i] == '\'' && !inside_double_quote)
+			inside_single_quote = !inside_single_quote;
+		else if (str[i] == '"' && !inside_single_quote)
+			inside_double_quote = !inside_double_quote;
+		i++;
+	}
+	return (inside_single_quote || inside_double_quote);
 }
