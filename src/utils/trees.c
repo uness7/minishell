@@ -43,7 +43,7 @@ t_ast_node	*create_node_tree(t_arena *arena, t_node_type type, char *data)
 
 void	print_tree_utils(t_ast_node *root, int space)
 {
-	int		i;
+	int	i;
 
 	if (root == NULL)
 		return ;
@@ -76,36 +76,33 @@ void	print_tree(t_ast_node *root)
 }
 
 /*
-void print_programs(t_program **programs, int count)
+void	print_programs(t_program **programs, int count)
 {
-    if (programs == NULL) {
-        printf("The programs array is NULL.\n");
-        return;
-    }
-
-    for (int i = 0; i < count; ++i) {
-        if (programs[i] == NULL) {
-            printf("Program %d is NULL.\n", i + 1);
-            continue;
-        }
-
-        printf("Program %d Details:\n", i + 1);
-        printf("Type: %d\n", programs[i]->type);
-        printf("fd_out: %d\n", programs[i]->fd_out);
-        printf("fd_in: %d\n", programs[i]->fd_in);
-        printf("fd_heredoc: %d\n", programs[i]->fd_heredoc);
-
-        printf("Args:\n");
-        if (programs[i]->args) {
-            for (int j = 0; programs[i]->args[j] != NULL; j++) {
-                printf("  arg[%d]: %s\n", j, programs[i]->args[j]);
-            }
-        } else {
-            printf("  No arguments.\n");
-        }
-
-        printf("Cmd: %s\n", programs[i]->cmd ? programs[i]->cmd : "No command.");
-        printf("\n");
-    }
+	if (programs == NULL) {
+		printf("The programs array is NULL.\n");
+		return ;
+	}
+	for (int i = 0; i < count; ++i) {
+		if (programs[i] == NULL) {
+			printf("Program %d is NULL.\n", i + 1);
+			continue ;
+		}
+		printf("Program %d Details:\n", i + 1);
+		printf("Type: %d\n", programs[i]->type);
+		printf("fd_out: %d\n", programs[i]->fd_out);
+		printf("fd_in: %d\n", programs[i]->fd_in);
+		printf("fd_heredoc: %d\n", programs[i]->fd_heredoc);
+		printf("Args:\n");
+		if (programs[i]->args) {
+			for (int j = 0; programs[i]->args[j] != NULL; j++) {
+				printf("  arg[%d]: %s\n", j, programs[i]->args[j]);
+			}
+		} else {
+			printf("  No arguments.\n");
+		}
+		printf("Cmd: %s\n",
+			programs[i]->cmd ? programs[i]->cmd : "No command.");
+		printf("\n");
+	}
 }
 */
