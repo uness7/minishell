@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 20:16:46 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/26 13:23:10 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static bool	check_cnd(char *cmd)
 
 static bool	execve_err(void)
 {
-	dprintf(2, " command not found\n");
+	ft_putstr_fd(" command not found\n", 2);
 	exit(127);
 }
 

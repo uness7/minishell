@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 18:52:17 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/26 17:07:49 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -528,7 +528,7 @@ void					ign_cmd(t_program ***programs);
 size_t					list_size(t_list *list);
 void					update_status(t_stock *stock);
 void					err_message(t_stock *stock, int code);
-long					ft_strtol(char *str, char **endptr, int base);
+long long				ft_strtoll(char *str, char **endptr, int base);
 char					*ign_quotes(t_arena *arena, char *s);
 void					ign_redir(t_list **list);
 void					init_terminal_settings(struct termios *old_termios);
@@ -545,5 +545,6 @@ int						read_first_part(char buff[], int len_start,
 int						export_helper_2(t_stock *stock, char *word, char *name,
 							char *value);
 bool					check_env_var_rules(char *name);
+void					print_programs(t_program **programs, int c);
 
 #endif

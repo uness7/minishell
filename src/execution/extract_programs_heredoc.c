@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:50:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 19:53:57 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/26 13:21:19 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,16 +97,15 @@ t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena,
 					delims->deli)), trim_single_quotes(arena, trim_quotes(arena,
 					delims->deli2)), "tmp.txt", old_termios);
-	if (ft_strcmp(program->cmd, "echo") == 0)
-		program->fd_in = 0;
 	if (program->fd_in == -1)
 		return (NULL);
 	unlink("tmp.txt");
 	if (f_no_cmd == 1)
 		return (NULL);
-	program->fd_out = 1;
 	program->fd_out = get_fd_out(arena, root);
 	program->cmd = get_cmd(arena, root);
+	if (ft_strcmp(program->cmd, "echo") == 0)
+		program->fd_in = 0;
 	program->args = get_args(arena, root, program->cmd);
 	program->type = NODE_REDIRECTION_HEREDOC;
 	return (program);

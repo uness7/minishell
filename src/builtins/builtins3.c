@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 17:53:43 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 13:07:35 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/26 13:24:11 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	custom_cd(t_arena *arena, char *input, t_env *env)
 		i++;
 	if (i > 2)
 	{
-		dprintf(2, " too many arguments\n");
+		ft_putstr_fd(" too many arguments\n", 2);
 		return (1);
 	}
 	cmd = ft_strtok_2(input, " \t\n");

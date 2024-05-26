@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:48:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 20:07:46 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/26 13:15:28 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,15 +99,13 @@ t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root)
 	t_program	*program;
 
 	program = arena_alloc(arena, sizeof(t_program));
-	program->fd_in = 0;
 	program->fd_in = get_fd_in(arena, root);
-	if (ft_strcmp(program->cmd, "echo") == 0)
-		program->fd_in = 0;
-	program->fd_out = 1;
 	program->fd_out = get_fd_out(arena, root);
 	if (program->fd_in == -1 || program->fd_out == -1)
 		return (NULL);
 	program->cmd = get_cmd(arena, root);
+	if (ft_strcmp(program->cmd, "echo") == 0)
+		program->fd_in = 0;
 	program->args = get_args(arena, root);
 	program->fd_heredoc = 0;
 	program->type = NODE_REDIRECTION_IN;

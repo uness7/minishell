@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 18:50:09 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 18:50:10 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/26 13:24:34 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	export_helper_2(t_stock *stock, char *word, char *name, char *value)
 	name = ft_strtok_2(word, "=");
 	if (!name || ft_isdigit(name[0]) || !check_env_var_rules(name))
 	{
-		dprintf(2, " not a valid identifier\n");
+		ft_putstr_fd(" not a valid identifier\n", 2);
 		err_flag = 1;
 	}
 	else

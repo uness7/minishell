@@ -6,85 +6,66 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:10:51 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 16:09:07 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/26 17:08:13 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_isbase(char c, int base)
+int	handle_sign_and_whitespace(char **str)
 {
-	if (base <= 10)
-		return (c >= '0' && c < '0' + base);
-	return ((c >= '0' && c <= '9') || (c >= 'a' && c < 'a' + base - 10)
-		|| (c >= 'A' && c < 'A' + base - 10));
+    int sign = 1;
+    while (ft_isspace((unsigned char)**str))
+        (*str)++;
+    if (**str == '-' || **str == '+')
+    {
+        if (**str == '-')
+            sign = -1;
+        (*str)++;
+    }
+    return sign;
 }
 
-static int	ft_chartoi(char c)
+void check_endptr(char **endptr, char *str)
 {
-	if (c >= '0' && c <= '9')
-		return (c - '0');
-	if (c >= 'a' && c <= 'z')
-		return (c - 'a' + 10);
-	if (c >= 'A' && c <= 'Z')
-		return (c - 'A' + 10);
-	return (0);
+    if (endptr)
+        *endptr = str;
 }
 
-void	initialize_conversion(char **str, int *sign, int *base)
+long long convert_to_long(char *str, char **endptr, int base, int sign)
 {
-	*sign = 1;
-	while (ft_isspace(**str))
-		(*str)++;
-	if (**str == '-' || **str == '+')
-	{
-		if (**str == '-')
-			*sign = -1;
-		else
-			*sign = 1;
-		(*str)++;
-	}
-	if (*base == 0)
-	{
-		if (**str == '0' && (*(*str + 1) == 'x' || *(*str + 1) == 'X'))
-			*base = 16;
-		else
-			*base = 10;
-	}
-	if (*base == 16 && **str == '0' && (*(*str + 1) == 'x' || *(*str
-				+ 1) == 'X'))
-		*str += 2;
+    long long result = 0;
+    int digit;
+
+    if (base != 10)
+    {
+        check_endptr(endptr, str);
+        return 0;
+    }
+
+    while (ft_isdigit((unsigned char)*str))
+    {
+        digit = *str - '0';
+        if (result > (LLONG_MAX - digit) / 10)
+        {
+            errno = ERANGE;
+            check_endptr(endptr, str);
+            if (sign == 1)
+                return LLONG_MAX;
+            return LLONG_MIN;
+        }
+        result = result * 10 + digit;
+        str++;
+    }
+
+    check_endptr(endptr, str);
+    return result * sign;
 }
 
-long	perform_conversion(char *str, int base, int sign)
+long long ft_strtoll(char *str, char **endptr, int base)
 {
-	long	result;
+    int sign;
 
-	result = 0;
-	while (ft_isbase(*str, base))
-	{
-		if (result > (LONG_MAX - ft_chartoi(*str)) / base)
-		{
-			errno = ERANGE;
-			if (sign == 1)
-				return (LONG_MAX);
-			else
-				return (LONG_MIN);
-		}
-		result = result * base + ft_chartoi(*str++);
-	}
-	return (result * sign);
-}
-
-long	ft_strtol(char *str, char **endptr, int base)
-{
-	int		sign;
-	long	result;
-
-	sign = 1;
-	initialize_conversion(&str, &sign, &base);
-	result = perform_conversion(str, base, sign);
-	if (endptr)
-		*endptr = (char *)str;
-	return (result);
+    sign = handle_sign_and_whitespace(&str);
+    return convert_to_long(str, endptr, base, sign);
 }
