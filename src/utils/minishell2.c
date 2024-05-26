@@ -67,7 +67,7 @@ void	err_message(t_stock *stock, int code)
 {
 	if (code == 127)
 	{
-		ft_putstr_fd("  command not found", 2);
+		ft_putstr_fd("  command not found\n", 2);
 		*(stock->status) = 127;
 	}
 	else if (code == 1)

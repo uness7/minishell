@@ -68,11 +68,6 @@ t_list	*tokenize(t_arena *arena, const char *s)
 	t_list	*list;
 
 	list = arena_alloc(arena, sizeof(t_list));
-	if (list == NULL)
-	{
-		printf("Error allocating memory\n");
-		return (NULL);
-	}
 	init_list(list);
 	while (*s)
 	{

@@ -40,5 +40,6 @@ void	*arena_alloc(t_arena *arena, size_t size)
 		return (NULL);
 	ptr = arena->buffer + arena->offset;
 	arena->offset += size;
+	ft_memset(ptr, 0, sizeof(size));
 	return (ptr);
 }

@@ -43,3 +43,18 @@ bool	has_unclosed_quotes(char *str)
 	}
 	return (inside_single_quote || inside_double_quote);
 }
+
+void	*ft_memset(void *str, int c, size_t n)
+{
+	unsigned int	i;
+	char			*dest;
+
+	i = 0;
+	dest = str;
+	while (i < n)
+	{
+		dest[i] = (char)c;
+		i++;
+	}
+	return (str);
+}

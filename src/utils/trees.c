@@ -17,17 +17,13 @@ t_ast_node	*create_node_tree(t_arena *arena, t_node_type type, char *data)
 	t_ast_node	*new_node;
 
 	new_node = arena_alloc(arena, sizeof(t_ast_node));
-	if (new_node == NULL)
-	{
-		printf("Error allocating memory :0.\n");
-		return (NULL);
-	}
 	new_node->type = type;
 	if (data != NULL)
 	{
-		if (ft_strncmp(data, "\"", 1) == 0 || ft_strstr(data, "\'"))
-			new_node->data = ft_strdup(arena, ign_quotes(arena, data));
-		else
+//		if ((ft_strncmp(data, "\"", 1) == 0 && *(data + 1) && isalnum(*(data + 1)))
+//				|| ft_strstr(data, "\'"))
+//			new_node->data = ft_strdup(arena, ign_quotes(arena, data));
+//		else
 			new_node->data = ft_strdup(arena, data);
 	}
 	if (new_node->data == NULL)
@@ -75,15 +71,17 @@ void	print_tree(t_ast_node *root)
 	print_tree_utils(root, 0);
 }
 
-/*
 void	print_programs(t_program **programs, int count)
 {
-	if (programs == NULL) {
+	if (programs == NULL)
+	{
 		printf("The programs array is NULL.\n");
 		return ;
 	}
-	for (int i = 0; i < count; ++i) {
-		if (programs[i] == NULL) {
+	for (int i = 0; i < count; ++i)
+	{
+		if (programs[i] == NULL)
+		{
 			printf("Program %d is NULL.\n", i + 1);
 			continue ;
 		}
@@ -93,11 +91,15 @@ void	print_programs(t_program **programs, int count)
 		printf("fd_in: %d\n", programs[i]->fd_in);
 		printf("fd_heredoc: %d\n", programs[i]->fd_heredoc);
 		printf("Args:\n");
-		if (programs[i]->args) {
-			for (int j = 0; programs[i]->args[j] != NULL; j++) {
+		if (programs[i]->args)
+		{
+			for (int j = 0; programs[i]->args[j] != NULL; j++)
+			{
 				printf("  arg[%d]: %s\n", j, programs[i]->args[j]);
 			}
-		} else {
+		}
+		else
+		{
 			printf("  No arguments.\n");
 		}
 		printf("Cmd: %s\n",
@@ -105,4 +107,3 @@ void	print_programs(t_program **programs, int count)
 		printf("\n");
 	}
 }
-*/

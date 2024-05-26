@@ -546,5 +546,6 @@ int						export_helper_2(t_stock *stock, char *word, char *name,
 							char *value);
 bool					check_env_var_rules(char *name);
 void					print_programs(t_program **programs, int c);
+void					*ft_memset(void *str, int c, size_t n);
 
 #endif

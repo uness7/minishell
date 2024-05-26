@@ -49,17 +49,32 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, input);
 	if (list_size(list) == 0)
-		return (err_message(stock, 127));
+		return ;
 	if (!is_input_valid(list))
 		return (err_message(stock, 1));
 	tree = parse(stock->arena, list);
 	if (!is_tree_valid(tree))
 		return (err_message(stock, 1));
 	programs = extract_programs(stock, tree, 2 * ft_strlen(input));
-	if (programs == NULL)
+
+	//print_programs(programs, 1);
+	t_program	**programs_cpy = NULL;
+	programs_cpy = programs;
+	while (*programs)
+	{
+		if (ft_strncmp((*programs)->cmd, "\"", 1) == 0)
+		{
+			(*programs)->cmd = trim_quotes(stock->arena, (*programs)->cmd);
+			(*programs)->args[0] = (*programs)->cmd;
+		}	
+		programs++;
+	}
+	//print_programs(programs_cpy, 1);
+
+	if (programs_cpy== NULL)
 		return (err_message(stock, 1));
-	ign_cmd(&programs);
-	*(stock->status) = run_programs(programs, new_envp, stock);
+	ign_cmd(&programs_cpy);
+	*(stock->status) = run_programs(programs_cpy, new_envp, stock);
 	update_status(stock);
 }
 
@@ -69,6 +84,7 @@ static void	run_minishell(t_stock *stock)
 	char	*input;
 	char	**new_envp;
 
+	input = NULL;
 	stock->status = &status;
 	while (1)
 	{
@@ -87,6 +103,7 @@ static void	run_minishell(t_stock *stock)
 		if (input[0] != '\0')
 			run_minishell2(stock, input, new_envp);
 		free(input);
+		input = NULL;
 		free_arena(stock->arena);
 		g_status = 0;
 	}
@@ -113,6 +130,7 @@ int	main(int ac, char **argv, char **envp)
 	stock.env = env;
 	stock.arena = &arena;
 	stock.env_arena = &env_arena;
+	stock.last_fd = -1;
 	run_minishell(&stock);
 	rl_clear_history();
 	free_arena(stock.arena);
