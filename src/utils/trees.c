@@ -19,13 +19,7 @@ t_ast_node	*create_node_tree(t_arena *arena, t_node_type type, char *data)
 	new_node = arena_alloc(arena, sizeof(t_ast_node));
 	new_node->type = type;
 	if (data != NULL)
-	{
-//		if ((ft_strncmp(data, "\"", 1) == 0 && *(data + 1) && isalnum(*(data + 1)))
-//				|| ft_strstr(data, "\'"))
-//			new_node->data = ft_strdup(arena, ign_quotes(arena, data));
-//		else
-			new_node->data = ft_strdup(arena, data);
-	}
+		new_node->data = ft_strdup(arena, data);
 	if (new_node->data == NULL)
 	{
 		printf("Error allocating memroy:0.\n");
@@ -71,6 +65,7 @@ void	print_tree(t_ast_node *root)
 	print_tree_utils(root, 0);
 }
 
+/*
 void	print_programs(t_program **programs, int count)
 {
 	if (programs == NULL)
@@ -107,3 +102,4 @@ void	print_programs(t_program **programs, int count)
 		printf("\n");
 	}
 }
+*/

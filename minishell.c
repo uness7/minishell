@@ -12,7 +12,35 @@
 
 #include "minishell.h"
 
-int			g_status = 0;
+int					g_status = 0;
+
+static t_program	**produce_programs(t_program **programs, t_stock *stock)
+{
+	char		**av;
+	t_program	**cpy;
+
+	cpy = programs;
+	av = NULL;
+	while (*programs)
+	{
+		if (ft_strncmp((*programs)->cmd, "\"", 1) == 0)
+			(*programs)->cmd = trim_quotes(stock->arena, (*programs)->cmd);
+		else if (ft_strncmp((*programs)->cmd, "\'", 1) == 0)
+			(*programs)->cmd = trim_single_quotes(stock->arena,
+					(*programs)->cmd);
+		av = (*programs)->args;
+		while (*av)
+		{
+			if (ft_strncmp(*av, "\"", 1) == 0)
+				*av = trim_quotes(stock->arena, *av);
+			else if (ft_strncmp(*av, "\'", 1) == 0)
+				*av = trim_single_quotes(stock->arena, *av);
+			av++;
+		}
+		programs++;
+	}
+	return (cpy);
+}
 
 char	*ign_quotes(t_arena *arena, char *s)
 {
@@ -39,6 +67,7 @@ char	*ign_quotes(t_arena *arena, char *s)
 static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 {
 	t_program	**programs;
+	t_program	**programs_cpy;
 	t_ast_node	*tree;
 	t_list		*list;
 
@@ -56,22 +85,8 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 	if (!is_tree_valid(tree))
 		return (err_message(stock, 1));
 	programs = extract_programs(stock, tree, 2 * ft_strlen(input));
-
-	//print_programs(programs, 1);
-	t_program	**programs_cpy = NULL;
-	programs_cpy = programs;
-	while (*programs)
-	{
-		if (ft_strncmp((*programs)->cmd, "\"", 1) == 0)
-		{
-			(*programs)->cmd = trim_quotes(stock->arena, (*programs)->cmd);
-			(*programs)->args[0] = (*programs)->cmd;
-		}	
-		programs++;
-	}
-	//print_programs(programs_cpy, 1);
-
-	if (programs_cpy== NULL)
+	programs_cpy = produce_programs(programs, stock);
+	if (programs_cpy == NULL)
 		return (err_message(stock, 1));
 	ign_cmd(&programs_cpy);
 	*(stock->status) = run_programs(programs_cpy, new_envp, stock);
@@ -84,7 +99,6 @@ static void	run_minishell(t_stock *stock)
 	char	*input;
 	char	**new_envp;
 
-	input = NULL;
 	stock->status = &status;
 	while (1)
 	{
@@ -103,7 +117,6 @@ static void	run_minishell(t_stock *stock)
 		if (input[0] != '\0')
 			run_minishell2(stock, input, new_envp);
 		free(input);
-		input = NULL;
 		free_arena(stock->arena);
 		g_status = 0;
 	}
