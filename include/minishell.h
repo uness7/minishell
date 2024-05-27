@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:13:20 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 17:07:49 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 23:36:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 
 # define SUCCES 1
 # define ERROR 0
-//# define PATH_MAX 1024
 # define MAX_INT 2147483647
 # define ARENA_SIZE 1073741824
 # define HEREDOC_SIZE 100
@@ -104,7 +103,7 @@ typedef struct s_stock_split
 
 typedef struct s_stock
 {
-	int					last_fd;
+	int					last_open_fd;
 	int					last_status;
 	int					*status;
 	char				**argv;
@@ -222,6 +221,8 @@ typedef struct s_delims
 
 typedef struct s_pipe
 {
+	char				*new_input;
+	char				*path;
 	t_stock				*stock;
 	int					pipefd[2];
 	int					last_fd;
@@ -278,13 +279,13 @@ t_program				**extract_programs(t_stock *stock, t_ast_node *root,
 t_program				**extract_programs_pipeline(t_stock *stock,
 							t_ast_node *root, t_program **programs, int *i);
 
-t_program				*extract_program_command(t_arena *arena,
+t_program				*extract_program_command(t_stock *stock,
 							t_ast_node *root);
 
-t_program				*extract_program_heredoc(t_arena *arena,
+t_program				*extract_program_heredoc(t_stock *stock,
 							t_ast_node *root, int f_no_cmd);
 
-t_program				*extract_program_redir_in(t_arena *arena,
+t_program				*extract_program_redir_in(t_stock *stock,
 							t_ast_node *root);
 
 t_program				*extract_program_redir_out_append(t_stock *stock,
@@ -547,5 +548,8 @@ int						export_helper_2(t_stock *stock, char *word, char *name,
 bool					check_env_var_rules(char *name);
 void					print_programs(t_program **programs, int c);
 void					*ft_memset(void *str, int c, size_t n);
+int						process_heredoc(t_program *program, t_stock *stock, \
+		struct termios *old_termios, t_delims *delims);
+char					*change_path_run(t_stock *stock, char *cmd);
 
 #endif
