@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:38:03 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 19:49:05 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 23:36:59 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,39 @@ int	handle_builtin(t_program_state *state, t_stock *stock, int i)
 	if (should_run_builtin(state->prev, state->next, state->curr, i))
 	{
 		new_input = join_args(stock->arena, state->curr->args);
+		stock->last_open_fd = saved_stdout;
 		status = _runbuiltins(stock, new_input);
 	}
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdout);
 	return (status);
+}
+
+char	*change_path_run(t_stock *stock, char *cmd)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	*path;
+	char	*new_cmd;
+
+	i = 0;
+	j = 0;
+	k = 0;
+	path = arena_alloc(stock->arena, ft_strlen(cmd) + 1);
+	new_cmd = arena_alloc(stock->arena, ft_strlen(cmd) + 1);
+	while (cmd[i])
+	{
+		if (cmd[i] == '.' || cmd[i] == '/')
+			path[j++] = cmd[i];
+		else
+			break ;
+		i++;
+	}
+	path[j] = '\0';
+	while (cmd[i])
+		new_cmd[k++] = cmd[i++];
+	new_cmd[k] = '\0';
+	ft_cd(stock->arena, path, stock->env);
+	return (new_cmd);
 }

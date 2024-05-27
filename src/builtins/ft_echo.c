@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 21:42:27 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/25 15:51:54 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 23:59:38 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ void	echo_helper(t_echo_arr **echo_args, int *flag)
 	while (echo_args[i] != NULL)
 	{
 		if (check_flag && ft_strncmp(echo_args[i]->data, "-", 1) == 0
-			&& check_str_for_n_char(echo_args[i]->data) && echo_args[i
-				+ 1] != NULL)
+			&& check_str_for_n_char(echo_args[i]->data))
 		{
 			i++;
 			*flag = 1;

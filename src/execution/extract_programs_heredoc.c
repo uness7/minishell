@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:50:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 13:21:19 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/28 00:20:31 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 	while (temp->left != NULL)
 	{
 		file = ft_strdup(arena, temp->left->data);
-		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		fd = open(file, O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
 		if (fd == -1)
 			return (-1);
 		temp = temp->left;
@@ -81,7 +81,7 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 	return (fd_out);
 }
 
-t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
+t_program	*extract_program_heredoc(t_stock *stock, t_ast_node *root,
 		int f_no_cmd)
 {
 	struct termios	old_termios;
@@ -92,21 +92,21 @@ t_program	*extract_program_heredoc(t_arena *arena, t_ast_node *root,
 	tcgetattr(STDIN_FILENO, &old_termios);
 	if (root->left == NULL)
 		f_no_cmd = 1;
-	program = arena_alloc(arena, sizeof(t_program));
-	delims = get_delims(arena, root);
-	program->fd_in = heredoc(trim_single_quotes(arena, trim_quotes(arena,
-					delims->deli)), trim_single_quotes(arena, trim_quotes(arena,
-					delims->deli2)), "tmp.txt", old_termios);
+	program = arena_alloc(stock->arena, sizeof(t_program));
+	delims = get_delims(stock->arena, root);
+	if (process_heredoc(program, stock, &old_termios, delims) == -1)
+		return (NULL);
 	if (program->fd_in == -1)
 		return (NULL);
 	unlink("tmp.txt");
 	if (f_no_cmd == 1)
 		return (NULL);
-	program->fd_out = get_fd_out(arena, root);
-	program->cmd = get_cmd(arena, root);
+	program->fd_out = get_fd_out(stock->arena, root);
+	stock->last_open_fd = program->fd_in;
+	program->cmd = get_cmd(stock->arena, root);
 	if (ft_strcmp(program->cmd, "echo") == 0)
 		program->fd_in = 0;
-	program->args = get_args(arena, root, program->cmd);
+	program->args = get_args(stock->arena, root, program->cmd);
 	program->type = NODE_REDIRECTION_HEREDOC;
 	return (program);
 }

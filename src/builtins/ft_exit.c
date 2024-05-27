@@ -6,7 +6,7 @@
 /*   By: hbenaddi <hbenaddi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:36:08 by hbenaddi          #+#    #+#             */
-/*   Updated: 2024/05/26 17:07:32 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 11:38:53 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ void	close_fds(t_stock *stock)
 {
 	int	i;
 
-	if (stock->last_fd < 3)
+	if (stock->last_open_fd < 3)
 		return ;
 	i = 3;
-	while (i <= stock->last_fd)
+	while (i <= stock->last_open_fd)
 	{
 		if (close(i) == -1)
 			i++;
 		i++;
 	}
-	stock->last_fd = -1;
+	stock->last_open_fd = -1;
 }
 
 static int	check_number_args(t_stock *stock, int i, int *status)
@@ -67,7 +67,7 @@ int	ft_exit(t_stock *stock, char *input, int *status)
 		temp = trim_quotes(stock->arena, trim_space(args[1]));
 		errno = 0;
 		num = ft_strtoll(temp, &endptr, 10);
-		if (*endptr != '\0' || errno != 0 || num > LONG_MAX || num < LONG_MIN)
+		if (*endptr != '\0' || errno != 0 || num > LLONG_MAX || num < LLONG_MIN)
 		{
 			ft_putstr_fd(" numeric argument required\n", 2);
 			*status = 2;

@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 13:37:54 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 17:27:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/28 00:28:18 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,20 +75,28 @@ void	process_programs(t_program **programs, char **envp, \
 	t_program_state	state;
 
 	state.stock = stock;
+	pipe_data->path = NULL;
+	pipe_data->new_input = NULL;
 	stock->last_status = 0;
-	i = -1;
-	while (programs[++i])
+	i = 0;
+	while (programs[i])
 	{
-		next_exists = programs[i + 1] != NULL;
-		if (next_exists && pipe(pipe_data->pipefd) == -1)
-			pipe_err();
-		if (i == 0 && !next_exists && _isbuiltin(stock->arena, \
-					programs[i]->cmd))
-			stock->last_status = handle_builtin(init(&state, \
-					programs[i], programs[i - 1], programs[i + 1]), stock, i);
+		if (programs[i] == NULL)
+			i++;
 		else
-			pipe_data->pids[pipe_data->p++] = execute_program(programs[i], \
-					envp, pipe_data, next_exists);
-		_redir(pipe_data, next_exists);
+		{
+			next_exists = programs[i + 1] != NULL;
+			if (next_exists && pipe(pipe_data->pipefd) == -1)
+				pipe_err();
+			if (i == 0 && !next_exists && _isbuiltin(stock->arena, \
+						programs[i]->cmd))
+				stock->last_status = handle_builtin(init(&state, \
+							programs[i], programs[i - 1], programs[i + 1]), stock, i);
+			else
+				pipe_data->pids[pipe_data->p++] = execute_program(programs[i], \
+						envp, pipe_data, next_exists);
+			_redir(pipe_data, next_exists);
+		}
+		i++;
 	}
 }

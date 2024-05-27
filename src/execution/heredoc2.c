@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 17:30:01 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 17:33:13 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 10:59:38 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,19 @@ int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 		if (check_sigint_code() == -1)
 			return (-1);
 	}
+	return (0);
+}
+
+int	process_heredoc(t_program *program, t_stock *stock, \
+		struct termios *old_termios, t_delims *delims)
+{
+	program->fd_in = heredoc(trim_single_quotes(stock->arena, \
+				trim_quotes(stock->arena, delims->deli)),
+			trim_single_quotes(stock->arena, \
+				trim_quotes(stock->arena, delims->deli2)),
+			"tmp.txt", *old_termios);
+	if (program->fd_in == -1)
+		return (-1);
+	unlink("tmp.txt");
 	return (0);
 }

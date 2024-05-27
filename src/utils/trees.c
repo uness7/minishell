@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 13:56:47 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 13:20:14 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/28 00:22:08 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ t_ast_node	*create_node_tree(t_arena *arena, t_node_type type, char *data)
 	new_node = arena_alloc(arena, sizeof(t_ast_node));
 	new_node->type = type;
 	if (data != NULL)
-		new_node->data = ft_strdup(arena, data);
+	{
+		if (ft_strstr(data, "\"") == 0 || ft_strstr(data, "'") == 0)
+			new_node->data = ft_strdup(arena, ign_quotes(arena, data));
+		else
+			new_node->data = ft_strdup(arena, data);
+	}
 	if (new_node->data == NULL)
 	{
 		printf("Error allocating memroy:0.\n");
@@ -65,7 +70,6 @@ void	print_tree(t_ast_node *root)
 	print_tree_utils(root, 0);
 }
 
-/*
 void	print_programs(t_program **programs, int count)
 {
 	if (programs == NULL)
@@ -102,4 +106,3 @@ void	print_programs(t_program **programs, int count)
 		printf("\n");
 	}
 }
-*/

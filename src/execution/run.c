@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:46:42 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 13:23:10 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 23:36:34 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static bool	check_cnd(char *cmd)
 {
-	return (ft_strncmp(cmd, "./", 2) == 0 || ft_strncmp(cmd, "/", 1) == 0);
+	return (ft_strncmp(cmd, ".", 1) == 0 || ft_strncmp(cmd, "/", 1) == 0);
 }
 
 static bool	execve_err(void)
@@ -26,7 +26,10 @@ static bool	execve_err(void)
 static void	run_child(t_pipe *pipe, int next_exists)
 {
 	if (pipe->last_fd != STDIN_FILENO)
+	{
 		dup2(pipe->last_fd, STDIN_FILENO);
+		close(pipe->last_fd);
+	}
 	if (next_exists)
 	{
 		close(pipe->pipefd[0]);
@@ -39,11 +42,10 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 		int next_exists)
 {
 	char	*path;
-	char	*new_input;
 	pid_t	pid;
 
-	path = find_cmd(pipe->stock->arena, ft_strtok(pipe->stock->arena,
-				find_paths(envp)), program->cmd);
+	path = find_cmd(pipe->stock->arena, ft_strtok(pipe->stock->arena, \
+			find_paths(envp)), program->cmd);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -51,11 +53,12 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 		redirect(program);
 		if (_isbuiltin(pipe->stock->arena, program->cmd))
 		{
-			new_input = join_args(pipe->stock->arena, program->args);
-			exit(_runbuiltins(pipe->stock, new_input));
+			pipe->new_input = join_args(pipe->stock->arena, program->args);
+			exit(_runbuiltins(pipe->stock, pipe->new_input));
 		}
 		else if (check_cnd(program->cmd))
-			execve(program->cmd, program->args, envp);
+			execve(change_path_run(pipe->stock, \
+						program->cmd), program->args, envp);
 		else
 			execve(path, program->args, envp);
 		execve_err();
@@ -80,10 +83,10 @@ int	run_programs(t_program **programs, char **envp, t_stock *stock)
 	process_programs(programs, envp, stock, &pipe);
 	if (pipe.last_fd != STDIN_FILENO)
 		close(pipe.last_fd);
+	close_fds(pipe.stock);
 	j = -1;
 	while (++j < pipe.p)
 		waitpid(pipe.pids[j], &status, 0);
-	close_fds(stock);
 	if (pipe.p == 0)
 		return (pipe.stock->last_status);
 	return (WEXITSTATUS(status));

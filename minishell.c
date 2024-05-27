@@ -6,7 +6,7 @@
 /*   By: yzioual <yzioual@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 15:24:25 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 13:15:42 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/28 00:27:27 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 	input = expand_variables(stock, input);
 	list = tokenize(stock->arena, input);
 	if (list_size(list) == 0)
-		return ;
+		return (err_message(stock, 1));
 	if (!is_input_valid(list))
 		return (err_message(stock, 1));
 	tree = parse(stock->arena, list);
@@ -89,13 +89,13 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 	if (programs_cpy == NULL)
 		return (err_message(stock, 1));
 	ign_cmd(&programs_cpy);
+	print_programs(programs_cpy, 2);
 	*(stock->status) = run_programs(programs_cpy, new_envp, stock);
 	update_status(stock);
 }
 
-static void	run_minishell(t_stock *stock)
+static void	run_minishell(t_stock *stock, int status)
 {
-	int		status;
 	char	*input;
 	char	**new_envp;
 
@@ -143,8 +143,8 @@ int	main(int ac, char **argv, char **envp)
 	stock.env = env;
 	stock.arena = &arena;
 	stock.env_arena = &env_arena;
-	stock.last_fd = -1;
-	run_minishell(&stock);
+	stock.last_open_fd = -1;
+	run_minishell(&stock, 0);
 	rl_clear_history();
 	free_arena(stock.arena);
 	free_arena(stock.env_arena);

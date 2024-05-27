@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:48:12 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 13:15:28 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 11:40:52 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ static int	get_fd_out(t_arena *arena, t_ast_node *root)
 		{
 			file = ft_strdup(arena, root->left->data);
 			if (root->left->f_out == 1)
-				fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+				fd = open(file, O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC, 0644);
 			if (root->left->f_out == 2)
-				fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0644);
+				fd = open(file, O_RDWR | O_CREAT | O_APPEND | O_CLOEXEC, 0644);
 			if (fd == -1)
 				return (-1);
 			root->left = root->left->left;
@@ -55,7 +55,7 @@ static int	get_fd_in(t_arena *arena, t_ast_node *root)
 			if (root->left->f_out == 1 || root->left->f_out == 2)
 				break ;
 			filename = ft_strdup(arena, root->left->data);
-			fd = open(filename, O_RDONLY);
+			fd = open(filename, O_RDONLY | O_CLOEXEC);
 			if (fd == -1)
 				return (-1);
 			root->left = root->left->left;
@@ -94,19 +94,21 @@ static char	**get_args(t_arena *arena, t_ast_node *root)
 	return (args);
 }
 
-t_program	*extract_program_redir_in(t_arena *arena, t_ast_node *root)
+t_program	*extract_program_redir_in(t_stock *stock, t_ast_node *root)
 {
 	t_program	*program;
 
-	program = arena_alloc(arena, sizeof(t_program));
-	program->fd_in = get_fd_in(arena, root);
-	program->fd_out = get_fd_out(arena, root);
+	program = arena_alloc(stock->arena, sizeof(t_program));
+	program->fd_in = get_fd_in(stock->arena, root);
+	stock->last_open_fd = program->fd_in;
+	program->fd_out = get_fd_out(stock->arena, root);
+	stock->last_open_fd = program->fd_out;
 	if (program->fd_in == -1 || program->fd_out == -1)
 		return (NULL);
-	program->cmd = get_cmd(arena, root);
+	program->cmd = get_cmd(stock->arena, root);
 	if (ft_strcmp(program->cmd, "echo") == 0)
 		program->fd_in = 0;
-	program->args = get_args(arena, root);
+	program->args = get_args(stock->arena, root);
 	program->fd_heredoc = 0;
 	program->type = NODE_REDIRECTION_IN;
 	return (program);

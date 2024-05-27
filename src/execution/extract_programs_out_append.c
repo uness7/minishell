@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 10:48:52 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/23 17:18:42 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 13:05:46 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ t_program	*extract_program_redir_out_append(t_stock *stock, t_ast_node *root,
 	program = arena_alloc(stock->arena, sizeof(t_program));
 	program->fd_in = 0;
 	program->fd_out = get_fd_out(stock->arena, root, f_out);
+	stock->last_open_fd = program->fd_out;
 	if (program->fd_out == -1)
 		return (NULL);
 	program->cmd = get_cmd(stock->arena, root);

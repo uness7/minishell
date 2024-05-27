@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:35:07 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 13:23:48 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 10:13:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,8 @@ void	err_message(t_stock *stock, int code)
 		*(stock->status) = 127;
 	}
 	else if (code == 1)
+	{
+		ft_putstr_fd(" Something went wrong\n", 2);
 		*(stock->status) = 1;
+	}
 }

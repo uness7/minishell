@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 13:53:58 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/25 18:51:46 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 11:43:16 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	open_fd(const char *filename)
 {
 	int	fd;
 
-	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC | O_CLOEXEC, 0644);
 	if (fd == -1)
 		return (-1);
 	return (fd);

@@ -6,7 +6,7 @@
 /*   By: yzioual <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 18:07:04 by yzioual           #+#    #+#             */
-/*   Updated: 2024/05/26 13:26:16 by yzioual          ###   ########.fr       */
+/*   Updated: 2024/05/27 21:34:58 by yzioual          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_env(t_env *list)
 	if (list == NULL)
 	{
 		ft_putstr_fd("env list is empty \n", 2);
-		exit(0);
+		return ;
 	}
 	current = list;
 	while (current != NULL)
