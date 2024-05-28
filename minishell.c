@@ -14,29 +14,32 @@
 
 int					g_status = 0;
 
+static void	helper(char **av, t_stock *stock)
+{
+	while (*av)
+	{
+		if (ft_strncmp(*av, "\"", 1) == 0)
+			*av = trim_quotes(stock->arena, *av);
+		else if (ft_strncmp(*av, "\'", 1) == 0)
+			*av = trim_single_quotes(stock->arena, *av);
+		av++;
+	}
+}
+
 static t_program	**produce_programs(t_program **programs, t_stock *stock)
 {
-	char		**av;
 	t_program	**cpy;
 
 	cpy = programs;
-	av = NULL;
 	while (*programs)
 	{
-		if (ft_strncmp((*programs)->cmd, "\"", 1) == 0)
+		if ((*programs)->cmd && ft_strncmp((*programs)->cmd, "\"", 1) == 0)
 			(*programs)->cmd = trim_quotes(stock->arena, (*programs)->cmd);
-		else if (ft_strncmp((*programs)->cmd, "\'", 1) == 0)
+		else if ((*programs)->cmd && ft_strncmp((*programs)->cmd, "\'", 1) == 0)
 			(*programs)->cmd = trim_single_quotes(stock->arena,
 					(*programs)->cmd);
-		av = (*programs)->args;
-		while (*av)
-		{
-			if (ft_strncmp(*av, "\"", 1) == 0)
-				*av = trim_quotes(stock->arena, *av);
-			else if (ft_strncmp(*av, "\'", 1) == 0)
-				*av = trim_single_quotes(stock->arena, *av);
-			av++;
-		}
+		if ((*programs)->args != NULL)
+			helper((*programs)->args, stock);
 		programs++;
 	}
 	return (cpy);
@@ -89,7 +92,6 @@ static void	run_minishell2(t_stock *stock, char *input, char **new_envp)
 	if (programs_cpy == NULL)
 		return (err_message(stock, 1));
 	ign_cmd(&programs_cpy);
-	print_programs(programs_cpy, 2);
 	*(stock->status) = run_programs(programs_cpy, new_envp, stock);
 	update_status(stock);
 }

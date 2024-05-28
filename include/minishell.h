@@ -548,8 +548,9 @@ int						export_helper_2(t_stock *stock, char *word, char *name,
 bool					check_env_var_rules(char *name);
 void					print_programs(t_program **programs, int c);
 void					*ft_memset(void *str, int c, size_t n);
-int						process_heredoc(t_program *program, t_stock *stock, \
-		struct termios *old_termios, t_delims *delims);
+int						process_heredoc(t_program *program, \
+		t_stock *stock, struct termios *old_termios, t_delims *delims);
 char					*change_path_run(t_stock *stock, char *cmd);
+t_program				*empty_program(t_program *program);
 
 #endif

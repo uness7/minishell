@@ -67,8 +67,8 @@ static void	_redir(t_pipe *pipe_data, int next_exists)
 	}
 }
 
-void	process_programs(t_program **programs, char **envp, \
-		t_stock *stock, t_pipe *pipe_data)
+void	process_programs(t_program **programs, char **envp, t_stock *stock,
+		t_pipe *pipe_data)
 {
 	int				next_exists;
 	int				i;
@@ -81,22 +81,17 @@ void	process_programs(t_program **programs, char **envp, \
 	i = 0;
 	while (programs[i])
 	{
-		if (programs[i] == NULL)
-			i++;
+		next_exists = programs[i + 1] != NULL;
+		if (next_exists && pipe(pipe_data->pipefd) == -1)
+			pipe_err();
+		if (i == 0 && !next_exists && _isbuiltin(stock->arena,
+				programs[i]->cmd))
+			stock->last_status = handle_builtin(init(&state, programs[i],
+						programs[i - 1], programs[i + 1]), stock, i);
 		else
-		{
-			next_exists = programs[i + 1] != NULL;
-			if (next_exists && pipe(pipe_data->pipefd) == -1)
-				pipe_err();
-			if (i == 0 && !next_exists && _isbuiltin(stock->arena, \
-						programs[i]->cmd))
-				stock->last_status = handle_builtin(init(&state, \
-							programs[i], programs[i - 1], programs[i + 1]), stock, i);
-			else
-				pipe_data->pids[pipe_data->p++] = execute_program(programs[i], \
-						envp, pipe_data, next_exists);
-			_redir(pipe_data, next_exists);
-		}
+			pipe_data->pids[pipe_data->p++] = execute_program(programs[i], envp,
+					pipe_data, next_exists);
+		_redir(pipe_data, next_exists);
 		i++;
 	}
 }

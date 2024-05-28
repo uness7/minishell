@@ -67,7 +67,7 @@ int	ft_exit(t_stock *stock, char *input, int *status)
 		temp = trim_quotes(stock->arena, trim_space(args[1]));
 		errno = 0;
 		num = ft_strtoll(temp, &endptr, 10);
-		if (*endptr != '\0' || errno != 0 || num > LLONG_MAX || num < LLONG_MIN)
+		if (*endptr || errno || num > LLONG_MAX || num < LLONG_MIN)
 		{
 			ft_putstr_fd(" numeric argument required\n", 2);
 			*status = 2;

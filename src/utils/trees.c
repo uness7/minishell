@@ -70,6 +70,7 @@ void	print_tree(t_ast_node *root)
 	print_tree_utils(root, 0);
 }
 
+/*
 void	print_programs(t_program **programs, int count)
 {
 	if (programs == NULL)
@@ -106,3 +107,4 @@ void	print_programs(t_program **programs, int count)
 		printf("\n");
 	}
 }
+*/

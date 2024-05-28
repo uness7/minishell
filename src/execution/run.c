@@ -57,8 +57,15 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 			exit(_runbuiltins(pipe->stock, pipe->new_input));
 		}
 		else if (check_cnd(program->cmd))
-			execve(change_path_run(pipe->stock, \
-						program->cmd), program->args, envp);
+		{
+			if (ft_strncmp(program->cmd, ".", 1) == 0)
+			{
+				execve(change_path_run(pipe->stock, \
+							program->cmd), program->args, envp);
+			}
+			else
+				execve(program->cmd, program->args, envp);
+		}
 		else
 			execve(path, program->args, envp);
 		execve_err();

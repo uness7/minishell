@@ -46,6 +46,8 @@ static char	**get_args(t_arena *arena, t_ast_node *root, char *cmd)
 	int			j;
 	char		**args;
 
+	if (cmd == NULL)
+		return (NULL);
 	args = arena_alloc(arena, sizeof(char *) * 100);
 	j = 0;
 	args[j++] = ft_strdup(arena, cmd);
@@ -100,10 +102,10 @@ t_program	*extract_program_heredoc(t_stock *stock, t_ast_node *root,
 		return (NULL);
 	unlink("tmp.txt");
 	if (f_no_cmd == 1)
-		return (NULL);
+		return (empty_program(program));
+	program->cmd = get_cmd(stock->arena, root);
 	program->fd_out = get_fd_out(stock->arena, root);
 	stock->last_open_fd = program->fd_in;
-	program->cmd = get_cmd(stock->arena, root);
 	if (ft_strcmp(program->cmd, "echo") == 0)
 		program->fd_in = 0;
 	program->args = get_args(stock->arena, root, program->cmd);

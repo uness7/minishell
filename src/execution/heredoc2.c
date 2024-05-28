@@ -77,16 +77,24 @@ int	read_second_part(char buff[], int len_end, int fd, char *end_delim)
 	return (0);
 }
 
-int	process_heredoc(t_program *program, t_stock *stock, \
+int	process_heredoc(t_program *program, t_stock *stock,
 		struct termios *old_termios, t_delims *delims)
 {
-	program->fd_in = heredoc(trim_single_quotes(stock->arena, \
+	program->fd_in = heredoc(trim_single_quotes(stock->arena,
 				trim_quotes(stock->arena, delims->deli)),
-			trim_single_quotes(stock->arena, \
-				trim_quotes(stock->arena, delims->deli2)),
-			"tmp.txt", *old_termios);
+			trim_single_quotes(stock->arena, trim_quotes(stock->arena,
+					delims->deli2)), "tmp.txt", *old_termios);
 	if (program->fd_in == -1)
 		return (-1);
 	unlink("tmp.txt");
 	return (0);
+}
+
+t_program	*empty_program(t_program *program)
+{
+	program->cmd = NULL;
+	program->fd_out = -1;
+	program->args = NULL;
+	program->type = NODE_REDIRECTION_HEREDOC;
+	return (program);
 }
