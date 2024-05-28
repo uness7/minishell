@@ -532,7 +532,8 @@ void					err_message(t_stock *stock, int code);
 long long				ft_strtoll(char *str, char **endptr, int base);
 char					*ign_quotes(t_arena *arena, char *s);
 void					ign_redir(t_list **list);
-void					init_terminal_settings(struct termios *old_termios);
+void					init_terminal_settings(struct termios \
+		*old_termios);
 void					restore_terminal_settings(const struct \
 		termios *old_termios);
 void					bubble_sort_arr(char **env);
@@ -548,9 +549,11 @@ int						export_helper_2(t_stock *stock, char *word, char *name,
 bool					check_env_var_rules(char *name);
 void					print_programs(t_program **programs, int c);
 void					*ft_memset(void *str, int c, size_t n);
-int						process_heredoc(t_program *program, \
-		t_stock *stock, struct termios *old_termios, t_delims *delims);
+int						process_heredoc(t_program *program, t_stock *stock,
+							struct termios *old_termios, t_delims *delims);
 char					*change_path_run(t_stock *stock, char *cmd);
 t_program				*empty_program(t_program *program);
+void					run_child(t_pipe *pipe, int next_exists);
+void					helper(char **av, t_stock *stock);
 
 #endif

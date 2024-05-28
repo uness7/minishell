@@ -21,9 +21,9 @@ int	ft_atoi(const char *str)
 	i = 0;
 	result = 0;
 	sign = 1;
-	while (str[i] == ' ' || str[i] == '\t' || \
-		str[i] == '\n' || str[i] == '\v' || \
-		str[i] == '\f' || str[i] == '\r')
+	while (str[i] == ' ' || str[i] == '\t' \
+		|| str[i] == '\n' || str[i] == '\v'
+		|| str[i] == '\f' || str[i] == '\r')
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{
@@ -94,4 +94,16 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 		i++;
 	}
 	return (0);
+}
+
+void	helper(char **av, t_stock *stock)
+{
+	while (*av)
+	{
+		if (ft_strncmp(*av, "\"", 1) == 0)
+			*av = trim_quotes(stock->arena, *av);
+		else if (ft_strncmp(*av, "\'", 1) == 0)
+			*av = trim_single_quotes(stock->arena, *av);
+		av++;
+	}
 }

@@ -81,3 +81,18 @@ char	*change_path_run(t_stock *stock, char *cmd)
 	ft_cd(stock->arena, path, stock->env);
 	return (new_cmd);
 }
+
+void	run_child(t_pipe *pipe, int next_exists)
+{
+	if (pipe->last_fd != STDIN_FILENO)
+	{
+		dup2(pipe->last_fd, STDIN_FILENO);
+		close(pipe->last_fd);
+	}
+	if (next_exists)
+	{
+		close(pipe->pipefd[0]);
+		dup2(pipe->pipefd[1], STDOUT_FILENO);
+		close(pipe->pipefd[1]);
+	}
+}

@@ -23,19 +23,25 @@ static bool	execve_err(void)
 	exit(127);
 }
 
-static void	run_child(t_pipe *pipe, int next_exists)
+static void	run_child_2(t_pipe *pipe, t_program *program, char **envp,
+		char *path)
 {
-	if (pipe->last_fd != STDIN_FILENO)
+	if (_isbuiltin(pipe->stock->arena, program->cmd))
 	{
-		dup2(pipe->last_fd, STDIN_FILENO);
-		close(pipe->last_fd);
+		pipe->new_input = join_args(pipe->stock->arena, program->args);
+		exit(_runbuiltins(pipe->stock, pipe->new_input));
 	}
-	if (next_exists)
+	else if (check_cnd(program->cmd))
 	{
-		close(pipe->pipefd[0]);
-		dup2(pipe->pipefd[1], STDOUT_FILENO);
-		close(pipe->pipefd[1]);
+		if (ft_strncmp(program->cmd, ".", 1) == 0)
+			execve(change_path_run(pipe->stock, program->cmd), program->args,
+				envp);
+		else
+			execve(program->cmd, program->args, envp);
 	}
+	else
+		execve(path, program->args, envp);
+	execve_err();
 }
 
 pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
@@ -44,31 +50,14 @@ pid_t	execute_program(t_program *program, char **envp, t_pipe *pipe,
 	char	*path;
 	pid_t	pid;
 
-	path = find_cmd(pipe->stock->arena, ft_strtok(pipe->stock->arena, \
-			find_paths(envp)), program->cmd);
+	path = find_cmd(pipe->stock->arena, ft_strtok(pipe->stock->arena,
+				find_paths(envp)), program->cmd);
 	pid = fork();
 	if (pid == 0)
 	{
 		run_child(pipe, next_exists);
 		redirect(program);
-		if (_isbuiltin(pipe->stock->arena, program->cmd))
-		{
-			pipe->new_input = join_args(pipe->stock->arena, program->args);
-			exit(_runbuiltins(pipe->stock, pipe->new_input));
-		}
-		else if (check_cnd(program->cmd))
-		{
-			if (ft_strncmp(program->cmd, ".", 1) == 0)
-			{
-				execve(change_path_run(pipe->stock, \
-							program->cmd), program->args, envp);
-			}
-			else
-				execve(program->cmd, program->args, envp);
-		}
-		else
-			execve(path, program->args, envp);
-		execve_err();
+		run_child_2(pipe, program, envp, path);
 	}
 	else if (pid < 0)
 		fork_err();

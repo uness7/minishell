@@ -14,18 +14,6 @@
 
 int					g_status = 0;
 
-static void	helper(char **av, t_stock *stock)
-{
-	while (*av)
-	{
-		if (ft_strncmp(*av, "\"", 1) == 0)
-			*av = trim_quotes(stock->arena, *av);
-		else if (ft_strncmp(*av, "\'", 1) == 0)
-			*av = trim_single_quotes(stock->arena, *av);
-		av++;
-	}
-}
-
 static t_program	**produce_programs(t_program **programs, t_stock *stock)
 {
 	t_program	**cpy;
